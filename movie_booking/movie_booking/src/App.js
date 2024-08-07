@@ -1,12 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import HomePage from "./pages/HomePages/HomePage.js";
+import SearchPage from "./pages/HomePages/SearchPage.js";
+import ShowingPage from "./pages/HomePages/ShowingPage.js";
+import CommingPage from "./pages/HomePages/CommingPage";
+import SupportPage from "./pages/HomePages/SupportPage";
+import ActorPage from "./pages/HomePages/ActorPage";
+import DirectorPage from "./pages/HomePages/DirectorPage";
+
 
 function App() {
-  return (
-      <h1 className="text-3xl font-bold underline">
-        Hello world!
-      </h1>
-  );
+
+    return (
+        <BrowserRouter>
+            <Routes>
+                <Route path="/" element={<HomePage/>} />
+                <Route path="/search-movie" element={<SearchPage/>} />
+                <Route path="/faq" element={<SupportPage/>} />
+                <Route path="/showing" element={<ShowingPage/>} />
+                <Route path="/comming" element={<CommingPage/>} />
+                <Route path="/actor" element={<ActorPage/>} />
+                <Route path="/director" element={<DirectorPage/>} />
+            </Routes>
+        </BrowserRouter>
+    );
 }
 
 export default App;
