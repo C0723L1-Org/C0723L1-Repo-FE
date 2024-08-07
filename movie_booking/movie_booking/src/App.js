@@ -1,11 +1,10 @@
-import logo from './logo.svg';
 import './App.css';
+import Receipt from "./booking/Receipt";
+import ModalFixtureOfMovieV2 from "./booking/ModalFixtureOfMovieV2";
 
 function App() {
   return (
-      <h1 className="text-3xl font-bold underline">
-        Hello world!
-      </h1>
+      <ModalFixtureOfMovieV2/>
   );
 }
 
