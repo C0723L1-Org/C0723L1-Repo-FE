@@ -1,10 +1,13 @@
 import './App.css';
 import Receipt from "./booking/Receipt";
-import ModalFixtureOfMovieV2 from "./booking/ModalFixtureOfMovieV2";
+import ModalFixtureOfMovie from "./booking/ModalFixtureOfMovie";
+import {useEffect, useState} from "react";
 
 function App() {
   return (
-      <ModalFixtureOfMovieV2/>
+      <>
+        <ModalFixtureOfMovie/>
+      </>
   );
 }
 
