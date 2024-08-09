@@ -195,4 +195,5 @@ function ModalFixtureOfMovie() {
     )
 }
 
+
 export default ModalFixtureOfMovie;
