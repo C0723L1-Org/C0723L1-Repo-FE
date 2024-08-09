@@ -1,10 +1,10 @@
 import './App.css';
-import Test from "./booking/Test";
+import ModalFixtureOfMovie from "./booking/ModalFixtureOfMovie";
 
 function App() {
   return (
       <>
-              <Test/>
+              <ModalFixtureOfMovie/>
       </>
   );
 }
