@@ -27,7 +27,7 @@ const Comming = () => {
                     speed="1.3"
                     color="black">
                     <div className="grid grid-rows-1 grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 place-items-center">
-                        {listFilmComming.slice(0, 5).map((data) => (
+                        {listFilmComming.map((data) => (
                             <div key={data.id} className="relative group h-full w-full">
                                 <div>
                                     <img

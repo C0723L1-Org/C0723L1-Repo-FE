@@ -19,7 +19,7 @@ const Showing = () => {
         <div className="mt-14 mb-12">
             <div className="container">
                 <div className="grid grid-rows-1 grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 place-items-center">
-                    {listFilmShowing.slice(0, 5).map((data) => (
+                    {listFilmShowing.map((data) => (
                         <div key={data.id} className="relative group h-full w-full">
                             <img
                                 src={data.avatar}

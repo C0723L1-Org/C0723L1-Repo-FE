@@ -54,11 +54,19 @@ const MovieComming = () => {
                                         </p>
                                         <div className="flex flex-col space-y-2">
                                             {data.statusFilmId.name === "Showing" && (
-                                                <button className="w-full bg-blue-500 text-white px-5 py-2 rounded-lg hover:bg-blue-600">
+                                                <button
+                                                    onClick={() => {
+                                                        navigate(`/movie/${data.id}`);
+                                                    }}
+                                                    className="w-full bg-blue-500 text-white px-5 py-2 rounded-lg hover:bg-blue-600">
                                                     Đặt vé
                                                 </button>
                                             )}
-                                            <button className="w-full bg-blue-500 text-white px-5 py-2 rounded-lg hover:bg-blue-600">
+                                            <button
+                                                onClick={() => {
+                                                    navigate(`/movie/information/${data.id}`);
+                                                }}
+                                                className="w-full bg-blue-500 text-white px-5 py-2 rounded-lg hover:bg-blue-600">
                                                 Thông tin
                                             </button>
                                         </div>
