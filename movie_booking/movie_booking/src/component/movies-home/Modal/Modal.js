@@ -22,10 +22,6 @@ const Modal = ({ showModal, setShowModal }) => {
                     <p>Chính thức khởi chiếu</p>
                     <h2 className="text-2xl font-bold">27.07.2024</h2>
                 </div>
-                <div className="flex items-center justify-center mt-4">
-                    <input type="checkbox" id="hide-today" />
-                    <label htmlFor="hide-today" className="ml-2">Không hiển thị hôm nay</label>
-                </div>
             </div>
         </div>
     );

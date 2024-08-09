@@ -7,6 +7,7 @@ import CommingPage from "./pages/HomePages/CommingPage";
 import SupportPage from "./pages/HomePages/SupportPage";
 import ActorPage from "./pages/HomePages/ActorPage";
 import DirectorPage from "./pages/HomePages/DirectorPage";
+import StudioPage from "./pages/HomePages/StudioPage";
 
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
                 <Route path="/comming" element={<CommingPage/>} />
                 <Route path="/actor" element={<ActorPage/>} />
                 <Route path="/director" element={<DirectorPage/>} />
+                <Route path="/studio" element={<StudioPage/>} />
             </Routes>
         </BrowserRouter>
     );

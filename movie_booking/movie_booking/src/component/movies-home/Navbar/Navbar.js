@@ -23,7 +23,7 @@ const InformationDropdown = [{
 }, {
     id: 3, name: "Đạo diễn", link: "/director",
 }, {
-    id: 4, name: "Hãng phim", link: "/#",
+    id: 4, name: "Hãng phim", link: "/studio",
 },];
 const Navbar = () => {
     const [searchTerm, setSearchTerm] = useState("");

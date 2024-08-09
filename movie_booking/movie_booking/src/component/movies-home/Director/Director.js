@@ -94,7 +94,7 @@ const Director = () => {
             <div className="flex justify-center items-center mb-4">
                 <div className="bg-white px-6 py-8 rounded-xl shadow-lg w-full ">
                     <div className="text-center max-w-[600px] mx-auto">
-                        <h1 className="text-2xl font-bold text-gray-900">PHIM ĐIỆN ẢNH</h1>
+                        <h1 className="text-2xl font-bold text-gray-900">ĐẠO DIỄN</h1>
                     </div>
                     <div className="flex items-center mb-4">
                         <span

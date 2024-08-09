@@ -2,7 +2,7 @@ import axios from "axios";
 
 export const getSearchMovie = async (nameMovie, director, releaseDate, nameStatus, nameKind, actor, page) => {
     try {
-        const response = await axios.get(`http://localhost:8080/api/v1/movie/public/show-search-movie?nameMovie=${nameMovie}`+
+        const response = await axios.get(`http://localhost:8080/api/v1/movie/public/show-search-movie-test?nameMovie=${nameMovie}`+
             `&director=${director}&releaseDate=${releaseDate}&nameStatus=${nameStatus}&nameKind=${nameKind}&actor=${actor}&page=${page}`);
         console.log(response.data)
         return response.data;

@@ -24,6 +24,7 @@ const SearchMovies = () => {
 
     const searchMovieByAll = async (nameMovie, director, releaseDate, nameStatus, nameKind, actor, page) => {
         const temp = await MovieService.getSearchMovie(nameMovie, director, releaseDate, nameStatus, nameKind, actor, page);
+        console.log(temp.content);
         setMovies(temp.content);
         setTotalPages(temp.totalPages);
     };

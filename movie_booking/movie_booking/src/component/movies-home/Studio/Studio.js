@@ -94,41 +94,17 @@ const Studio = () => {
             <div className="flex justify-center items-center mb-4">
                 <div className="bg-white px-6 py-8 rounded-xl shadow-lg w-full ">
                     <div className="text-center max-w-[600px] mx-auto">
-                        <h1 className="text-2xl font-bold text-gray-900">PHIM ĐIỆN ẢNH</h1>
+                        <h1 className="text-2xl font-bold text-gray-900">NHÀ SẢN SUẤT</h1>
                     </div>
-                    <div className="flex items-center mb-4">
-                        <span
-                            className="inline-flex items-center justify-center w-9 h-9 rounded-full border-4 border-blue-100 bg-blue-200 text-blue-800 mr-2">
-                            <FiSearch/>
-                        </span>
-                        <h1 className="text-xl font-medium">Search</h1>
-                    </div>
-                    <form className="space-y-4 w-full" onSubmit={handleSubmit(onSubmit)}>
-                        <div>
-                            <div className="flex flex-col col-span-2">
-                                <label className="font-medium text-sm mb-1" htmlFor="director">Tên Đạo Diễn:</label>
-                                <input {...register("director")} type="text" id="director"
-                                       placeholder="Nhập tên đạo diễn"
-                                       className="w-full rounded-lg border border-gray-300 px-3 py-2"/>
-                            </div>
-                        </div>
-                        <div className="grid grid-cols-1">
-                            <button
-                                className="bg-blue-500 justify-center items-center text-white px-5 py-2 rounded-lg mt-4 hover:bg-blue-600"
-                                type="submit">
-                                Tìm kiếm
-                            </button>
-                        </div>
-                    </form>
                 </div>
             </div>
             <div className="space-y-6">
                 {movies.map(movie => (
                     <div key={movie.id} className="bg-white rounded-lg shadow-lg overflow-hidden flex items-center">
-                        <img src={movie.avatar} alt={movie.director} className="h-40 w-30 object-cover"/>
+                        <img src={movie.avatar} alt={movie.studio} className="h-40 w-30 object-cover"/>
                         <div className="p-4 flex flex-col justify-between">
                             <div>
-                                <h2 className="text-xl font-bold">{movie.director}</h2>
+                                <h2 className="text-xl font-bold">{movie.studio}</h2>
                             </div>
                             <div className="flex items-center space-x-2 mt-2">
                                 <button className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Thích</button>
