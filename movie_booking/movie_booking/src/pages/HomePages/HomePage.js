@@ -30,13 +30,11 @@ const HomePage = () => {
 
     return (
         <div className="no-scrollbar">
-            <Navbar />
             <Feed />
             <TopMovies />
             <MovieShowing />
             <MovieComming />
             <Assess />
-            <Footer />
             <Modal showModal={showModal} setShowModal={setShowModal} />
         </div>
     );

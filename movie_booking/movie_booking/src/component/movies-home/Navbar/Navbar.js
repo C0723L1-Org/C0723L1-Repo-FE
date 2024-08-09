@@ -2,7 +2,8 @@ import {MdLocalMovies} from "react-icons/md";
 import React, {useState} from "react";
 import {IoIosLogIn, IoMdSearch} from "react-icons/io";
 import {FaCaretDown} from "react-icons/fa";
-import {useNavigate} from "react-router-dom";
+import {Outlet, useNavigate} from "react-router-dom";
+import Footer from "../Footer/Footer";
 
 const Menu = [{
     id: 1, name: "Trang Chủ", link: "/",
@@ -36,7 +37,9 @@ const Navbar = () => {
         }
     };
 
-    return (<div className="shadow-md bg-slate-100 dark:bg-gray-900 dark:text-white relative z-40">
+    return (
+        <>
+        <div className="shadow-md bg-slate-100 dark:bg-gray-900 dark:text-white relative z-40">
             {/* Upper Navbar */}
             <div className="bg-slate-100 py-3 sm:py-0">
                 <div className="container flex justify-between  items-center">
@@ -133,7 +136,10 @@ const Navbar = () => {
                     </li>
                 </ul>
             </div>
-        </div>);
+        </div>
+            <Outlet />
+            <Footer/>
+        </> );
 };
 
 export default Navbar;
