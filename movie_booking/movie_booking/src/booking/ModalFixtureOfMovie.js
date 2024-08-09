@@ -5,6 +5,8 @@ function ModalFixtureOfMovie() {
     // Lấy ngày hiện tại
     const initialDate = new Date();
     initialDate.setHours(0, 0, 0, 0);
+    const today = new Date()
+    today.setHours(0, 0, 0, 0);
     const [currentDate, setCurrentDate] = useState(initialDate);
     const [days, setDays] = useState([])
     const daysOfWeek  = ['Sun', 'Mon', 'Tue', 'Wed', 'Thus', 'Fri', 'Sat'];
@@ -31,10 +33,12 @@ function ModalFixtureOfMovie() {
         console.log("current: "+currentDate)
         console.log("index: "+day)
         setCurrentDate(currentDate=>day)
-        console.log(currentDate.getTime() == day.getTime())
+        console.log(currentDate.getTime() === day.getTime())
     };
     const handleClickDatePicker = (param) => {
         const newDate = new Date(currentDate);
+        newDate.setHours(0, 0, 0, 0);
+
         switch (param) {
             case "NEXT":
                 newDate.setDate(currentDate.getDate() + 1);
@@ -77,8 +81,8 @@ function ModalFixtureOfMovie() {
                             <div
                                 className="flex group rounded-lg mx-1 transition-all duration-300 cursor-pointer justify-center w-16 bg-slate-50 hover:shadow-regal-blue  hover:shadow-lg hover-light-shadow ">
                                 <div className="flex items-center px-4 py-4">
-                                    <div onClick={() => handleClickDatePicker("PREVIOUS")}
-                                         className="text-center">
+                                    <div onClick={currentDate.getTime() !== today.getTime() ? () => handleClickDatePicker("PREVIOUS") : null}
+                                         className={`text-center ${currentDate.getTime() === today.getTime() ? 'opacity-50 cursor-not-allowed' : ''}`}>
                                         <p className="text-gray-900 group-hover:text-black text-sm transition-all duration-300">
                                             Previous
                                         </p>
@@ -86,26 +90,32 @@ function ModalFixtureOfMovie() {
                                 </div>
                             </div>
                             <div className="flex">
-                                {days.map((day, index) => (
-                                    <div
-                                        key={index}
-                                        onClick={() => handleDayClick(day)}
-                                        className={`flex group rounded-lg mx-1 transition-all duration-300 cursor-pointer justify-center w-16 ${
-                                            currentDate.getTime() == day.getTime() ? 'bg-zinc-400' : ''
-                                        } hover:shadow-regal-blue hover:shadow-lg hover-light-shadow`}
-                                    >
-                                        <div className="flex items-center px-4 py-4">
-                                            <div className="text-center">
-                                                <p className="text-gray-900 group-hover:text-black text-sm transition-all duration-300">
-                                                    {daysOfWeek[day.getDay()]}
-                                                </p>
-                                                <p className="text-gray-900 group-hover:text-black mt-3 group-hover:font-bold transition-all duration-300">
-                                                    {day.getDate()}/{day.getMonth() + 1}
-                                                </p>
+                                {days.map((day, index) => {
+                                    const isPast = day.getTime() < today.getTime();
+                                    return (
+                                        <>
+                                            <div
+                                                key={index}
+                                                onClick={() => handleDayClick(day)}
+                                                style={isPast ? { pointerEvents: 'none' } : {}}
+                                                className={`flex group rounded-lg mx-1 transition-all duration-300 cursor-pointer justify-center w-16 ${
+                                                    currentDate.getTime() === day.getTime() ? 'bg-zinc-400' : ''
+                                                } ${isPast ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-regal-blue hover:shadow-lg hover-light-shadow'}`}
+                                            >
+                                                <div className="flex items-center px-4 py-4">
+                                                    <div className="text-center">
+                                                        <p className="text-gray-900 group-hover:text-black text-sm transition-all duration-300">
+                                                            {daysOfWeek[day.getDay()]}
+                                                        </p>
+                                                        <p className="text-gray-900 group-hover:text-black mt-3 group-hover:font-bold transition-all duration-300">
+                                                            {day.getDate()}/{day.getMonth() + 1}
+                                                        </p>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                ))}
+                                        </>
+                                    );
+                                })}
                             </div>
                             <div
                                 className="flex group rounded-lg mx-1 transition-all duration-300 cursor-pointer justify-center w-16 bg-slate-50 hover:shadow-regal-blue  hover:shadow-lg hover-light-shadow ">
