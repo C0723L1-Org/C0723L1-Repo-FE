@@ -1,21 +1,19 @@
 import {useEffect, useState} from "react";
+import {useParams} from "react-router-dom";
+import {Bounce, toast} from "react-toastify";
+import request from "../../redux/axios-config";
 
 function ModalFixtureOfMovie() {
+    const params = useParams()
+    const [movie, setMovie] = useState({})
     const [selectedSlot, setSelectedSlot] = useState(null);
     // Lấy ngày hiện tại
     const initialDate = new Date();
-    initialDate.setHours(0, 0, 0, 0);
     const today = new Date()
-    today.setHours(0, 0, 0, 0);
     const [currentDate, setCurrentDate] = useState(initialDate);
     const [days, setDays] = useState([])
     const daysOfWeek  = ['Sun', 'Mon', 'Tue', 'Wed', 'Thus', 'Fri', 'Sat'];
-    const slots = [
-        { startTime: "16:00", endTime: "17:20", room: "ROOM 1", bgColor: "bg-zinc-400" },
-        { startTime: "16:00", endTime: "17:20", room: "ROOM 2", bgColor: "bg-white" },
-        { startTime: "16:00", endTime: "17:20", room: "ROOM 3", bgColor: "bg-white" },
-        { startTime: "16:00", endTime: "17:20", room: "ROOM 1", bgColor: "bg-white" },
-    ];
+    const [showtime, setShowtime] = useState([])
     useEffect(() => {
         const dates = [];
         for (let i = -3; i <= 3; i++) {
@@ -28,6 +26,55 @@ function ModalFixtureOfMovie() {
         setDays(days => dates)
 
 
+    }, [currentDate]);
+    useEffect( () => {
+        const fetchDataMovie =async()=>{
+            try {
+                const res = await request.get(`/movie/public/${params.id}`)
+                await setMovie(prevState => res.data)
+            } catch (e) {
+                toast.error(`Error: ${e}`, {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                    transition: Bounce,
+                });
+            }
+        }
+
+        fetchDataMovie()
+    }, []);
+    useEffect(() => {
+        const fetchDataShowtime = async () =>{
+            try {
+                const  res = await request.get(`/showtime/public/list`,{
+                    params:{
+                        movieId:params.id,
+                        date:currentDate
+                    }
+                })
+                await setShowtime(prevState => res.data)
+
+            } catch (e) {
+                toast.error(`Error: ${e}`, {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                    transition: Bounce,
+                });
+            }
+        }
+        fetchDataShowtime()
     }, [currentDate]);
     const handleDayClick = (day) => {
         console.log("current: "+currentDate)
@@ -81,8 +128,9 @@ function ModalFixtureOfMovie() {
                             <div
                                 className="flex group rounded-lg mx-1 transition-all duration-300 cursor-pointer justify-center w-16 bg-slate-50 hover:shadow-regal-blue  hover:shadow-lg hover-light-shadow ">
                                 <div className="flex items-center px-4 py-4">
-                                    <div onClick={currentDate.getTime() !== today.getTime() ? () => handleClickDatePicker("PREVIOUS") : null}
-                                         className={`text-center ${currentDate.getTime() === today.getTime() ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                                    <div
+                                        onClick={currentDate.getTime() !== today.getTime() ? () => handleClickDatePicker("PREVIOUS") : null}
+                                        className={`text-center ${currentDate.getTime() === today.getTime() ? 'opacity-50 cursor-not-allowed' : ''}`}>
                                         <p className="text-gray-900 group-hover:text-black text-sm transition-all duration-300">
                                             Previous
                                         </p>
@@ -91,15 +139,20 @@ function ModalFixtureOfMovie() {
                             </div>
                             <div className="flex">
                                 {days.map((day, index) => {
+                                    const tempCurrentDate = currentDate;
+                                    let tempToday = today;
+                                    tempCurrentDate.setHours(0, 0, 0, 0);
+                                    day.setHours(0, 0, 0, 0);
+                                    tempToday.setHours(0, 0, 0, 0);
                                     const isPast = day.getTime() < today.getTime();
                                     return (
                                         <>
-                                            <div
+                                        <div
                                                 key={index}
                                                 onClick={() => handleDayClick(day)}
                                                 style={isPast ? { pointerEvents: 'none' } : {}}
                                                 className={`flex group rounded-lg mx-1 transition-all duration-300 cursor-pointer justify-center w-16 ${
-                                                    currentDate.getTime() === day.getTime() ? 'bg-zinc-400' : ''
+                                                    tempCurrentDate.getTime() === day.getTime() ? 'bg-zinc-400' : ''
                                                 } ${isPast ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-regal-blue hover:shadow-lg hover-light-shadow'}`}
                                             >
                                                 <div className="flex items-center px-4 py-4">
@@ -135,20 +188,20 @@ function ModalFixtureOfMovie() {
                         <div className="w-[300px] min-h-[450px]">
                             <img
                                 className="max-w-[300px] rounded-lg object-cover"
-                                src="https://i.pinimg.com/736x/6e/fc/de/6efcde07c6aab04e7ef2daa00df27b5f.jpg"
+                                src={movie.avatar}
                                 alt="Baner"
                             />
                         </div>
                         <div className="flex flex-col h-[350px]">
                             {
-                                slots.length === 0 ? (
+                                showtime.length === 0 ? (
                                     <span className="text-xl">
                                           Không có lịch chiếu trong khoảng thời gian này
                                         </span>
                                 ) : (
                                     <div className=" min-w-[400px] max-h-[400px]  grid grid-cols-3  gap-3  ">
                                         {
-                                            slots.map((slot, index) => (
+                                            showtime.map((s, index) => (
                                                 <>
                                                     <div key={index}
                                                          onClick={() => handleSlotClick(index)}
@@ -159,16 +212,16 @@ function ModalFixtureOfMovie() {
                                                         <div
                                                             className="flex flex-row items-center justify-center gap-2">
                                                             <div className="flex flex-row items-center justify-center">
-                                                                <span>16:00</span>
+                                                                <span>{s.startTime}</span>
                                                             </div>
                                                             <span>-</span>
                                                             <div className="flex items-center justify-center">
-                                                                <span>17:20</span>
+                                                                <span>{s.startTime + s.movie.durationMovie}</span>
                                                             </div>
                                                         </div>
                                                         <span className="flex items-center">
                                                               <span className="h-px flex-1 bg-black">
-                                                                ROOM 1
+                                                                {s.room.name}
                                                               </span>
                                                             </span>
                                                     </div>

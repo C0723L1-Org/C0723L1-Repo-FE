@@ -26,7 +26,7 @@ function App() {
                     <Route path="/comming" element={<CommingPage/>}/>
                     <Route path="/actor" element={<ActorPage/>}/>
                     <Route path="/director" element={<DirectorPage/>}/>
-                    <Route path="/movie" element={<ModalFixtureOfMovie/>}/>
+                    <Route path="/movie/:id" element={<ModalFixtureOfMovie/>}/>
                 </Route>
                 {/*<Route path="*" element={<PageNotFound/>}/>*/}
             </Routes>
