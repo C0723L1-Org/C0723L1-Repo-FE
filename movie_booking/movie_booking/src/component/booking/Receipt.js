@@ -1,5 +1,12 @@
 import './receipt.css'
+import {useEffect, useState} from "react";
+import {PayPalButtons, PayPalScriptProvider, usePayPalScriptReducer} from "@paypal/react-paypal-js";
+import Swal from "sweetalert2";
+import axios from "axios";
 function Receipt(){
+    const [paymentSelector, setPaymentSelector] = useState()
+    const [amountVND, setAmountVND] = useState(35000)
+    const [amountUSD, setAmountUSD] = useState(0)
     const data = [
         {
             title: "Siêu sao âm nhạc",
@@ -29,6 +36,59 @@ function Receipt(){
             price: "100000 VND"
         }
     ];
+    const handlePaymentChange = (value) =>{
+        setPaymentSelector(value);
+        console.log(paymentSelector)
+    }
+    const onCreateOrder = async (data,actions) => {
+        await console.log(amountUSD.toString())
+        return actions.order.create({
+            purchase_units: [
+                {
+                    amount: {
+                        value: amountUSD.toFixed(2),
+                    },
+                },
+            ],
+        });
+    }
+
+    const onApproveOrder = (data,actions) => {
+        return actions.order.capture().then((details) => {
+            Swal.fire({
+                icon: "success",
+                title: "Thanh toán thành công",
+                showConfirmButton: false,
+                timer: 5000
+            });
+        }).then(
+            // lưu dữ liệu vào DB
+        );
+    }
+    const onErrorOrder = (err) =>{
+        return Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Thanh toán không thành công! lỗi :" +err
+        });
+    }
+    const initialOptions = {
+        clientId: "AQpqoUWuwAhJZxtkl6VGYUzJw-iujAr1mdJhuqp6OGSRhjC4rLLzGf091AHkaNc5ItVnzGZiwv7Eo-M9",
+        currency: "USD",
+        intent: "capture",
+    };
+    useEffect(() => {
+        const fetchExchangeRate = async () => {
+            try {
+                const response = await axios.get('https://v6.exchangerate-api.com/v6/c6e9382a6961e5a03e3ee78e/latest/VND');
+                setAmountUSD(prevState => amountVND*response.data.conversion_rates.USD)
+            } catch (error) {
+                console.error('Error fetching exchange rate', error);
+            }
+        };
+
+        fetchExchangeRate();
+    }, []);
     return (
         <>
             <div className="py-14  md:px-6 2xl:px-20 2xl:container 2xl:mx-auto dark:bg-gray-800 rounded-3xl mt-10">
@@ -125,7 +185,10 @@ function Receipt(){
                         <ul>
                             <li>
                                 <div className="flex">
-                                    <input type="radio" name="payment-method"/>
+                                    <input type="radio"
+                                           value="PAYPAL"
+                                           name="payment-method"
+                                           onChange={(event) =>handlePaymentChange(event.target.value)}/>
                                         <div className="w-8 h-8 overflow-hidden rounded-lg border border-gray-200 shadow-md m-1">
                                             <img
                                                 className="w-full h-full"
@@ -141,7 +204,10 @@ function Receipt(){
                             </li>
                             <li>
                                 <div className="flex">
-                                    <input type="radio" name="payment-method"/>
+                                    <input type="radio"
+                                           value="MOMO"
+                                           name="payment-method"
+                                           onChange={(event) =>handlePaymentChange(event.target.value)}/>
                                         <div className="w-8 h-8 overflow-hidden rounded-lg border border-gray-200 shadow-md m-1">
                                             <img
                                                 className="w-full h-full"
@@ -156,7 +222,10 @@ function Receipt(){
                             </li>
                             <li>
                                 <div className="flex">
-                                    <input type="radio" name="payment-method"/>
+                                    <input type="radio"
+                                           value="ZALOPAY"
+                                           name="payment-method"
+                                           onChange={(event) =>handlePaymentChange(event.target.value)}/>
                                         <div className="w-8 h-8 overflow-hidden rounded-lg border border-gray-200 shadow-md m-1">
                                             <img
                                                 className="w-full h-full"
@@ -172,7 +241,11 @@ function Receipt(){
                             </li>
                             <li>
                                 <div className="flex">
-                                    <input type="radio" name="payment-method"/>
+                                    <input type="radio"
+                                           value="VNPAY"
+                                           name="payment-method"
+                                           onChange={(event) =>handlePaymentChange(event.target.value)}
+                                    />
                                         <div className="w-8 h-8 overflow-hidden rounded-lg border border-gray-200 shadow-md m-1">
                                             <img
                                                 className="w-full h-full"
@@ -186,11 +259,27 @@ function Receipt(){
                                 </div>
                             </li>
                         </ul>
-                        <div className="w-full flex justify-center items-center">
-                            <button className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded ">
-                                Thanh Toán
-                            </button>
-                        </div>
+                        {
+                            paymentSelector === "PAYPAL" ? (
+                                <div className="w-full">
+                                    <PayPalScriptProvider options={initialOptions}>
+                                        <PayPalButtons
+                                            style={{ layout: "vertical" }}
+                                            createOrder={(data, actions) => onCreateOrder(data, actions)}
+                                            onApprove={(data, actions) => onApproveOrder(data, actions)}
+                                            onError={(err) =>onErrorOrder(err)}
+                                            fundingSource={"paypal"}
+                                        />
+                                    </PayPalScriptProvider>
+                                </div>
+                            ):(<div className="w-full flex justify-center items-center">
+                                <button onClick={()=>{console.log(paymentSelector)}}
+                                        className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded ">
+                                    Thanh Toán
+                                </button>
+                            </div>)
+                        }
+
                     </div>
                 </div>
             </div>
