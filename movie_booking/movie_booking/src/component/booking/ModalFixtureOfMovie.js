@@ -13,19 +13,17 @@ function ModalFixtureOfMovie() {
     const [currentDate, setCurrentDate] = useState(initialDate);
     const [days, setDays] = useState([])
     const daysOfWeek  = ['Sun', 'Mon', 'Tue', 'Wed', 'Thus', 'Fri', 'Sat'];
-    const [showtime, setShowtime] = useState([])
+    const [showtimes, setShowtimes] = useState([])
+    const [selectedShowtime, setSelectedShowtime] = useState({})
     useEffect(() => {
         const dates = [];
         for (let i = -3; i <= 3; i++) {
             // Tạo một bản sao của currentDate và thay đổi nó
             const newDate = new Date(currentDate);
             newDate.setDate(currentDate.getDate() + i);
-            newDate.setHours(0, 0, 0, 0);
             dates.push(newDate);
         }
         setDays(days => dates)
-
-
     }, [currentDate]);
     useEffect( () => {
         const fetchDataMovie =async()=>{
@@ -51,14 +49,22 @@ function ModalFixtureOfMovie() {
     }, []);
     useEffect(() => {
         const fetchDataShowtime = async () =>{
+            const timePart = currentDate.toTimeString().split(' ')[0]
+            const year = currentDate.getFullYear(); // Lấy năm
+            const month = (currentDate.getMonth() + 1).toString().padStart(2, '0')
+            const day = currentDate.getDate().toString().padStart(2, '0');
+            const formattedDate = `${year}-${month}-${day}`
+            console.log("Ngày:", formattedDate);
+            console.log("Time:", timePart);
             try {
                 const  res = await request.get(`/showtime/public/list`,{
                     params:{
                         movieId:params.id,
-                        date:currentDate
+                        date:formattedDate,
+                        time:timePart
                     }
                 })
-                await setShowtime(prevState => res.data)
+                await setShowtimes(prevState => res.data)
 
             } catch (e) {
                 toast.error(`Error: ${e}`, {
@@ -77,15 +83,11 @@ function ModalFixtureOfMovie() {
         fetchDataShowtime()
     }, [currentDate]);
     const handleDayClick = (day) => {
-        console.log("current: "+currentDate)
-        console.log("index: "+day)
         setCurrentDate(currentDate=>day)
-        console.log(currentDate.getTime() === day.getTime())
+        console.log(currentDate)
     };
-    const handleClickDatePicker = (param) => {
+    const handleClickDateButton = (param) => {
         const newDate = new Date(currentDate);
-        newDate.setHours(0, 0, 0, 0);
-
         switch (param) {
             case "NEXT":
                 newDate.setDate(currentDate.getDate() + 1);
@@ -97,10 +99,13 @@ function ModalFixtureOfMovie() {
                 break;
         }
         setCurrentDate(currentDate =>newDate);
+        console.log("cur: " +currentDate)
+
     }
 
     const handleSlotClick = (index) => {
         setSelectedSlot(index);
+        setSelectedShowtime(prevState => showtimes[index])
     };
     return (
         <>
@@ -123,14 +128,13 @@ function ModalFixtureOfMovie() {
                         </div>
                     </div>
                     <div className="h-[200px] bg-white p-6">
-                        <div
-                            className="flex bg-white shadow-md justify-start md:justify-center rounded-lg  mx-auto py-4 px-2 md:mx-12">
-                            <div
-                                className="flex group rounded-lg mx-1 transition-all duration-300 cursor-pointer justify-center w-16 bg-slate-50 hover:shadow-regal-blue  hover:shadow-lg hover-light-shadow ">
+                        <div className="flex bg-white shadow-md justify-start md:justify-center rounded-lg  mx-auto py-4 px-2 md:mx-12">
+                            {}
+                            <div className="flex group rounded-lg mx-1 transition-all duration-300 cursor-pointer justify-center w-16 bg-slate-50 hover:shadow-regal-blue  hover:shadow-lg hover-light-shadow ">
                                 <div className="flex items-center px-4 py-4">
                                     <div
-                                        onClick={currentDate.getTime() !== today.getTime() ? () => handleClickDatePicker("PREVIOUS") : null}
-                                        className={`text-center ${currentDate.getTime() === today.getTime() ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                                        onClick={currentDate.getTime() >= today.getTime() ? () => handleClickDateButton("PREVIOUS") : null}
+                                        className={`text-center ${currentDate.getTime() < today.getTime() ? 'opacity-50 cursor-not-allowed' : ''}`}>
                                         <p className="text-gray-900 group-hover:text-black text-sm transition-all duration-300">
                                             Previous
                                         </p>
@@ -139,12 +143,13 @@ function ModalFixtureOfMovie() {
                             </div>
                             <div className="flex">
                                 {days.map((day, index) => {
-                                    const tempCurrentDate = currentDate;
-                                    let tempToday = today;
+                                    const tempCurrentDate = new Date(currentDate);
+                                    const tempToday = new Date(today);
+                                    const tempDay = new Date(day)
                                     tempCurrentDate.setHours(0, 0, 0, 0);
-                                    day.setHours(0, 0, 0, 0);
+                                    tempDay.setHours(0, 0, 0, 0);
                                     tempToday.setHours(0, 0, 0, 0);
-                                    const isPast = day.getTime() < today.getTime();
+                                    const isPast = tempDay.getTime() < tempToday.getTime();
                                     return (
                                         <>
                                         <div
@@ -152,7 +157,7 @@ function ModalFixtureOfMovie() {
                                                 onClick={() => handleDayClick(day)}
                                                 style={isPast ? { pointerEvents: 'none' } : {}}
                                                 className={`flex group rounded-lg mx-1 transition-all duration-300 cursor-pointer justify-center w-16 ${
-                                                    tempCurrentDate.getTime() === day.getTime() ? 'bg-zinc-400' : ''
+                                                    tempCurrentDate.getTime() === tempDay.getTime() ? 'bg-zinc-400' : ''
                                                 } ${isPast ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-regal-blue hover:shadow-lg hover-light-shadow'}`}
                                             >
                                                 <div className="flex items-center px-4 py-4">
@@ -173,7 +178,7 @@ function ModalFixtureOfMovie() {
                             <div
                                 className="flex group rounded-lg mx-1 transition-all duration-300 cursor-pointer justify-center w-16 bg-slate-50 hover:shadow-regal-blue  hover:shadow-lg hover-light-shadow ">
                                 <div className="flex items-center px-4 py-4">
-                                    <div onClick={() => handleClickDatePicker("NEXT")}
+                                    <div onClick={() => handleClickDateButton("NEXT")}
                                          className="text-center">
                                         <p className="text-gray-900 group-hover:text-black text-sm transition-all duration-300">
                                             Next
@@ -194,14 +199,14 @@ function ModalFixtureOfMovie() {
                         </div>
                         <div className="flex flex-col h-[350px]">
                             {
-                                showtime.length === 0 ? (
+                                showtimes.length === 0 ? (
                                     <span className="text-xl">
                                           Không có lịch chiếu trong khoảng thời gian này
                                         </span>
                                 ) : (
                                     <div className=" min-w-[400px] max-h-[400px]  grid grid-cols-3  gap-3  ">
                                         {
-                                            showtime.map((s, index) => (
+                                            showtimes.map((s, index) => (
                                                 <>
                                                     <div key={index}
                                                          onClick={() => handleSlotClick(index)}
