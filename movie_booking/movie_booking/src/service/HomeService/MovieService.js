@@ -1,10 +1,24 @@
 import axios from "axios";
 
-export const getSearchMovie = async (nameMovie, director, releaseDate, nameStatus, nameKind, actor, page) => {
+
+export const getSearchMovie = async (nameMovie, director, releaseDate, nameStatus, actor, page) => {
     try {
         const response = await axios.get(`http://localhost:8080/api/v1/movie/public/show-search-movie?nameMovie=${nameMovie}`+
-            `&director=${director}&releaseDate=${releaseDate}&nameStatus=${nameStatus}&nameKind=${nameKind}&actor=${actor}&page=${page}`);
-        console.log(response.data)
+            `&director=${director}&releaseDate=${releaseDate}&nameStatus=${nameStatus}&actor=${actor}&page=${page}`);
+        return response.data;
+    } catch (error) {
+        if (error.response && error.response.status === 404) {
+            throw new Error(error.response.data);
+        } else {
+            throw new Error('Có lỗi xảy ra trong quá trình tìm kiếm.');
+        }
+    }
+}
+
+export const getSearchMovieByKindOfFilm = async (nameKind, page) => {
+    try {
+        const response = await axios.get(`http://localhost:8080/api/v1/movie/public/search-movie-by-kind?nameKind=${nameKind}&page=${page}`);
+        console.log(response);
         return response.data;
     } catch (error) {
         if (error.response && error.response.status === 404) {

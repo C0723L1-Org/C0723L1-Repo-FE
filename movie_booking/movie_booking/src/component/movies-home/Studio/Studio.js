@@ -1,28 +1,26 @@
 import React, { useEffect, useState } from "react";
 import * as MovieService from "../../../service/HomeService/MovieService";
 import { useForm } from "react-hook-form";
-import { FiSearch } from "react-icons/fi";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {CgArrowLeft, CgArrowRight} from "react-icons/cg";
+import {FiSearch} from "react-icons/fi";
 
 const Studio = () => {
     const [movies, setMovies] = useState([]);
-    const [kindOfMovie, setKindOfMovie] = useState([]); // Initialize as empty array
-    const [statusMovie, setStatusMovie] = useState([]); // Initialize as empty array
     const [totalPages, setTotalPages] = useState(0);
     const [pageNumber, setPageNumber] = useState(0);
     const { register, handleSubmit, formState: { errors } } = useForm({ criteriaMode: "all" });
 
     useEffect(() => {
         const fetchMovies = async () => {
-            await searchMovieByAll('', '', '', '', '', '', pageNumber);
+            await searchMovieByAll('', '', '', '', '', pageNumber);
         }
         fetchMovies();
     }, [pageNumber]);
 
-    const searchMovieByAll = async (nameMovie, director, releaseDate, nameStatus, nameKind, actor, page) => {
-        const temp = await MovieService.getSearchMovie(nameMovie, director, releaseDate, nameStatus, nameKind, actor, page);
+    const searchMovieByAll = async (nameMovie, director, releaseDate, nameStatus, actor, page) => {
+        const temp = await MovieService.getSearchMovie(nameMovie, director, releaseDate, nameStatus, actor, page);
         setMovies(temp.content);
         setTotalPages(temp.totalPages);
     };
@@ -47,39 +45,21 @@ const Studio = () => {
         return pageNoTags;
     }
 
-    const getKindOfMovies = async () => {
-        const temp = await MovieService.getKindOfMovie();
-        setKindOfMovie(temp);
-    };
-
-    const getStatusMovies = async () => {
-        const temp = await MovieService.getStatusMovie();
-        setStatusMovie(temp);
-    };
-
-    useEffect(() => {
-        const fetchMovies = async () => {
-            await getKindOfMovies();
-            await getStatusMovies();
-        }
-        fetchMovies();
-    }, []);
 
     const onSubmit = async (data) => {
         const nameMovie = data.nameMovie || '';
         const director = data.director || '';
         const releaseDate = data.releaseDate || '';
         const nameStatus = data.nameStatus || '';
-        const nameKind = data.nameKind || '';
         const actor = data.actor || '';
 
-        if (!nameMovie && !director && !releaseDate && !nameStatus && !nameKind && !actor) {
+        if (!nameMovie && !director && !releaseDate && !nameStatus && !actor) {
             toast.warning('Please enter at least one search criteria');
             return;
         }
 
         try {
-            const temp = await MovieService.getSearchMovie(nameMovie, director, releaseDate, nameStatus, nameKind, actor, pageNumber);
+            const temp = await MovieService.getSearchMovie(nameMovie, director, releaseDate, nameStatus, actor, pageNumber);
             setMovies(temp.content);
             setTotalPages(temp.totalPages);
         } catch (e) {
@@ -96,6 +76,30 @@ const Studio = () => {
                     <div className="text-center max-w-[600px] mx-auto">
                         <h1 className="text-2xl font-bold text-gray-900">NHÀ SẢN SUẤT</h1>
                     </div>
+                    <div className="flex items-center mb-4">
+                        <span
+                            className="inline-flex items-center justify-center w-9 h-9 rounded-full border-4 border-blue-100 bg-blue-200 text-blue-800 mr-2">
+                            <FiSearch/>
+                        </span>
+                        <h1 className="text-xl font-medium">Search</h1>
+                    </div>
+                    <form className="space-y-4 w-full" onSubmit={handleSubmit(onSubmit)}>
+                        <div>
+                            <div className="flex flex-col col-span-2">
+                                <label className="font-medium text-sm mb-1" htmlFor="studio">Tên Studio:</label>
+                                <input {...register("director")} type="text" id="studio"
+                                       placeholder="Nhập tên studio"
+                                       className="w-full rounded-lg border border-gray-300 px-3 py-2"/>
+                            </div>
+                        </div>
+                        <div className="grid grid-cols-1">
+                            <button
+                                className="bg-blue-500 justify-center items-center text-white px-5 py-2 rounded-lg mt-4 hover:bg-blue-600"
+                                type="submit">
+                                Tìm kiếm
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
             <div className="space-y-6">
@@ -107,7 +111,8 @@ const Studio = () => {
                                 <h2 className="text-xl font-bold">{movie.studio}</h2>
                             </div>
                             <div className="flex items-center space-x-2 mt-2">
-                                <button className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Thích</button>
+                                <button className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Thích
+                                </button>
                                 <span className="text-gray-600">10000</span>
                             </div>
                         </div>
@@ -119,7 +124,7 @@ const Studio = () => {
                     {pageNumber > 0 && (
                         <a className="h-10 w-15 font-semibold text-gray-800 hover:text-gray-900 text-sm flex items-center justify-center ml-3"
                            onClick={() => handlePage(pageNumber - 1)}>Trang trước
-                            <CgArrowLeft className="fas fa-arrow-right ml-2" />
+                            <CgArrowLeft className="fas fa-arrow-right ml-2"/>
                         </a>
                     )}
                     {showPageNo()}

@@ -8,8 +8,6 @@ import {CgArrowLeft, CgArrowRight} from "react-icons/cg";
 
 const Actor = () => {
     const [movies, setMovies] = useState([]);
-    const [kindOfMovie, setKindOfMovie] = useState([]); // Initialize as empty array
-    const [statusMovie, setStatusMovie] = useState([]); // Initialize as empty array
     const [totalPages, setTotalPages] = useState(0);
     const [pageNumber, setPageNumber] = useState(0);
     const { register, handleSubmit, formState: { errors } } = useForm({ criteriaMode: "all" });
@@ -21,8 +19,8 @@ const Actor = () => {
         fetchMovies();
     }, [pageNumber]);
 
-    const searchMovieByAll = async (nameMovie, director, releaseDate, nameStatus, nameKind, actor, page) => {
-        const temp = await MovieService.getSearchMovie(nameMovie, director, releaseDate, nameStatus, nameKind, actor, page);
+    const searchMovieByAll = async (nameMovie, director, releaseDate, nameStatus, actor, page) => {
+        const temp = await MovieService.getSearchMovie(nameMovie, director, releaseDate, nameStatus, actor, page);
         setMovies(temp.content);
         setTotalPages(temp.totalPages);
     };
@@ -47,39 +45,22 @@ const Actor = () => {
         return pageNoTags;
     }
 
-    const getKindOfMovies = async () => {
-        const temp = await MovieService.getKindOfMovie();
-        setKindOfMovie(temp);
-    };
 
-    const getStatusMovies = async () => {
-        const temp = await MovieService.getStatusMovie();
-        setStatusMovie(temp);
-    };
-
-    useEffect(() => {
-        const fetchMovies = async () => {
-            await getKindOfMovies();
-            await getStatusMovies();
-        }
-        fetchMovies();
-    }, []);
 
     const onSubmit = async (data) => {
         const nameMovie = data.nameMovie || '';
         const director = data.director || '';
         const releaseDate = data.releaseDate || '';
         const nameStatus = data.nameStatus || '';
-        const nameKind = data.nameKind || '';
         const actor = data.actor || '';
 
-        if (!nameMovie && !director && !releaseDate && !nameStatus && !nameKind && !actor) {
+        if (!nameMovie && !director && !releaseDate && !nameStatus && !actor) {
             toast.warning('Please enter at least one search criteria');
             return;
         }
 
         try {
-            const temp = await MovieService.getSearchMovie(nameMovie, director, releaseDate, nameStatus, nameKind, actor, pageNumber);
+            const temp = await MovieService.getSearchMovie(nameMovie, director, releaseDate, nameStatus, actor, pageNumber);
             setMovies(temp.content);
             setTotalPages(temp.totalPages);
         } catch (e) {
