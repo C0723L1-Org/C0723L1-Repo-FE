@@ -1,0 +1,5 @@
+export  const SET_SEAT='SET_SEAT'
+export  const GET_ALL_SELECTED_SEAT='GET_ALL_SELECTED_SEAT'
+export  const GET_USER='GET_USER'
+export  const SET_SHOWTIME='GET_SHOWTIME'
+export  const GET_BOOKING_STATUS='GET_BOOKING_STATUS'

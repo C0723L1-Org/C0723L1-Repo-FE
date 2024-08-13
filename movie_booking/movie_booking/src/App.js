@@ -10,9 +10,6 @@ import ActorPage from "./pages/HomePages/ActorPage";
 import DirectorPage from "./pages/HomePages/DirectorPage";
 import ModalFixtureOfMovie from "./component/booking/ModalFixtureOfMovie";
 import Navbar from "./component/movies-home/Navbar/Navbar";
-
-
-
 function App() {
 
     return (

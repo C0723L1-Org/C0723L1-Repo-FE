@@ -1,20 +1,24 @@
 import request from '../axios-config'
-const getUser = (id)=>{
+const setUser = (id)=>{
     return request.get(`/user/${id}`)
 }
-const getShowtime = (movieId, date)=>{
-    return request.get(`/showtime?movieId=${movieId}&date=${date}`)
+const setShowtime = (showtime)=>{
+    return  showtime
 }
-const getSeat = (id)=>{
-    return request.get(`/seat/${id}`)
+const setSeat = (seat)=>{
+    return seat
 }
-const  createBooking = (booking) =>{
-    return request.post(`/booking/create`,booking)
+const getAllSelectedSeat = (showtimeId,) =>{
+    return request.get(`/seat/public/list`,{
+        params:{
+            showtimeId:showtimeId
+        }
+    })
 }
 const bookingService ={
-    getUser,
-    getShowtime,
-    getSeat,
-    createBooking
+    setUser,
+    setShowtime,
+    setSeat,
+    getAllSelectedSeat
 }
 export default bookingService
