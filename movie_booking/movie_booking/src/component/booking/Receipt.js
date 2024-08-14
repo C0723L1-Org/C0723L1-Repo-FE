@@ -1,47 +1,32 @@
 import './receipt.css'
 import {useEffect, useState} from "react";
-import {PayPalButtons, PayPalScriptProvider, usePayPalScriptReducer} from "@paypal/react-paypal-js";
+import {PayPalButtons} from "@paypal/react-paypal-js";
 import Swal from "sweetalert2";
 import axios from "axios";
+import request from "../../redux/axios-config";
+import {useDispatch, useSelector} from "react-redux";
+import {useNavigate} from "react-router-dom";
+import {setListBooking} from "../../redux/action/booking-action";
 function Receipt(){
+    const dispatch = useDispatch();
+    const navigate = useNavigate()
+    const listBooking = useSelector(state => state.booking)
+    const totalAmount = listBooking.reduce((total, booking) => {
+        return total + booking.seat.price;
+    }, 0);
     const [paymentSelector, setPaymentSelector] = useState()
-    const [amountVND, setAmountVND] = useState(35000)
+    const [amountVND, setAmountVND] = useState(totalAmount)
     const [amountUSD, setAmountUSD] = useState(0)
-    const data = [
-        {
-            title: "Siêu sao âm nhạc",
-            email: "jobs@sailboatui.com",
-            seat: "A1",
-            room: "Room : 3",
-            time: "9:00 - 11:00",
-            date: "26-2-2024",
-            price: "100000 VND"
-        },
-        {
-            title: "Siêu sao âm nhạc",
-            email: "jobs@sailboatui.com",
-            seat: "A1",
-            room: "Room : 3",
-            time: "9:00 - 11:00",
-            date: "26-2-2024",
-            price: "100000 VND"
-        },
-        {
-            title: "Siêu sao âm nhạc",
-            email: "jobs@sailboatui.com",
-            seat: "A1",
-            room: "Room : 3",
-            time: "9:00 - 11:00",
-            date: "26-2-2024",
-            price: "100000 VND"
-        }
-    ];
+    const bookingStatus ={
+        id:"1",
+        name:"Đã thanh toán"
+    }
+
     const handlePaymentChange = (value) =>{
         setPaymentSelector(value);
-        console.log(paymentSelector)
     }
     const onCreateOrder = async (data,actions) => {
-        await console.log(amountUSD.toString())
+        console.log(amountUSD)
         return actions.order.create({
             purchase_units: [
                 {
@@ -55,15 +40,14 @@ function Receipt(){
 
     const onApproveOrder = (data,actions) => {
         return actions.order.capture().then((details) => {
-            Swal.fire({
-                icon: "success",
-                title: "Thanh toán thành công",
-                showConfirmButton: false,
-                timer: 5000
-            });
-        }).then(
-            // lưu dữ liệu vào DB
-        );
+            updateBookings().then(()=>(Swal.fire({
+                    icon: "success",
+                    title: "Thanh toán thành công",
+                    showConfirmButton: false,
+                    timer: 5000
+                }))
+            )
+        })
     }
     const onErrorOrder = (err) =>{
         return Swal.fire({
@@ -72,12 +56,30 @@ function Receipt(){
             text: "Thanh toán không thành công! lỗi :" +err
         });
     }
-    const initialOptions = {
-        clientId: "AQpqoUWuwAhJZxtkl6VGYUzJw-iujAr1mdJhuqp6OGSRhjC4rLLzGf091AHkaNc5ItVnzGZiwv7Eo-M9",
-        currency: "USD",
-        intent: "capture",
+    const updateBookings = async () => {
+        for (const item of listBooking) {
+            let newItem = {
+                ...item,
+                bookingStatus: bookingStatus
+            };
+            try {
+                console.log(newItem)
+                await saveBookingToBackend(newItem);
+            } catch (error) {
+                console.error('Error saving booking:', error);
+            }
+        }
+    };
+    const saveBookingToBackend = async (booking) => {
+        try {
+            console.log(booking)
+            await request.post("/booking/create",booking)
+        } catch (e){
+            console.log(e)
+        }
     };
     useEffect(() => {
+        console.log(listBooking)
         const fetchExchangeRate = async () => {
             try {
                 const response = await axios.get('https://v6.exchangerate-api.com/v6/c6e9382a6961e5a03e3ee78e/latest/VND');
@@ -89,11 +91,53 @@ function Receipt(){
 
         fetchExchangeRate();
     }, []);
+    function handelClickBackSeatScreen() {
+        Swal.fire({
+            title: "Warning!!!",
+            text:"Ary you sure get back to select seat",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                navigate(`/seat`)
+            }
+        });
+
+    }
+    const convertTime = (time) =>{
+        const date = new Date(time);
+        const hour = date.getHours();
+        const minutes = date.getMinutes();
+        return `${hour}:${minutes}`;
+    }
+    const convertEndTime = (time, durationMovie) =>{
+        const date = new Date(time);
+        date.setMinutes(date.getMinutes() + durationMovie);
+        const newIsoString = date.toISOString();
+        return convertTime(newIsoString)
+    }
+    function formatDate(isoString) {
+        const date = new Date(isoString);
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Tháng bắt đầu từ 0
+        const year = date.getFullYear();
+
+        return `${day}/${month}/${year}`;
+    }
+    const removeBooking=(index)=>{
+        const newListBooking =  listBooking.filter((item, i) => index !== i)
+       dispatch(setListBooking(newListBooking))
+    }
     return (
+
         <>
             <div className="py-14  md:px-6 2xl:px-20 2xl:container 2xl:mx-auto dark:bg-gray-800 rounded-3xl mt-10">
                 <div className="w-full flex items-center ml-2">
-                    <button className=" hover:bg-slate-200 text-amber-700 font-semibold hover:text-black py-2 px-4 border border-amber-700 hover:border-transparent rounded ">
+                    <button onClick={() =>handelClickBackSeatScreen()}
+                            className=" hover:bg-slate-200 text-amber-700 font-semibold hover:text-black py-2 px-4 border border-amber-700 hover:border-transparent rounded ">
                         Quay lại
                     </button>
                 </div>
@@ -117,12 +161,12 @@ function Receipt(){
                                     </tr>
                                     </thead>
                                     <tbody className="divide-y divide-gray-100 border-t border-gray-100">
-                                    {data.map((item, index) => (
+                                    {listBooking.map((item, index) => (
                                         <tr className="hover:bg-gray-50" key={index}>
                                             <th className="flex gap-3 px-6 py-4 font-normal text-gray-900">
                                                 <div className="text-sm">
                                                     <div className="font-medium text-gray-700">
-                                                        {item.title}
+                                                        {item.showTime.movie.nameMovie}
                                                     </div>
                                                     <div className="text-gray-400">{item.email}</div>
                                                 </div>
@@ -130,21 +174,22 @@ function Receipt(){
                                             <td className="px-6 py-4">
                                                 <span className="inline-flex items-center gap-1 rounded-full bg-green-50 px-2 py-1 text-base font-normal text-green-600">
                                                   <span className="h-1.5 w-1.5 rounded-full bg-green-600"></span>
-                                                    {item.seat}
+                                                    {item.seat.seatNumber}
                                                 </span>
                                             </td>
-                                            <td className="px-6 py-4">{item.room}</td>
+                                            <td className="px-6 py-4">{item.seat.room.roomName}</td>
                                             <td className="px-6 py-4">
                                                 <div className="flex gap-2">
                                                   <span className="inline-flex items-center gap-1 rounded-full bg-blue-50 px-2 py-1 text-xs font-semibold text-blue-600">
-                                                    {item.time}
+                                                    {convertTime(item.showTime.startTime)} - {convertEndTime(item.showTime.startTime,item.showTime.movie.durationMovie)}
                                                   </span>
                                                 </div>
                                             </td>
-                                            <td className="px-6 py-4">{item.date}</td>
-                                            <td className="px-6 py-4">{item.price}</td>
+                                            <td className="px-6 py-4">{formatDate(item.showTime.startTime)}</td>
+                                            <td className="px-6 py-4">{item.totalAmount}</td>
                                             <td className="px-6 py-4">
-                                                <div className="flex justify-end gap-4">
+                                                <div onClick={() =>removeBooking(index)}
+                                                     className="flex justify-end gap-4">
                                                     <svg
                                                         xmlns="http://www.w3.org/2000/svg"
                                                         fill="none"
@@ -176,7 +221,7 @@ function Receipt(){
                         </p>
                         <div className="flex justify-center items-center w-full bg-orange-100 rounded">
                             <div className="total-money">
-                                200000 VNĐ
+                                {totalAmount} VNĐ
                             </div>
                         </div>
                         <p className="text-lg md:text-xl font-semibold leading-6 xl:leading-5 text-gray-800">
@@ -262,7 +307,6 @@ function Receipt(){
                         {
                             paymentSelector === "PAYPAL" ? (
                                 <div className="w-full">
-                                    <PayPalScriptProvider options={initialOptions}>
                                         <PayPalButtons
                                             style={{ layout: "vertical" }}
                                             createOrder={(data, actions) => onCreateOrder(data, actions)}
@@ -270,7 +314,6 @@ function Receipt(){
                                             onError={(err) =>onErrorOrder(err)}
                                             fundingSource={"paypal"}
                                         />
-                                    </PayPalScriptProvider>
                                 </div>
                             ):(<div className="w-full flex justify-center items-center">
                                 <button onClick={()=>{console.log(paymentSelector)}}

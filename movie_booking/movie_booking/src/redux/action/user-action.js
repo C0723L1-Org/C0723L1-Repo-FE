@@ -1,13 +1,14 @@
-import bookingService from "../service/bookingService";
-import {GET_USER} from "./type-action";
-export  const setUser =(id) => async (dispatch)=>{
+import request from "../axios-config"
+import {GET_USER, SET_SEAT} from "./type-action";
+export  const getUser =() => async (dispatch)=>{
     try {
-        const  res = await bookingService.setUser(id)
+        const user = JSON.parse(localStorage.getItem('user'))
+        const res = await request.get(`/user/info/${user.id}`)
         dispatch({
-            type:GET_USER,
-            payload:res.data
+            type: GET_USER,
+            payload: res.data
         })
-    }catch (e) {
+    } catch (e){
         console.log(e)
     }
 }

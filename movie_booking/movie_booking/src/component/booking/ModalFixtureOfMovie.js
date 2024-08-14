@@ -1,9 +1,14 @@
 import {useEffect, useState} from "react";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {Bounce, toast} from "react-toastify";
 import request from "../../redux/axios-config";
+import {useDispatch} from "react-redux";
+import {setShowtime} from "../../redux/action/showtime-action";
+import {logDOM} from "@testing-library/react";
 
 function ModalFixtureOfMovie() {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
     const params = useParams()
     const [movie, setMovie] = useState({})
     const [selectedSlot, setSelectedSlot] = useState(null);
@@ -12,9 +17,8 @@ function ModalFixtureOfMovie() {
     const today = new Date()
     const [currentDate, setCurrentDate] = useState(initialDate);
     const [days, setDays] = useState([])
-    const daysOfWeek  = ['Sun', 'Mon', 'Tue', 'Wed', 'Thus', 'Fri', 'Sat'];
-    const [showtimes, setShowtimes] = useState([])
-    const [selectedShowtime, setSelectedShowtime] = useState({})
+    const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thus', 'Fri', 'Sat'];
+    const [listShowtime, setListShowtime] = useState([])
     useEffect(() => {
         const dates = [];
         for (let i = -3; i <= 3; i++) {
@@ -25,8 +29,8 @@ function ModalFixtureOfMovie() {
         }
         setDays(days => dates)
     }, [currentDate]);
-    useEffect( () => {
-        const fetchDataMovie =async()=>{
+    useEffect(() => {
+        const fetchDataMovie = async () => {
             try {
                 const res = await request.get(`/movie/public/${params.id}`)
                 await setMovie(prevState => res.data)
@@ -48,7 +52,7 @@ function ModalFixtureOfMovie() {
         fetchDataMovie()
     }, []);
     useEffect(() => {
-        const fetchDataShowtime = async () =>{
+        const fetchDataShowtime = async () => {
             const timePart = currentDate.toTimeString().split(' ')[0]
             const year = currentDate.getFullYear(); // Lấy năm
             const month = (currentDate.getMonth() + 1).toString().padStart(2, '0')
@@ -57,14 +61,15 @@ function ModalFixtureOfMovie() {
             console.log("Ngày:", formattedDate);
             console.log("Time:", timePart);
             try {
-                const  res = await request.get(`/showtime/public/list`,{
-                    params:{
-                        movieId:params.id,
-                        date:formattedDate,
-                        time:timePart
+                const res = await request.get(`/showtime/public/list`, {
+                    params: {
+                        movieId: params.id,
+                        date: formattedDate,
+                        time: timePart
                     }
                 })
-                await setShowtimes(prevState => res.data)
+                console.log(res.data)
+                await setListShowtime(prevState => res.data)
 
             } catch (e) {
                 toast.error(`Error: ${e}`, {
@@ -83,7 +88,7 @@ function ModalFixtureOfMovie() {
         fetchDataShowtime()
     }, [currentDate]);
     const handleDayClick = (day) => {
-        setCurrentDate(currentDate=>day)
+        setCurrentDate(currentDate => day)
         console.log(currentDate)
     };
     const handleClickDateButton = (param) => {
@@ -98,15 +103,31 @@ function ModalFixtureOfMovie() {
                 setCurrentDate(newDate);
                 break;
         }
-        setCurrentDate(currentDate =>newDate);
-        console.log("cur: " +currentDate)
+        setCurrentDate(currentDate => newDate);
+        console.log("cur: " + currentDate)
 
     }
 
     const handleSlotClick = (index) => {
         setSelectedSlot(index);
-        setSelectedShowtime(prevState => showtimes[index])
+        dispatch(setShowtime(listShowtime[index]))
     };
+
+    function handelClickMoveToSeatScreen() {
+        navigate("/seat")
+    }
+    const convertTime = (time) =>{
+        const date = new Date(time);
+        const hour = date.getHours();
+        const minutes = date.getMinutes();
+        return `${hour}:${minutes}`;
+    }
+    const convertEndTime = (time, durationMovie) =>{
+        const date = new Date(time);
+        date.setMinutes(date.getMinutes() + durationMovie);
+        const newIsoString = date.toISOString();
+        return convertTime(newIsoString)
+    }
     return (
         <>
             {/*<div className="fixed      bg-opacity-50 ">*/}
@@ -128,9 +149,11 @@ function ModalFixtureOfMovie() {
                         </div>
                     </div>
                     <div className="h-[200px] bg-white p-6">
-                        <div className="flex bg-white shadow-md justify-start md:justify-center rounded-lg  mx-auto py-4 px-2 md:mx-12">
+                        <div
+                            className="flex bg-white shadow-md justify-start md:justify-center rounded-lg  mx-auto py-4 px-2 md:mx-12">
                             {}
-                            <div className="flex group rounded-lg mx-1 transition-all duration-300 cursor-pointer justify-center w-16 bg-slate-50 hover:shadow-regal-blue  hover:shadow-lg hover-light-shadow ">
+                            <div
+                                className="flex group rounded-lg mx-1 transition-all duration-300 cursor-pointer justify-center w-16 bg-slate-50 hover:shadow-regal-blue  hover:shadow-lg hover-light-shadow ">
                                 <div className="flex items-center px-4 py-4">
                                     <div
                                         onClick={currentDate.getTime() >= today.getTime() ? () => handleClickDateButton("PREVIOUS") : null}
@@ -152,10 +175,10 @@ function ModalFixtureOfMovie() {
                                     const isPast = tempDay.getTime() < tempToday.getTime();
                                     return (
                                         <>
-                                        <div
+                                            <div
                                                 key={index}
                                                 onClick={() => handleDayClick(day)}
-                                                style={isPast ? { pointerEvents: 'none' } : {}}
+                                                style={isPast ? {pointerEvents: 'none'} : {}}
                                                 className={`flex group rounded-lg mx-1 transition-all duration-300 cursor-pointer justify-center w-16 ${
                                                     tempCurrentDate.getTime() === tempDay.getTime() ? 'bg-zinc-400' : ''
                                                 } ${isPast ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-regal-blue hover:shadow-lg hover-light-shadow'}`}
@@ -199,38 +222,36 @@ function ModalFixtureOfMovie() {
                         </div>
                         <div className="flex flex-col h-[350px]">
                             {
-                                showtimes.length === 0 ? (
+                                listShowtime.length === 0 ? (
                                     <span className="text-xl">
                                           Không có lịch chiếu trong khoảng thời gian này
                                         </span>
                                 ) : (
                                     <div className=" min-w-[400px] max-h-[400px]  grid grid-cols-3  gap-3  ">
                                         {
-                                            showtimes.map((s, index) => (
-                                                <>
+                                            listShowtime.map((s, index) => (
                                                     <div key={index}
                                                          onClick={() => handleSlotClick(index)}
                                                          className={`w-[140px] h-[80px] shadow-xl border-2 border-regal-blue rounded-2xl flex flex-col justify-center items-center
                                                                          gap-2 cursor-pointer pb-4 hover:shadow-regal-blue hover:shadow-lg hover-light-shadow ${
                                                              selectedSlot === index ? 'bg-zinc-400' : 'bg-white'
                                                          }`}>
-                                                        <div
-                                                            className="flex flex-row items-center justify-center gap-2">
+                                                        <div className="flex flex-row items-center justify-center gap-2">
                                                             <div className="flex flex-row items-center justify-center">
-                                                                <span>{s.startTime}</span>
+                                                                <span>{convertTime(s.startTime)}</span>
                                                             </div>
                                                             <span>-</span>
                                                             <div className="flex items-center justify-center">
-                                                                <span>{s.startTime + s.movie.durationMovie}</span>
+                                                                <span>{convertEndTime(s.startTime,s.movie.durationMovie)}</span>
                                                             </div>
                                                         </div>
                                                         <span className="flex items-center">
                                                               <span className="h-px flex-1 bg-black">
-                                                                {s.room.name}
+                                                                {s.room.roomName}
                                                               </span>
-                                                            </span>
+                                                        </span>
                                                     </div>
-                                                </>)
+                                                )
                                             )
                                         }
                                     </div>
@@ -239,7 +260,7 @@ function ModalFixtureOfMovie() {
                             {/*bước kế tiếp*/}
                             <div>
                                 <div className="w-full  h-[250px] flex flex-col-reverse justify-items-end items-center">
-                                    <button
+                                    <button onClick={()=>handelClickMoveToSeatScreen()}
                                         className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded ">
                                         Tiếp theo
                                     </button>

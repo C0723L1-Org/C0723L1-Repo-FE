@@ -1,12 +1,13 @@
-import { SET_SEAT} from "../action/type-action";
+import {SET_SHOWTIME} from "../action/type-action";
 
 const init =[]
 const showtimeReducer = (showtime = init, action) => {
     const {type, payload} = action
     switch (type) {
-        case SET_SEAT:
+        case SET_SHOWTIME:
             return payload
-
+        default:
+            return showtime
     }
 }
 export default showtimeReducer;
