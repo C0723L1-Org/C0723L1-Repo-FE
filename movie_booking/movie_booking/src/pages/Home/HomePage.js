@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import Feed from "../../component/movies-home/Feed/Feed";
-import TopMovies from "../../component/movies-home/TopMovies/TopMovies";
-import MovieShowing from "../../component/movies-home/Movies/MovieShowing";
-import MovieComming from "../../component/movies-home/Movies/MovieComming";
-import Modal from "../../component/movies-home/Modal/Modal";
+import Feed from "../../component/Home/Feed/Feed";
+import TopMovies from "../../component/Home/TopMovies/TopMovies";
+import MovieShowing from "../../component/Home/Movies/MovieShowing";
+import MovieComming from "../../component/Home/Movies/MovieComming";
+import Modal from "../../component/Home/Modal/Modal";
+import {Main} from "../../layout/main/Main";
 
 const HomePage = () => {
     const [showModal, setShowModal] = useState(true);
@@ -28,13 +29,15 @@ const HomePage = () => {
     };
 
     return (
-        <div className="no-scrollbar">
-            <Feed />
-            <TopMovies />
-            <MovieShowing />
-            <MovieComming />
-            <Modal showModal={showModal} setShowModal={setShowModal} />
-        </div>
+        <Main content={
+            <div>
+                <Feed />
+                <TopMovies />
+                <MovieShowing />
+                <MovieComming />
+                <Modal showModal={showModal} setShowModal={setShowModal} />
+            </div>
+        }/>
     );
 };
 

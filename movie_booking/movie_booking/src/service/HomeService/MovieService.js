@@ -69,20 +69,3 @@ export const getStatusMovie = async () => {
         return [];
     }
 };
-
-// export const getMovieAvatars = async (nameSearch, page) => {
-//     try {
-//         if (page < 1) {
-//             page = 1;
-//         }
-//         const response = await axios.get(
-//             `http://localhost:8080/api/v1/movie?searchContent=${nameSearch}` +
-//             `&_page=${page}&_limit=5`
-//         );
-//
-//         return response.data;
-//     } catch (e) {
-//         console.error("Error finding Movies:", e);
-//         return [];
-//     }
-// };

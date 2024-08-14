@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import * as MovieService from "../../../service/HomeService/MovieService";
+import * as MovieService from "../../service/HomeService/MovieService";
 import { infinity } from 'ldrs'
+import {Main} from "../../layout/main/Main";
 infinity.register()
 const Comming = () => {
     const [listFilmComming, setListFilmComming] = useState([]);
@@ -17,6 +18,7 @@ const Comming = () => {
     };
 
     return (
+        <Main content={
         <div className="mt-14 mb-12">
             <div className="container">
                 <infinity
@@ -78,6 +80,7 @@ const Comming = () => {
                 </infinity>
             </div>
         </div>
+        }/>
     );
 };
 

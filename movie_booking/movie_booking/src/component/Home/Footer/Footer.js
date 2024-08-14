@@ -51,7 +51,7 @@ const Footer = () => {
                 <div className="grid md:grid-cols-3 pv-44 pt-5">
                     {/*Company Detail*/}
                     <div className="py-5 px-4">
-                        <a href="/" className="font-bold text-xl sm:text-3xl flex text-justify mb-3 items-center ">
+                        <a href="/movie_booking/movie_booking/public" className="font-bold text-xl sm:text-3xl flex text-justify mb-3 items-center ">
                             <MdLocalMovies className=" w-10 h-auto text-red-600 "/>
                             CINEMA
                         </a>
@@ -89,8 +89,8 @@ const Footer = () => {
                             </ul>
                         </div>
                         {/*Social Link*/}
-                        <div className="py-5 px-4">
-                            <div className="flex">
+                        <div className="py-5 px-12">
+                            <div className="flex gap-4">
                                 <a href="#" className="">
                                     <FaFacebookF className="text-3xl hover:text-blue-400"/>
                                 </a>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import * as MovieService from "../../../service/HomeService/MovieService";
+import * as MovieService from "../../service/HomeService/MovieService";
+import {Main} from "../../layout/main/Main";
 
 const Showing = () => {
     const [listFilmShowing, setListFilmShowing] = useState([]);
@@ -16,6 +17,7 @@ const Showing = () => {
     };
 
     return (
+        <Main content={
         <div className="mt-14 mb-12">
             <div className="container">
                 <div className="grid grid-rows-1 grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 place-items-center">
@@ -67,6 +69,7 @@ const Showing = () => {
                 </div>
             </div>
         </div>
+        }/>
     );
 };
 

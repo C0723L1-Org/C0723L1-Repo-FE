@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import * as MovieService from "../../../service/HomeService/MovieService";
+import * as MovieService from "../../service/HomeService/MovieService";
 import { useForm } from "react-hook-form";
 import { FiSearch } from "react-icons/fi";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {CgArrowLeft, CgArrowRight} from "react-icons/cg";
+import {Main} from "../../layout/main/Main";
 
 const Actor = () => {
     const [movies, setMovies] = useState([]);
@@ -70,6 +71,7 @@ const Actor = () => {
     }
 
     return (
+        <Main content={
         <div className="container mx-auto mt-8 mb-10 px-4">
             <ToastContainer />
             <div className="flex justify-center items-center mb-4">
@@ -137,6 +139,7 @@ const Actor = () => {
                 </div>
             </div>
         </div>
+        }/>
     );
 };
 

@@ -1,17 +1,20 @@
 import React, {useEffect} from 'react';
-import FAQ from "../../component/movies-home/q&a/FAQ";
-import Comments from "../../component/movies-home/Support/Comments";
-import Assess from "../../component/movies-home/Assess/Assess";
+import FAQ from "../../component/Home/q&a/FAQ";
+import Comments from "../../component/Home/Support/Comments";
+import Assess from "../../component/Home/Assess/Assess";
+import {Main} from "../../layout/main/Main";
 const SupportPage = () => {
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
     return (
+    <Main content={
         <div>
             <FAQ/>
             <Comments/>
             <Assess />
         </div>
+    }/>
     );
 };
 

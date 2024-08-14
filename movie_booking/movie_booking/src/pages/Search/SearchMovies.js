@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from "react";
-import * as MovieService from "../../../service/HomeService/MovieService";
+import * as MovieService from "../../service/HomeService/MovieService";
 import { useForm } from "react-hook-form";
 import { FiSearch } from "react-icons/fi";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { CgArrowLeft, CgArrowRight } from "react-icons/cg";
+import { treadmill } from 'ldrs'
+import {Main} from "../../layout/main/Main";
+
+treadmill.register()
 
 const SearchMovies = () => {
     const [movies, setMovies] = useState([]);
@@ -16,19 +20,25 @@ const SearchMovies = () => {
     const [pageNumber1, setPageNumber1] = useState(0);
     const [totalPages1, setTotalPages1] = useState(0);
     const [kind, setKind] = useState('');
-
+    const [loading, setLoading] = useState(true);
     const { register, handleSubmit, formState: { errors } } = useForm({ criteriaMode: "all" });
 
     useEffect(() => {
         const fetchMovies = async () => {
+            setLoading(true);
+            await new Promise(resolve => setTimeout(resolve, 1500));
             await searchMovieByAll('', '', '', '', '', pageNumber);
+            setLoading(false);
         };
         fetchMovies();
     }, [pageNumber]);
 
     useEffect(() => {
         const fetchMoviesByKindOfFilm = async () => {
+            setLoading(true);
+            await new Promise(resolve => setTimeout(resolve, 2000));
             await searchMovieByKindOfFilm(kind, pageNumber1);
+            setLoading(false);
         };
         fetchMoviesByKindOfFilm();
     }, [kind, pageNumber1]);
@@ -38,7 +48,6 @@ const SearchMovies = () => {
             const response = await MovieService.getSearchMovie(nameMovie, director, releaseDate, nameStatus, actor, page);
             setMovies(response.content);
             setTotalPages(response.totalPages);
-            console.log(response.totalPages);
         } catch (error) {
             console.error("Error fetching movies:", error);
             toast.warning('Error fetching movies.');
@@ -50,13 +59,11 @@ const SearchMovies = () => {
             const response = await MovieService.getSearchMovieByKindOfFilm(nameKind, page);
             setMoviesKind(response.content);
             setTotalPages1(response.totalPages);
-            console.log(response.totalPages);
         } catch (error) {
             console.error("Error fetching movies by kind:", error);
             toast.warning('Error fetching movies by kind.');
         }
     };
-
 
     const handlePage = (pageNo) => {
         setPageNumber(pageNo);
@@ -74,7 +81,6 @@ const SearchMovies = () => {
         ));
     };
 
-
     const handlePage1 = (pageNo1) => {
         setPageNumber1(pageNo1);
     };
@@ -90,7 +96,6 @@ const SearchMovies = () => {
             </a>
         ));
     };
-
 
     const getKindOfMovies = async () => {
         try {
@@ -128,20 +133,25 @@ const SearchMovies = () => {
     const onSubmit = async (data) => {
         const { nameMovie = '', director = '', releaseDate = '', nameStatus = '', actor = '' } = data;
         if (!nameMovie && !director && !releaseDate && !nameStatus && !actor) {
-            toast.warning('Please enter at least one search criterion.');
+            toast.warning('Hãy nhập hoặc chọn một trường bất kỳ!');
             return searchMovieByAll('', '', '', '', '', pageNumber);
         }
 
         try {
+            setLoading(true);
+            await new Promise(resolve => setTimeout(resolve, 2000));
             await searchMovieByAll(nameMovie, director, releaseDate, nameStatus, actor, pageNumber);
+            setLoading(false); // End loading
         } catch (error) {
             console.error("Search error:", error);
             toast.warning('No results found.');
             setMovies([]);
+            setLoading(false);
         }
     };
 
     return (
+        <Main content={
         <div className="container mx-auto mt-8 mb-10 px-4">
             <ToastContainer />
             <div className="flex justify-center items-center mb-4">
@@ -155,13 +165,15 @@ const SearchMovies = () => {
                         </span>
                         <h1 className="text-xl font-medium">Search</h1>
                     </div>
-                    <div className="flex flex-col mb-4">
-                        <label className="font-medium text-sm mb-1" htmlFor="kind">Loại phim:</label>
+                    <div className="flex flex-col mb-4 mx-auto">
+                        <label  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white" htmlFor="kind">Loại phim:</label>
                         <select
                             name="kind"
                             onChange={handleSearch}
                             id="kind"
-                            className="w-full rounded-lg border border-gray-300 py-2 text-center"
+                            className="w-full rounded-lg border border-gray-300 py-2 text-center
+                            bg-gray-50 text-gray-900 text-sm  focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500
+                            "
                         >
                             <option value="">--Chọn loại phim--</option>
                             {kindOfMovie.map((item, index) => (
@@ -170,6 +182,7 @@ const SearchMovies = () => {
                         </select>
                     </div>
                     <form className="space-y-4 w-full" onSubmit={handleSubmit(onSubmit)}>
+
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                             <div className="flex flex-col">
                                 <label className="font-medium text-sm mb-1" htmlFor="nameMovie">Tên phim:</label>
@@ -239,7 +252,15 @@ const SearchMovies = () => {
                     </form>
                 </div>
             </div>
-            {!kind ? (
+            {loading ? (
+                <div className="flex items-center justify-center py-16">
+                    <l-treadmill
+                        size="100"
+                        speed="1.3"
+                        color="blue"
+                    ></l-treadmill>
+                </div>
+            ) : !kind ? (
                 <div className="space-y-6">
                     {movies.map(movie => (
                         <div key={movie.id}
@@ -292,20 +313,20 @@ const SearchMovies = () => {
                         </div>
                     ))}
                     <div className="flex items-center justify-center py-8">
-                        <div className="flex space-x-2">
+                        <div className="flex space-x-4">
                             {pageNumber1 > 0 && (
                                 <a
-                                    className="h-10 w-15 font-semibold text-gray-800 hover:text-gray-900 text-sm flex items-center justify-center ml-3"
+                                    className="h-10 px-4 font-semibold text-gray-800 bg-gray-200 hover:bg-gray-300 text-sm flex items-center justify-center rounded-full transition duration-200"
                                     onClick={() => handlePage1(pageNumber1 - 1)}
                                 >
+                                    <CgArrowLeft className="mr-2"/>
                                     Trang trước
-                                    <CgArrowLeft className="ml-2"/>
                                 </a>
                             )}
                             {showPageNo1()}
                             {pageNumber1 < totalPages1 - 1 && (
                                 <a
-                                    className="h-10 w-15 font-semibold text-gray-800 hover:text-gray-900 text-sm flex items-center justify-center ml-3"
+                                    className="h-10 px-4 font-semibold text-gray-800 bg-gray-200 hover:bg-gray-300 text-sm flex items-center justify-center rounded-full transition duration-200"
                                     onClick={() => handlePage1(pageNumber1 + 1)}
                                 >
                                     Trang sau
@@ -314,9 +335,11 @@ const SearchMovies = () => {
                             )}
                         </div>
                     </div>
+
                 </div>
             )}
         </div>
+        }/>
     );
 };
 
