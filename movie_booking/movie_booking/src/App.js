@@ -10,9 +10,6 @@ import ActorPage from "./pages/HomePages/ActorPage";
 import DirectorPage from "./pages/HomePages/DirectorPage";
 import ModalFixtureOfMovie from "./component/booking/ModalFixtureOfMovie";
 import Navbar from "./component/movies-home/Navbar/Navbar";
-
-
-
 function App() {
 
     return (
@@ -26,7 +23,7 @@ function App() {
                     <Route path="/comming" element={<CommingPage/>}/>
                     <Route path="/actor" element={<ActorPage/>}/>
                     <Route path="/director" element={<DirectorPage/>}/>
-                    <Route path="/movie" element={<ModalFixtureOfMovie/>}/>
+                    <Route path="/movie/:id" element={<ModalFixtureOfMovie/>}/>
                 </Route>
                 {/*<Route path="*" element={<PageNotFound/>}/>*/}
             </Routes>

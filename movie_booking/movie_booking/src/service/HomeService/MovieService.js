@@ -1,8 +1,10 @@
 import axios from "axios";
+import request from "../../redux/axios-config";
+
 
 export const getSearchMovie = async (nameMovie, director, releaseDate, nameStatus, nameKind, actor, page) => {
     try {
-        const response = await axios.get(`http://localhost:8080/api/v1/movie/public/show-search-movie?nameMovie=${nameMovie}`+
+        const response = await request.get(`/movie/public/show-search-movie?nameMovie=${nameMovie}`+
             `&director=${director}&releaseDate=${releaseDate}&nameStatus=${nameStatus}&nameKind=${nameKind}&actor=${actor}&page=${page}`);
         console.log(response.data)
         return response.data;
@@ -17,7 +19,7 @@ export const getSearchMovie = async (nameMovie, director, releaseDate, nameStatu
 
 export const getMovieComming = async () => {
     try {
-        const response = await axios.get(`http://localhost:8080/api/v1/movie/public/show-list-movie-comming`);
+        const response = await request.get(`/movie/public/show-list-movie-comming`);
         console.log(response.data)
         return response.data;
     } catch (error) {
@@ -27,7 +29,7 @@ export const getMovieComming = async () => {
 };
 export const getMovieShowing = async () => {
     try {
-        const response = await axios.get(`http://localhost:8080/api/v1/movie/public/show-list-movie-showing`);
+        const response = await request.get(`/movie/public/show-list-movie-showing`);
         console.log(response.data)
         return response.data;
     } catch (error) {
@@ -37,7 +39,7 @@ export const getMovieShowing = async () => {
 };
 export const getKindOfMovie = async () => {
     try {
-        const response = await axios.get(`http://localhost:8080/api/v1/movie/public/show-list-kindofmovie`);
+        const response = await request.get(`/movie/public/show-list-kindofmovie`);
         console.log(response.data)
         return response.data;
     } catch (error) {
@@ -47,7 +49,7 @@ export const getKindOfMovie = async () => {
 };
 export const getStatusMovie = async () => {
     try {
-        const response = await axios.get(`http://localhost:8080/api/v1/movie/public/show-list-statusmovie`);
+        const response = await request.get(`/movie/public/show-list-statusmovie`);
         console.log(response.data)
         return response.data;
     } catch (error) {
