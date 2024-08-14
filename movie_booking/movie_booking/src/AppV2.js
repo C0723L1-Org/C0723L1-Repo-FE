@@ -23,7 +23,7 @@ function AppV2() {
                     <Routes>
                         <Route path="/" element={<Navbar/>}>
                             <Route path="/movie/:id" element={<ModalFixtureOfMovie/>}/>
-                            <Route path="/seat" element={<SeatScreen/>}/>
+                            <Route path="/seat/:id" element={<SeatScreen/>}/>
                             <Route path="/receipt" element={<Receipt/>}/>
                         </Route>
                         {/*<Route path="*" element={<PageNotFound/>}/>*/}

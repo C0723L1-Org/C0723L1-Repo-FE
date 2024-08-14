@@ -4,12 +4,13 @@ import {useEffect, useState} from "react";
 import {Bounce, toast} from "react-toastify";
 import {useDispatch, useSelector} from "react-redux";
 import {removeSeat, setSeat} from "../../redux/action/seat-action";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import Swal from "sweetalert2";
 import {setListBooking} from "../../redux/action/booking-action";
 
 function SeatScreen(){
     const dispatch = useDispatch();
+    const param = useParams()
     const navigate = useNavigate();
     const listSeat = useSelector(state => state.seat);
     const showtime = useSelector(state => state.showtime)
@@ -19,9 +20,13 @@ function SeatScreen(){
     const [occupiedSeats, setOccupiedSeats] = useState([])
     useEffect(() => {
         const fetchDateSeatSelected = async () =>{
-            console.log(showtime)
+            // console.log(showtime)
             try {
-                let res = await request.get("/seat/public/list")
+                let res = await request.get("/seat/public/list",{
+                    params:{
+                        showtimeId : showtime.id
+                    }
+                })
                 console.log(res.data)
                 setOccupiedSeats(prevState => res.data)
             } catch (e) {
@@ -39,9 +44,10 @@ function SeatScreen(){
             }
         }
         fetchDateSeatSelected()
+
     }, []);
     const isSeatSelected = (seatNumber) => {
-        return listSeat.some(seat => seat.seatNumber === seatNumber);
+return listSeat.some(seat => seat.seatNumber === seatNumber);
     };
     const isSeatOccupied = (seatNumber) => {
         const newArray = [...occupiedSeats];
@@ -49,12 +55,25 @@ function SeatScreen(){
     };
 
     const handleSeatClick = (seatNumber) => {
-        console.log(showtime.room.id)
-        if (listSeat.includes(seatNumber)) {
-            dispatch(removeSeat(showtime.room.id,seatNumber));
-        } else {
-            dispatch(setSeat(showtime.room.id,seatNumber));
+        if(!(showtime)){
+            Swal.fire({
+                title: "Warning!!!",
+                text:"Please choose showtime before choose seat",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Ok!"
+            }).then(
+                navigate(`/movie/${param.id}`)
+            )}else{
+            if (listSeat.some(s => s.seatNumber === seatNumber)) {
+                dispatch(removeSeat(showtime.room.id,seatNumber));
+            } else {
+                dispatch(setSeat(showtime.room.id,seatNumber));
+            }
         }
+
         console.log(listSeat)
     };
     const creatListBooking =() =>{
@@ -150,7 +169,7 @@ function SeatScreen(){
                        </div>
                    ))}
                    <p className="text">
-                       Bạn đã chọn <span id="count">0</span> ghế
+                       Bạn đã chọn <span id="count">{listSeat.length}</span> ghế
                    </p>
                    <div className="flex justify-between items-center w-full mt-5">
                        <div className="w-full  flex justify-center items-center">

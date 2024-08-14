@@ -102,7 +102,7 @@ function Receipt(){
             confirmButtonText: "Yes!"
         }).then((result) => {
             if (result.isConfirmed) {
-                navigate(`/seat`)
+                navigate(`/seat/${listBooking.showtime.movie.id}`)
             }
         });
 

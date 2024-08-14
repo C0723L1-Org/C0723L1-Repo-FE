@@ -2,12 +2,14 @@ import {useEffect, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import {Bounce, toast} from "react-toastify";
 import request from "../../redux/axios-config";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {setShowtime} from "../../redux/action/showtime-action";
-import {logDOM} from "@testing-library/react";
+import showing from "../movies-home/Showing/Showing";
+import Swal from "sweetalert2";
 
 function ModalFixtureOfMovie() {
     const dispatch = useDispatch();
+    const showtime = useSelector(state => state.showtime)
     const navigate = useNavigate();
     const params = useParams()
     const [movie, setMovie] = useState({})
@@ -58,8 +60,6 @@ function ModalFixtureOfMovie() {
             const month = (currentDate.getMonth() + 1).toString().padStart(2, '0')
             const day = currentDate.getDate().toString().padStart(2, '0');
             const formattedDate = `${year}-${month}-${day}`
-            console.log("Ngày:", formattedDate);
-            console.log("Time:", timePart);
             try {
                 const res = await request.get(`/showtime/public/list`, {
                     params: {
@@ -114,20 +114,27 @@ function ModalFixtureOfMovie() {
     };
 
     function handelClickMoveToSeatScreen() {
-        navigate("/seat")
+        console.log(showtime)
+        if (showtime) {
+            navigate(`/seat/${movie.id}`)
+        } else {
+            Swal.fire({
+                title: "Warning!!!",
+                text:"Please choose showtime before choose seat",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Ok!"
+            })
+        }
+
     }
     const convertTime = (time) =>{
-        const date = new Date(time);
-        const hour = date.getHours();
-        const minutes = date.getMinutes();
-        return `${hour}:${minutes}`;
+        return time.substring(0, 5);
     }
-    const convertEndTime = (time, durationMovie) =>{
-        const date = new Date(time);
-        date.setMinutes(date.getMinutes() + durationMovie);
-        const newIsoString = date.toISOString();
-        return convertTime(newIsoString)
-    }
+
+
     return (
         <>
             {/*<div className="fixed      bg-opacity-50 ">*/}
@@ -240,10 +247,7 @@ function ModalFixtureOfMovie() {
                                                             <div className="flex flex-row items-center justify-center">
                                                                 <span>{convertTime(s.startTime)}</span>
                                                             </div>
-                                                            <span>-</span>
-                                                            <div className="flex items-center justify-center">
-                                                                <span>{convertEndTime(s.startTime,s.movie.durationMovie)}</span>
-                                                            </div>
+
                                                         </div>
                                                         <span className="flex items-center">
                                                               <span className="h-px flex-1 bg-black">
