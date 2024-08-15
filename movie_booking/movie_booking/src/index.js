@@ -10,7 +10,7 @@ import AppV2 from "./AppV2";
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
         <Provider store={store}>
-            <AppV2/>
+            <App/>
         </Provider>
 );
 
