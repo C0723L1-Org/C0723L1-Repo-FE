@@ -3,6 +3,7 @@ import React, {useEffect} from "react";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import routes from "./router/Router";
 import PrivateRoute from "./utils/PrivateRoute";
+import NotFound from "./pages/NotFound/NotFound";
 
 
 function App() {
@@ -30,6 +31,8 @@ function App() {
                         />
                     );
                 })}
+
+                <Route path='*' element={<NotFound/>}/>
             </Routes>
         </Router>
     );

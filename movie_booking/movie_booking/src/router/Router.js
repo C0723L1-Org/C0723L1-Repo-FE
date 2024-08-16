@@ -64,7 +64,7 @@ const routes = [
         private: true,
     },
     {
-        path: '/receipt',
+        path: '/receipt/:id',
         element: <Receipt />,
         private: true,
     },
