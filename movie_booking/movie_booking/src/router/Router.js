@@ -76,7 +76,7 @@ const routes = [
         // private: true,
     },
     {
-        path: '/booking',
+        path: '/ticket',
         element: <ListBooking />,
         // private: true,
     },

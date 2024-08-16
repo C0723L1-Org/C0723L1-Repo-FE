@@ -5,10 +5,19 @@ import routes from "./router/Router";
 import PrivateRoute from "./utils/PrivateRoute";
 import NotFound from "./pages/NotFound/NotFound";
 import {PayPalScriptProvider} from "@paypal/react-paypal-js";
+import {ToastContainer} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 
 function App() {
-
+    const initialOptions = {
+        clientId: "AQpqoUWuwAhJZxtkl6VGYUzJw-iujAr1mdJhuqp6OGSRhjC4rLLzGf091AHkaNc5ItVnzGZiwv7Eo-M9",
+        currency: "USD",
+        intent: "capture",
+    };
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
     return (
         <PayPalScriptProvider options={initialOptions}>
             <Router>
@@ -34,6 +43,7 @@ function App() {
 
                     <Route path='*' element={<NotFound/>}/>
                 </Routes>
+                <ToastContainer />
             </Router>
         </PayPalScriptProvider>
     );
