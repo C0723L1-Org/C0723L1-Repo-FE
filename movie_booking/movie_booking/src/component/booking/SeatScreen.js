@@ -87,7 +87,7 @@ return listSeat.some(seat => seat.seatNumber === seatNumber);
         return listSeat.map(seat => ({
             dateBooking: dateBooking,
             totalAmount: seat.price,
-            user: user,
+            user: null,
             showTime: showtime,
             seat: seat
         }));

@@ -121,7 +121,7 @@ function ModalFixtureOfMovie() {
         } else {
             Swal.fire({
                 title: "Warning!!!",
-                text:"Please choose showtime before choose seat",
+                text:"Vui lòng chọn suất chiếu",
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",

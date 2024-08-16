@@ -12,6 +12,8 @@ function Receipt(){
     const navigate = useNavigate()
     const params = useParams()
     const listBooking = useSelector(state => state.booking)
+    // const userId = useSelector(state => state.user)
+    const userId = 1
     const totalAmount = listBooking.reduce((total, booking) => {
         return total + booking.seat.price;
     }, 0);
@@ -80,13 +82,13 @@ function Receipt(){
     const saveBookingToBackend = async (booking) => {
         try {
             console.log(booking)
-            await request.post("/booking/create",booking)
+            await request.post(`/booking/create/${userId}`,booking)
         } catch (e){
             console.log(e)
         }
     };
     useEffect(() => {
-        console.log(listBooking)
+        console.log(userId)
         document.title = `Movie: ${listBooking[1]?.showTime?.movie?.nameMovie || 'Tên Phim'}` ;
         const fetchExchangeRate = async () => {
             try {
@@ -191,7 +193,7 @@ function Receipt(){
                                                 </div>
                                             </td>
                                             <td className="px-6 py-4">{formatDate(item.showTime.showDate)}</td>
-                                            <td className="px-6 py-4">{item.totalAmount}</td>
+                                            <td className="px-6 py-4">{item.totalAmount} VNĐ</td>
                                             <td className="px-6 py-4">
                                                 <div onClick={() =>removeBooking(index)}
                                                      className="flex justify-end gap-4">
