@@ -7,6 +7,10 @@ import Actor from "../pages/Actor/Actor";
 import Director from "../pages/Director/Director";
 import Studio from "../pages/Studio/Studio";
 import SupportPage from "../pages/Support/SupportPage";
+import SeatScreen from "../component/Booking/SeatScreen";
+import Receipt from "../component/Booking/Receipt";
+import ModalFixtureOfMovie from "../component/Booking/ModalFixtureOfMovie";
+import SearchMovies from "../pages/Search/SearchMovies";
 
 const routes = [
     {
@@ -17,6 +21,10 @@ const routes = [
     {
         path: '/showing',
         element: <Showing />,
+    },
+    {
+        path: '/search-movie',
+        element: <SearchMovies />,
     },
     {
         path: '/comming',
@@ -43,12 +51,21 @@ const routes = [
         element: <SupportPage />,
     },
     {
+        path: '/movie/:id',
+        element: <ModalFixtureOfMovie />,
+    },
+    {
         path: '/login',
         element: <HomePage />,
     },
     {
-        path: '/dashboard',
-        element: <HomePage />,
+        path: '/seat/:id',
+        element: <SeatScreen />,
+        private: true,
+    },
+    {
+        path: '/receipt',
+        element: <Receipt />,
         private: true,
     },
     {
