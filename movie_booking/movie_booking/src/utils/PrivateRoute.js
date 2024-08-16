@@ -1,9 +1,13 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 const isAuthenticated = () => {
-    return localStorage.getItem('user') !== null;
+    const jwt = Cookies.get('jwt');
+    // return jwt !== undefined && jwt.trim() !== '';
+    return true
 };
+
 
 const PrivateRoute = ({ element }) => {
     return isAuthenticated() ? element : <Navigate to="/login" />;
