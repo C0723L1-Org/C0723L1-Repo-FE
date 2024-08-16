@@ -12,6 +12,8 @@ import ModalFixtureOfMovie from "./component/booking/ModalFixtureOfMovie";
 import Navbar from "./component/movies-home/Navbar/Navbar";
 import ListEmployee from "./component/employee/ListEmployee";
 import ListBooking from "./component/booking/ListBooking";
+import {ToastContainer} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 function App() {
 
     return (
@@ -31,9 +33,7 @@ function App() {
                 </Route>
                 {/*<Route path="*" element={<PageNotFound/>}/>*/}
             </Routes>
-            <Routes>
-
-            </Routes>
+            <ToastContainer />
         </BrowserRouter>
     );
 }
