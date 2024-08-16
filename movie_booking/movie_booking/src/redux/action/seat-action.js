@@ -1,4 +1,4 @@
-import {REMOVE_SEAT, SET_SEAT} from "./type-action";
+import {REMOVE_SEAT, SET_SEAT,REMOVE_ALL_SEAT} from "./type-action";
 import request from "../axios-config"
 
 export  const setSeat =(roomId,seatNumber) => async (dispatch)=> {
@@ -28,3 +28,10 @@ export  const removeSeat =(roomId,seatNumber) => async (dispatch)=> {
         payload: res.data
     })
 }
+export  const  removeAllSelectedSeat=()=>(dispatch) =>{
+    dispatch({
+        type: REMOVE_ALL_SEAT,
+        payload: []
+    })
+}
+

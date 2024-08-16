@@ -1,40 +1,42 @@
-
 import "./App.css";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import HomePage from "./pages/HomePages/HomePage.js";
-import SearchPage from "./pages/HomePages/SearchPage.js";
-import ShowingPage from "./pages/HomePages/ShowingPage.js";
-import CommingPage from "./pages/HomePages/CommingPage";
-import SupportPage from "./pages/HomePages/SupportPage";
-import ActorPage from "./pages/HomePages/ActorPage";
-import DirectorPage from "./pages/HomePages/DirectorPage";
-import ModalFixtureOfMovie from "./component/booking/ModalFixtureOfMovie";
-import Navbar from "./component/movies-home/Navbar/Navbar";
-import ListEmployee from "./component/employee/ListEmployee";
-import ListBooking from "./component/booking/ListBooking";
-import {ToastContainer} from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+import React, {useEffect} from "react";
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import routes from "./router/Router";
+import PrivateRoute from "./utils/PrivateRoute";
+import NotFound from "./pages/NotFound/NotFound";
+import {PayPalScriptProvider} from "@paypal/react-paypal-js";
+
+
 function App() {
 
     return (
-        <BrowserRouter>
-            <Routes>
-                <Route path="/" element={<Navbar/>}>
-                    <Route index element={<HomePage/>}/>
-                    <Route path="/search-movie" element={<SearchPage/>}/>
-                    <Route path="/faq" element={<SupportPage/>}/>
-                    <Route path="/showing" element={<ShowingPage/>}/>
-                    <Route path="/comming" element={<CommingPage/>}/>
-                    <Route path="/actor" element={<ActorPage/>}/>
-                    <Route path="/director" element={<DirectorPage/>}/>
-                    <Route path="/movie/:id" element={<ModalFixtureOfMovie/>}/>
-                    <Route exact path='/employee' element={<ListEmployee />}></Route>
-                    <Route exact path='/booking' element={<ListBooking />}></Route>
-                </Route>
-                {/*<Route path="*" element={<PageNotFound/>}/>*/}
-            </Routes>
-            <ToastContainer />
-        </BrowserRouter>
+        <PayPalScriptProvider options={initialOptions}>
+            <Router>
+                <Routes>
+                    {routes.map((route, index) => {
+                        if (route.private) {
+                            return (
+                                <Route
+                                    key={index}
+                                    path={route.path}
+                                    element={<PrivateRoute element={route.element} />}
+                                />
+                            );
+                        }
+                        return (
+                            <Route
+                                key={index}
+                                path={route.path}
+                                element={route.element}
+                            />
+                        );
+                    })}
+
+                    <Route path='*' element={<NotFound/>}/>
+                </Routes>
+            </Router>
+        </PayPalScriptProvider>
     );
 }
+
 export default App;
