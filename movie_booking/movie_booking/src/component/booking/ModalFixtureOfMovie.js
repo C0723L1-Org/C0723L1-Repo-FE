@@ -13,7 +13,6 @@ function ModalFixtureOfMovie() {
     const navigate = useNavigate();
     const params = useParams()
     const [movie, setMovie] = useState({})
-    const [selectedSlot, setSelectedSlot] = useState(null);
     // Lấy ngày hiện tại
     const initialDate = new Date();
     const today = new Date()
@@ -32,10 +31,13 @@ function ModalFixtureOfMovie() {
         setDays(days => dates)
     }, [currentDate]);
     useEffect(() => {
+
         const fetchDataMovie = async () => {
             try {
                 const res = await request.get(`/movie/public/${params.id}`)
+                document.title = `Movie: ${res.data?.nameMovie || 'Tên Phim'}` ;
                 await setMovie(prevState => res.data)
+
             } catch (e) {
                 toast.error(`Error: ${e}`, {
                     position: "bottom-right",
@@ -109,7 +111,6 @@ function ModalFixtureOfMovie() {
     }
 
     const handleSlotClick = (index) => {
-        setSelectedSlot(index);
         dispatch(setShowtime(listShowtime[index]))
     };
 
@@ -241,7 +242,7 @@ function ModalFixtureOfMovie() {
                                                          onClick={() => handleSlotClick(index)}
                                                          className={`w-[140px] h-[80px] shadow-xl border-2 border-regal-blue rounded-2xl flex flex-col justify-center items-center
                                                                          gap-2 cursor-pointer pb-4 hover:shadow-regal-blue hover:shadow-lg hover-light-shadow ${
-                                                             selectedSlot === index ? 'bg-zinc-400' : 'bg-white'
+                                                             showtime?.id === s.id ? 'bg-zinc-400' : 'bg-white'
                                                          }`}>
                                                         <div className="flex flex-row items-center justify-center gap-2">
                                                             <div className="flex flex-row items-center justify-center">

@@ -3,14 +3,14 @@ import request from "../../redux/axios-config"
 import {useEffect, useState} from "react";
 import {Bounce, toast} from "react-toastify";
 import {useDispatch, useSelector} from "react-redux";
-import {removeSeat, setSeat} from "../../redux/action/seat-action";
+import {removeAllSelectedSeat, removeSeat, setSeat} from "../../redux/action/seat-action";
 import {useNavigate, useParams} from "react-router-dom";
 import Swal from "sweetalert2";
 import {setListBooking} from "../../redux/action/booking-action";
 
 function SeatScreen(){
     const dispatch = useDispatch();
-    const param = useParams()
+    const params = useParams()
     const navigate = useNavigate();
     const listSeat = useSelector(state => state.seat);
     const showtime = useSelector(state => state.showtime)
@@ -19,8 +19,10 @@ function SeatScreen(){
     const seatsPerRow = 12;
     const [occupiedSeats, setOccupiedSeats] = useState([])
     useEffect(() => {
+        document.title = `Movie: ${showtime?.movie?.nameMovie || 'Tên Phim'}` ;
+
         const fetchDateSeatSelected = async () =>{
-            // console.log(showtime)
+            console.log(showtime)
             try {
                 let res = await request.get("/seat/public/list",{
                     params:{
@@ -58,15 +60,19 @@ return listSeat.some(seat => seat.seatNumber === seatNumber);
         if(!(showtime)){
             Swal.fire({
                 title: "Warning!!!",
-                text:"Please choose showtime before choose seat",
+                text:"Vui lòng chọn xuất chiếu trước khi chọn ghế ngồi",
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",
                 cancelButtonColor: "#d33",
                 confirmButtonText: "Ok!"
-            }).then(
-                navigate(`/movie/${param.id}`)
-            )}else{
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    navigate(`/movie/${params.id}`)
+                }
+            })
+        }
+        else{
             if (listSeat.some(s => s.seatNumber === seatNumber)) {
                 dispatch(removeSeat(showtime.room.id,seatNumber));
             } else {
@@ -97,7 +103,7 @@ return listSeat.some(seat => seat.seatNumber === seatNumber);
         console.log(showtime)
         Swal.fire({
             title: "Warning!!!",
-            text:"Please check carefully before next step",
+            text:"Vui lòng kiễm tra kỹ trước khi chuyển sang bước tiếp theo",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
@@ -107,7 +113,7 @@ return listSeat.some(seat => seat.seatNumber === seatNumber);
             if (result.isConfirmed) {
                 const listBooking = creatListBooking()
                 await dispatch(setListBooking(listBooking))
-                navigate("/receipt")
+                navigate(`/receipt/${params.id}`)
             }
         });
 
@@ -115,38 +121,45 @@ return listSeat.some(seat => seat.seatNumber === seatNumber);
     function handelClickBackToMovie() {
         Swal.fire({
             title: "Warning!!!",
-            text:"Ary you sure get back to select showtime",
+            text:"Bạn có muốn chọn lại xuất chiếu ?",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
             confirmButtonText: "Yes!"
-        }).then((result) => {
+        }).then(async (result) => {
             if (result.isConfirmed) {
-                navigate(`/movie/${showtime.movie.id}`)
+                await dispatch(removeAllSelectedSeat())
+                navigate(`/movie/${params.id}`)
             }
         });
 
     }
     return (
-       <><div className="flex justify-center align-center rounded-lg">
-           <div className="seat-screen_body w-1/2">
+       <><div className="flex justify-center align-center bg-slate-100 ">
+           <div className="seat-screen_body min-w-[1000px] rounded-lg bg-slate-600">
                <div className="movie-container">
-                   <label>Movie: </label>
-                   <span id="movie"> Siêu sao ca nhạc</span>
+                   <p>
+                       <label>Movie: </label>
+                       <span id="movie"> {showtime?.movie?.nameMovie || 'Tên Phim'}</span>
+                   </p>
+                   <p>
+                       <label>Thời lượng: </label>
+                       <span id="movie"> {showtime?.movie?.durationMovie || "Thời Lượng"} phút</span>
+                   </p>
                </div>
                <ul className="showcase">
                    <li>
                        <div className="seat"></div>
-                       <small>Available</small>
+                       <small className="text-white">Hợp lệ</small>
                    </li>
                    <li>
                        <div className="seat selected"></div>
-                       <small>Selected</small>
+                       <small className="text-white">Đang chọn</small>
                    </li>
                    <li>
                        <div className="seat occupied"></div>
-                       <small>Occupied</small>
+                       <small className="text-white">Đã đặt</small>
                    </li>
                </ul>
                 {/*in ra danh sách ghế*/}
@@ -170,6 +183,11 @@ return listSeat.some(seat => seat.seatNumber === seatNumber);
                    ))}
                    <p className="text">
                        Bạn đã chọn <span id="count">{listSeat.length}</span> ghế
+                   </p>
+                   <p className="text">
+                       Tổng tiền: <span id="count">{listSeat.reduce((total, seat) => {
+                       return total + seat.price;
+                   }, 0)}</span> VNĐ
                    </p>
                    <div className="flex justify-between items-center w-full mt-5">
                        <div className="w-full  flex justify-center items-center">
