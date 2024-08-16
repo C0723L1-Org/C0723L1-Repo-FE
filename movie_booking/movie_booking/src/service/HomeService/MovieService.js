@@ -1,10 +1,10 @@
 import axios from "axios";
 
 
-export const getSearchMovie = async (nameMovie, director, releaseDate, nameStatus, nameKind, actor, page) => {
+export const getSearchMovie = async (nameMovie, director, releaseDate, nameStatus, actor, page) => {
     try {
         const response = await axios.get(`http://localhost:8080/api/v1/movie/public/show-search-movie?nameMovie=${nameMovie}`+
-            `&director=${director}&releaseDate=${releaseDate}&nameStatus=${nameStatus}&nameKind=${nameKind}&actor=${actor}&page=${page}`);
+            `&director=${director}&releaseDate=${releaseDate}&nameStatus=${nameStatus}&actor=${actor}&page=${page}`);
         console.log(response.data)
         return response.data;
     } catch (error) {
