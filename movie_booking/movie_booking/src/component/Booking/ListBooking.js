@@ -3,7 +3,7 @@ import {fetchBookings} from "../../service/BookingService";
 import BookingTable from "./child_list/BookingTable";
 import HeaderBooking from "./child_list/HeaderBooking";
 import Pagination from "../employee/child_list/Pagination";
-import SearchNotFound from "../employee/child_list/SearchNotFound";
+import SearchNotFound from "../Booking/child_list/SearchNotFound";
 import ReceiveBookingModal from "./child_list/ReceiveBookingModal";
 
 const ListBooking = () => {
