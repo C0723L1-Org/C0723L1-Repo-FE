@@ -11,6 +11,7 @@ import SeatScreen from "../component/Booking/SeatScreen";
 import Receipt from "../component/Booking/Receipt";
 import ModalFixtureOfMovie from "../component/Booking/ModalFixtureOfMovie";
 import SearchMovies from "../pages/Search/SearchMovies";
+import {MovieManager} from "../component/movie/MovieManager";
 
 const routes = [
     {
@@ -72,6 +73,18 @@ const routes = [
         path: '*',
         element: <NotFound />,
     },
+    {
+    path: '/movie-manager',
+    element: <MovieManager/>
+    }
+    // {
+    // path: '/movie-manager',
+    // element: <Header />
+    // },
+    // {
+    //     path: '/movie-manager',
+    //     element: <DataNotFound />
+    // }
 ];
 
 export default routes;

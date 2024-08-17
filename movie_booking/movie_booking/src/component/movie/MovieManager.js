@@ -175,7 +175,7 @@ export const MovieManager = () => {
                       <h1 className="text-xl font-medium ">Search</h1>
                   </div>
 
-                  <form className="space-y-2  max-lg:flex-col max-lg:grid " onSubmit={(e) => handleSearchs(e)}>
+                  <form className="space-y-2 max-lg:flex-col" onSubmit={(e) => handleSearchs(e)}>
                       <div className="grid grid-cols-2 gap-5 max-lg:grid-cols-1">
                           <div className="flex-col justify-center items-center">
                               <label className="font-medium text-[14px]" htmlFor="nameMovie">Tên phim:</label>
@@ -189,18 +189,18 @@ export const MovieManager = () => {
                           </div>
                       </div>
 
-                      <div className="flex-col grid grid-cols-5 gap-5 max-lg:grid-cols-1">
+                      <div className="flex-col grid grid-cols-5 gap-5 max-lg:col-span-1">
                           <div className="flex-col justify-center items-center">
                               <label className="font-medium text-[14px]" htmlFor="releaseDateFrom">Ngày phát hành từ:</label>
                               <input type="date" name="releaseDateFrom" id="releaseDateFrom"
                                      className="w-full rounded-lg border border-gray-300 mr-2 px-3 min-xl:py-1"/>
                           </div>
-                          <div className="flex-col clear-both justify-center items-center col-span-3">
+                          <div className="flex-col justify-center items-center">
                               <label className="font-medium text-[14px]" htmlFor="releaseDateTo">Ngày phát hành đến:</label>
                               <input type="date" name="releaseDateTo" id="releaseDateTo"
                                      className="w-full rounded-lg border border-gray-300 mr-2 px-3 min-xl:py-1"/>
                           </div>
-                          <div className="flex-col justify-center items-center col-span-1">
+                          <div className="flex-col justify-center items-center">
                               <label className="font-medium text-[14px]" htmlFor="status">Trạng thái phim:</label>
                               <select name="status" id="status" className="w-full rounded-lg border min-xl:py-1 border-gray-300 mr-2 text-center">
                                   <option value="">--Chọn loại phim--</option>
@@ -211,7 +211,7 @@ export const MovieManager = () => {
                                   }
                               </select>
                           </div>
-                          <div className="flex-col justify-center items-center col-span-2">
+                          <div className="flex-col justify-center items-center col-span-1">
                               <label className="font-medium text-[14px]" htmlFor="director">Đạo diễn:</label>
                               <input type="text" name="director" id="director" placeholder="Nhập đạo diễn phim"
                                      className="w-full rounded-lg border border-gray-300 mr-2 px-3 py-1"/>

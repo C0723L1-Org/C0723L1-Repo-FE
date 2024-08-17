@@ -51,7 +51,7 @@ export const getMovieShowing = async () => {
 };
 export const getKindOfMovie = async () => {
     try {
-        const response = await axios.get(`http://localhost:8080/api/v1/movie/public/show-list-kindofmovie`);
+        const response = await axios.get(`http://localhost:8080/api/v1/movie/private/list-kind-of-film`);
         console.log(response.data)
         return response.data;
     } catch (error) {
@@ -69,6 +69,69 @@ export const getStatusMovie = async () => {
         return [];
     }
 };
+
+export const getFindAllMovie = async (pageNumber , pageSize ) => {
+    try {
+        const response = await axios.get('http://localhost:8080/api/v1/movie/private/list-movie', {
+            params: {
+                pageNumber,
+                pageSize
+            }
+        });
+        console.log(response.data);
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching movies:", error);
+        return { content: [], totalElements: 0 };
+    }
+};
+
+
+export const getFindAllStatus = async () => {
+    try {
+        const response = await axios.get('http://localhost:8080/api/v1/movie/private/list-status-film');
+        console.log(response);
+        return response.data;
+    } catch (error) {
+        console.log(error + " error");
+        return null;
+    }
+};
+
+export const getFindAllKindOfFilm = async () => {
+    try {
+        const response = await axios.get('http://localhost:8080/api/v1/movie/private/list-kind-of-film');
+        console.log(response);
+        return response.data;
+    } catch (error) {
+        console.log(error + " error");
+        return null;
+    }
+};
+
+export const deleteById = async (id) => {
+    try {
+        const response = await axios.put(`http://localhost:8080/api/v1/movie/private/delete/${id}`);
+        return response.data;
+    } catch (error) {
+        console.log(error + " error");
+        return null;
+    }
+};
+
+export const deleteByIds = async (ids) => {
+    try {
+        const params = new URLSearchParams();
+        ids.forEach(id => params.append('id', id));
+
+        const response = await axios.put('http://localhost:8080/api/v1/movie/private/list-delete', null, { params });
+        return response.data;
+    } catch (error) {
+        console.log(error + " error");
+        return null;
+    }
+};
+
 export const searchMovie = async (nameMovie, content, director, releaseDateFrom,
                                   releaseDateTo, nameStatus, actor, pageNumber, pageSize) => {
     try {
