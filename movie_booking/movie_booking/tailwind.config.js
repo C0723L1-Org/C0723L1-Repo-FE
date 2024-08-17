@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./src/**/*.{html,js,jsx,ts,tsx}"],
+  content: ["./src/**/*.{html,js,jsx}"],
   darkMode:"class",
   theme: {
     extend: {
@@ -28,10 +28,10 @@ module.exports = {
         '100': '100',
       },
       spacing: {
-        '-left-0': '-0%', 
+        '-left-0': '-0%',
       },
       height: {
-        '500px': '500px', 
+        '500px': '500px',
       },
     },
   },

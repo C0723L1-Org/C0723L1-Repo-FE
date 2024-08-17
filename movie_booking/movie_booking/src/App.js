@@ -5,6 +5,10 @@ import routes from "./router/Router";
 import PrivateRoute from "./utils/PrivateRoute";
 import NotFound from "./pages/NotFound/NotFound";
 import {PayPalScriptProvider} from "@paypal/react-paypal-js";
+import Login from "./component/Login/Login";
+import ChangePassword from "./component/Information Account/ChangePassword";
+import Register from "./component/Register/Register";
+import HoSo from "./component/Information Account/HoSo";
 import {ToastContainer} from "react-toastify";
 
 
@@ -19,31 +23,29 @@ function App() {
     }, []);
     return (
         <PayPalScriptProvider options={initialOptions}>
-        <Router>
-            <Routes>
-                {routes.map((route, index) => {
-                    if (route.private) {
+            <Router>
+                <Routes>
+                    {routes.map((route, index) => {
+                        if (route.private) {
+                            return (
+                                <Route
+                                    key={index}
+                                    path={route.path}
+                                    element={<PrivateRoute element={route.element} />}
+                                />
+                            );
+                        }
                         return (
                             <Route
                                 key={index}
                                 path={route.path}
-                                element={<PrivateRoute element={route.element} />}
+                                element={route.element}
                             />
                         );
-                    }
-                    return (
-                        <Route
-                            key={index}
-                            path={route.path}
-                            element={route.element}
-                        />
-                    );
-                })}
-
-                <Route path='*' element={<NotFound/>}/>
-            </Routes>
-            <ToastContainer />
-        </Router>
+                    })}
+                </Routes>
+                <ToastContainer />
+            </Router>
         </PayPalScriptProvider>
     );
 }

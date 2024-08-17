@@ -13,6 +13,10 @@ import ModalFixtureOfMovie from "../component/Booking/ModalFixtureOfMovie";
 import SeatScreen from "../component/Booking/SeatScreen";
 import UserBookingManagement from "../component/Booking/UserBookingManagement/UserBookingManagement";
 import Receipt from "../component/Booking/Receipt";
+import Register from "../component/Register/Register";
+import Login from "../component/Login/Login";
+import ChangePassword from "../component/Information Account/ChangePassword";
+import HoSo from "../component/Information Account/HoSo";
 
 
 const routes = [
@@ -59,7 +63,25 @@ const routes = [
     },
     {
         path: '/login',
-        element: <HomePage />,
+        element: <Login />,
+    },
+    {
+        path: '/see-movie-details/:id',
+        element: <SeeMovieDetails />,
+    },
+    {
+        path: '/register',
+        element: <Register/>,
+    },
+    {
+        path: '/change-password',
+        element: <ChangePassword/>,
+        private: true,
+    },
+    {
+        path: '/profile',
+        element: <HoSo/>,
+        private: true,
     },
     {
         path: '/seat/:id',
@@ -76,12 +98,9 @@ const routes = [
         element: <NotFound />,
     },
     {
-        path: '/see-movie-details/:id',
-        element: <SeeMovieDetails />,
-    },
-    {
         path: '/use-booking-management',
         element: <UserBookingManagement />,
+        private: true,
     },
 ];
 
