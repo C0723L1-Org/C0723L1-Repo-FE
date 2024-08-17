@@ -1,8 +1,9 @@
 import {MdLocalMovies} from "react-icons/md";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {IoMdSearch} from "react-icons/io";
 import {FaCaretDown, FaUser} from "react-icons/fa";
 import {useNavigate} from "react-router-dom";
+import Cookies from "js-cookie";
 
 const Menu = [{
     id: 1, name: "Trang Chủ", link: "/",
@@ -30,7 +31,11 @@ const Navbar = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const navigate = useNavigate();
     const [dropdown, setDropdown] = useState(false);
+    const [user, setUser] = useState({})
 
+    useEffect(() => {
+        setUser(JSON.parse(localStorage.getItem('user')))
+    }, []);
 
     const handleSearch = (e) => {
         e.preventDefault();
@@ -46,7 +51,7 @@ const Navbar = () => {
             <div className="bg-slate-100 py-3 sm:py-0">
                 <div className="container flex justify-between  items-center">
                     <div>
-                        <a href="/movie_booking/movie_booking/public" className="font-bold text-xl sm:text-3xl flex items-center ">
+                        <a href="/" className="font-bold text-xl sm:text-3xl flex items-center ">
                             <MdLocalMovies className=" w-10 h-auto text-red-600 "/>
                             CINEMA
                         </a>
@@ -68,7 +73,7 @@ const Navbar = () => {
                         </form>
                     </div>
                     {/* Button */}
-                    {a = !null ? (
+                    {user != null ? (
                         <div className="min-w-32 flex justify-center items-center gap-1">
                             <div className="flex">
                                 <div className="hover:bg-slate-200">
@@ -129,6 +134,7 @@ const Navbar = () => {
                                         <div
                                             onClick={() => {
                                                 localStorage.clear();
+                                                Cookies.set('jwt', '')
                                                 navigate("/");
                                             }}
                                             className="cursor-pointer block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-200 transform dark:text-gray-300 hover:bg-slate-200"
