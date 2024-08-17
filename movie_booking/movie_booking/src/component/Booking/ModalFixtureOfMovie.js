@@ -247,12 +247,7 @@ function ModalFixtureOfMovie() {
                                                          }`}>
                                                         <div className="flex flex-row items-center justify-center gap-2">
                                                             <div className="flex flex-row items-center justify-center">
-                                                                {/*<span>{convertTime(s.startTime)}</span>*/}
-                                                            </div>
-
-                                                            <span>-</span>
-                                                            <div className="flex items-center justify-center">
-                                                                {/*<span>{convertEndTime(s.startTime,s.movie.durationMovie)}</span>*/}
+                                                                <span>{convertTime(s.startTime)}</span>
                                                             </div>
                                                         </div>
                                                         <span className="flex items-center">

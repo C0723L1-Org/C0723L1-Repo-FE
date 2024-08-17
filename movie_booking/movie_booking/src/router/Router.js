@@ -13,6 +13,9 @@ import ModalFixtureOfMovie from "../component/Booking/ModalFixtureOfMovie";
 import SearchMovies from "../pages/Search/SearchMovies";
 import ListEmployee from "../component/employee/ListEmployee";
 import ListBooking from "../component/Booking/ListBooking";
+import {MovieManager} from "../component/movie/MovieManager";
+import CreateMovie from "../component/movie/CreateMovie";
+import UpdateMovie from "../component/movie/UpdateMovie";
 
 const routes = [
     {
@@ -81,9 +84,21 @@ const routes = [
         // private: true,
     },
     {
+        path: '/create-movie',
+        element: <CreateMovie />,
+    },
+    {
+        path: '//update-movie/:movieId',
+        element: <UpdateMovie />,
+    },
+    {
         path: '*',
         element: <NotFound />,
     },
+    {
+    path: '/movie-manager',
+    element: <MovieManager/>
+    }
 ];
 
 export default routes;
