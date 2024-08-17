@@ -1,0 +1,82 @@
+<div className="bg-white dark:bg-gray-900 w-full xl:w-96 flex flex-col justify-between items-center p-6 shadow-lg rounded-lg">
+    <p className="text-xl font-semibold text-gray-900 mb-4">
+        Tổng cộng
+    </p>
+    <div className="flex justify-center items-center w-full bg-orange-100 rounded-lg p-2 mb-4">
+        <div className="text-2xl font-bold text-orange-600">
+            {totalAmount} VNĐ
+        </div>
+    </div>
+    <p className="text-lg font-semibold text-gray-900 mb-4">
+        Phương thức:
+    </p>
+    <ul className="space-y-3 w-full">
+        <li className="flex items-center space-x-3">
+            <input type="radio"
+                   value="PAYPAL"
+                   name="payment-method"
+                   onChange={(event) =>handlePaymentChange(event.target.value)}
+            className="form-radio h-4 w-4 text-blue-600"
+            />
+            <div className="w-8 h-8 overflow-hidden rounded-lg border border-gray-300 shadow-sm">
+                <img
+                        className="w-full h-full object-contain"
+                        alt="PayPal logo"
+                        src="https://www.paypalobjects.com/paypal-ui/logos/svg/paypal-mark-color.svg"
+                />
+            </div>
+            <label className="text-gray-800">PayPal</label>
+        </li>
+        <li className="flex items-center space-x-3">
+            <input type="radio"
+                   value="MOMO"
+                   name="payment-method"
+                   onChange={(event) =>handlePaymentChange(event.target.value)}
+            className="form-radio h-4 w-4 text-pink-600"
+            />
+            <div className="w-8 h-8 overflow-hidden rounded-lg border border-gray-300 shadow-sm">
+                <img
+                        className="w-full h-full object-contain"
+                        alt="MOMO logo"
+                        src="https://iguov8nhvyobj.vcdn.cloud/media/catalog/product/placeholder/default/momo_icon.png"
+                />
+            </div>
+            <label className="text-gray-800">MOMO</label>
+        </li>
+        <li className="flex items-center space-x-3">
+            <input type="radio"
+                   value="ZALOPAY"
+                   name="payment-method"
+                   onChange={(event) =>handlePaymentChange(event.target.value)}
+            className="form-radio h-4 w-4 text-green-600"
+            />
+            <div className="w-8 h-8 overflow-hidden rounded-lg border border-gray-300 shadow-sm">
+                <img
+                        className="w-full h-full object-contain"
+                        alt="Zalopay logo"
+                        src="https://iguov8nhvyobj.vcdn.cloud/media/catalog/product/placeholder/default/icon-HOT-96x96.png"
+                />
+            </div>
+            <label className="text-gray-800">Zalopay</label>
+        </li>
+        <li className="flex items-center space-x-3">
+            <input type="radio"
+                   value="VNPAY"
+                   name="payment-method"
+                   onChange={(event) =>handlePaymentChange(event.target.value)}
+            className="form-radio h-4 w-4 text-red-600"
+            />
+            <div className="w-8 h-8 overflow-hidden rounded-lg border border-gray-300 shadow-sm">
+                <img
+                        className="w-full h-full object-contain"
+                        alt="VNPAY logo"
+                        src="https://iguov8nhvyobj.vcdn.cloud/media/catalog/product/placeholder/default/vnpay_newlogo.png"
+                />
+            </div>
+            <label className="text-gray-800">VNPAY</label>
+        </li>
+    </ul>
+    <button className="mt-6 px-4 py-2 bg-blue-600 text-white text-lg font-medium rounded-lg shadow-md hover:bg-blue-700">
+        Thanh Toán
+    </button>
+</div>

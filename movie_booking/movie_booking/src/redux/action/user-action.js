@@ -1,12 +1,15 @@
 import request from "../axios-config"
 import {GET_USER, SET_SEAT} from "./type-action";
-export  const getUser =() => async (dispatch)=>{
+export  const getUser =() => (dispatch)=>{
     try {
         const user = JSON.parse(localStorage.getItem('user'))
-        const res = await request.get(`/user/info/${user.id}`)
+        let userId
+        if(user !=null){
+            userId = user.id
+        } else userId =0
         dispatch({
             type: GET_USER,
-            payload: res.data
+            payload: userId
         })
     } catch (e){
         console.log(e)
