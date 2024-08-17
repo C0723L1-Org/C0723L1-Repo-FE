@@ -5,6 +5,7 @@ import HeaderBooking from "./child_list/HeaderBooking";
 import Pagination from "../Booking/child_list/Pagination";
 import SearchNotFound from "../Booking/child_list/SearchNotFound";
 import ReceiveBookingModal from "./child_list/ReceiveBookingModal";
+import { ClipLoader } from 'react-spinners';
 
 const ListBooking = () => {
     const [bookings, setBookings] = useState([]);
@@ -12,7 +13,7 @@ const ListBooking = () => {
     const [totalPages, setTotalPages] = useState(1);
     const [bookingReceive, setBookingReceive] = useState(null);
     const [valueSearch, setValueSearch] = useState({valueSearch: ''});
-
+    const [isLoading, setIsLoading] = useState(false); // Biến trạng thái loading
     //Cập nhật hiển thị cho vé sau khi nhận thành công
     const handleBookingReceived = (bookingId) => {
         const newBookings = bookings.filter(booking => booking.id !== bookingId);
@@ -21,10 +22,19 @@ const ListBooking = () => {
     };
 
     // Lấy dữ liệu
+    // const fetchData = async (page, valueSearch) => {
+    //     const data = await fetchBookings(page, valueSearch);
+    //     setBookings(data.content || []);
+    //     setTotalPages(data.totalPages);
+    // };
     const fetchData = async (page, valueSearch) => {
+        setIsLoading(true); // Bắt đầu trạng thái loading
         const data = await fetchBookings(page, valueSearch);
-        setBookings(data.content || []);
-        setTotalPages(data.totalPages);
+        setTimeout(() => {
+            setBookings(data.content || []);
+            setTotalPages(data.totalPages);
+            setIsLoading(false); // Kết thúc trạng thái loading sau 2 giây
+        }, 300); // Thời gian chờ 2 giây
     };
 
     const handleOpenModalReceive = (booking) => setBookingReceive(booking);
@@ -67,30 +77,65 @@ const ListBooking = () => {
                 <HeaderBooking onSearch={handleSearch}/>
             </div>
 
-            <div className="tw-table-zone">
-                {/* Table */}
-                <BookingTable
-                    bookings={bookings}
-                    handleOpenModalReceive={handleOpenModalReceive}
-                />
+            {/*<div className="tw-table-zone">*/}
+            {/*    /!* Table *!/*/}
+            {/*    <BookingTable*/}
+            {/*        bookings={bookings}*/}
+            {/*        handleOpenModalReceive={handleOpenModalReceive}*/}
+            {/*    />*/}
+            {/*</div>*/}
+
+            {/*{bookings?.length === 0 && (*/}
+            {/*    <div className=" mx-16 h-10 ">*/}
+            {/*        <SearchNotFound onFetchData={() => {*/}
+            {/*            setValueSearch({valueSearch: ''})*/}
+            {/*            // fetchData(1, {valueSearch: ''})*/}
+            {/*        }*/}
+            {/*        }/>*/}
+            {/*    </div>*/}
+            {/*)}*/}
+            <div>
+                {isLoading ? (
+                    <div className="flex justify-center items-center h-full">
+                        <ClipLoader color="#123abc" loading={isLoading} size={40}/> {/* Vòng tròn loading */}
+                    </div>
+                ) : (
+                    <>
+                        {bookings.length > 0 ? (
+                            <div className="tw-table-zone">
+                                {/* Table */}
+                                <BookingTable
+                                    bookings={bookings}
+                                    handleOpenModalReceive={handleOpenModalReceive}
+                                />
+                            </div>
+                        ) : (
+                            <div className="mx-16 h-10">
+                                <SearchNotFound onFetchData={() => {
+                                    setValueSearch({valueSearch: ''});
+                                }}/>
+                            </div>
+                        )}
+                    </>
+                )}
             </div>
 
-            {bookings?.length === 0 && (
-                <div className=" mx-16 h-10 ">
-                    <SearchNotFound onFetchData={() => {
-                        setValueSearch({valueSearch: ''})
-                        // fetchData(1, {valueSearch: ''})
-                    }
-                    }/>
-                </div>
+            {/*<Pagination*/}
+            {/*    currentPage={currentPage}*/}
+            {/*    totalPages={totalPages}*/}
+            {/*    onPageChange={handlePageChange}*/}
+            {/*    onPreviousPage={handlePreviousPage}*/}
+            {/*    onNextPage={handleNextPage}*/}
+            {/*/>*/}
+            {!isLoading && (
+                <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={handlePageChange}
+                    onPreviousPage={handlePreviousPage}
+                    onNextPage={handleNextPage}
+                />
             )}
-            <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={handlePageChange}
-                onPreviousPage={handlePreviousPage}
-                onNextPage={handleNextPage}
-            />
 
             {bookingReceive && (
                 <ReceiveBookingModal
@@ -99,7 +144,7 @@ const ListBooking = () => {
                     onClose={handleCloseModalReceive}
                     onBookingReceived={handleBookingReceived}
                 />
-                )}
+            )}
         </>
 
 
