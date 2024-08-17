@@ -11,6 +11,8 @@ import SeatScreen from "../component/Booking/SeatScreen";
 import Receipt from "../component/Booking/Receipt";
 import ModalFixtureOfMovie from "../component/Booking/ModalFixtureOfMovie";
 import SearchMovies from "../pages/Search/SearchMovies";
+import CreateMovie from "../component/movie/CreateMovie";
+import UpdateMovie from "../component/movie/UpdateMovie";
 
 const routes = [
     {
@@ -67,6 +69,14 @@ const routes = [
         path: '/receipt/:id',
         element: <Receipt />,
         private: true,
+    },
+    {
+        path: '/create-movie',
+        element: <CreateMovie />,
+    },
+    {
+        path: '//update-movie/:movieId',
+        element: <UpdateMovie />,
     },
     {
         path: '*',
