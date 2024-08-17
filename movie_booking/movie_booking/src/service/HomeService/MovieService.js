@@ -69,3 +69,26 @@ export const getStatusMovie = async () => {
         return [];
     }
 };
+export const searchMovie = async (nameMovie, content, director, releaseDateFrom,
+                                  releaseDateTo, nameStatus, actor, pageNumber, pageSize) => {
+    try {
+        const response = await axios.get(`http://localhost:8080/api/v1/movie/private/searches`, {
+            params: {
+                nameMovie,
+                content,
+                director,
+                releaseDateFrom,
+                releaseDateTo,
+                nameStatus,
+                actor,
+                pageNumber,
+                pageSize
+            }
+        });
+        console.log(response.data);
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching movie images:", error);
+        return [];
+    }
+};
