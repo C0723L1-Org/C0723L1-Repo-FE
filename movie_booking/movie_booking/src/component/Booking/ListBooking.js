@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {fetchBookings} from "../../service/BookingService";
 import BookingTable from "./child_list/BookingTable";
 import HeaderBooking from "./child_list/HeaderBooking";
-import Pagination from "../employee/child_list/Pagination";
+import Pagination from "../Booking/child_list/Pagination";
 import SearchNotFound from "../Booking/child_list/SearchNotFound";
 import ReceiveBookingModal from "./child_list/ReceiveBookingModal";
 
@@ -58,6 +58,8 @@ const ListBooking = () => {
     useEffect(() => {
         fetchData(currentPage, valueSearch);
     }, [currentPage,valueSearch]);
+
+
     return (
         <>
             <div className="tw-custom-header-table-zone sticky top-0 z-50">
@@ -77,7 +79,7 @@ const ListBooking = () => {
                 <div className=" mx-16 h-10 ">
                     <SearchNotFound onFetchData={() => {
                         setValueSearch({valueSearch: ''})
-                        fetchData(1, valueSearch)
+                        // fetchData(1, {valueSearch: ''})
                     }
                     }/>
                 </div>

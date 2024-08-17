@@ -80,10 +80,9 @@ const ListEmployee = (() => {
                 <div className=" mx-16 h-10 ">
                     <SearchNotFound onFetchData={() => {
                         setValueSearch({valueSearch: ''})
-                        fetchData(1, valueSearch)
+                        // fetchData(1, {valueSearch: ''})
                     }
                     }/>
-                    {/*<SearchNotFound onFetchData={resetSearch} />*/}
                 </div>
             )}
             <Pagination

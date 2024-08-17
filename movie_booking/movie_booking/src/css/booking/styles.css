@@ -1,4 +1,4 @@
-/*list employee*/
+/*list booking*/
 .tw-delete-all-button {
     @apply bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded;
 }
@@ -10,33 +10,57 @@
 .tw-table-zone {
     @apply overflow-hidden rounded-lg mx-16 max-xl:mx-0 border-gray-200 shadow-md ;
 }
-/*employee header*/
+/*booking header*/
+/*.tw-custom-header-table-zone {*/
+/*    @apply overflow-hidden rounded-lg mx-16 max-xl:mx-0 border-gray-200 shadow-md;*/
+/*}*/
+
+/*.tw-custom-header-list {*/
+/*    @apply relative flex flex-wrap items-center bg-clip-border mx-4 rounded-xl overflow-hidden bg-gradient-to-tr from-gray-900 to-gray-800 text-white shadow-gray-900/20 shadow-lg -mt-6 mb-8 p-10;*/
+/*}*/
+
+/*.tw-custom-header-title {*/
+/*    @apply block antialiased tracking-normal font-sans text-2xl font-semibold leading-relaxed text-white mb-4 md:mb-0;*/
+/*}*/
+
+/*.tw-custom-header-add-button {*/
+/*    @apply inline-block bg-gradient-to-tr from-green-500 to-green-300 text-white px-5 py-2 rounded-lg mt-2 md:mt-0*/
+/*    hover:from-green-600 hover:to-green-400 focus:outline-none transition duration-300 ease-in-out;*/
+/*}*/
+
+/*.tw-custom-header-search {*/
+/*    @apply w-56 sm:w-72 px-5 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-300 text-black p-2;*/
+/*}*/
+
+/*.tw-custom-header-add-search {*/
+/*    @apply flex items-center space-x-4 ml-auto w-full md:w-auto;*/
+/*}*/
 .tw-custom-header-table-zone {
-    @apply overflow-hidden rounded-lg mx-16 max-xl:mx-0 border-gray-200 shadow-md;
+    @apply overflow-hidden rounded-lg mx-4 lg:mx-16 border-gray-200 shadow-md;
 }
 
 .tw-custom-header-list {
-    @apply relative flex flex-wrap items-center bg-clip-border mx-4 rounded-xl overflow-hidden bg-gradient-to-tr from-gray-900 to-gray-800 text-white shadow-gray-900/20 shadow-lg -mt-6 mb-8 p-10;
+    @apply relative flex flex-wrap items-center justify-between bg-clip-border rounded-xl overflow-hidden bg-gradient-to-tr from-gray-900 to-gray-800 text-white shadow-gray-900/20 shadow-lg -mt-6 mb-8 p-6 lg:p-10;
 }
 
 .tw-custom-header-title {
-    @apply block antialiased tracking-normal font-sans text-2xl font-semibold leading-relaxed text-white mb-4 md:mb-0;
+    @apply block antialiased tracking-normal font-sans text-xl lg:text-2xl font-semibold leading-relaxed text-white mb-4 md:mb-0;
 }
 
-.tw-custom-header-add-button {
-    @apply inline-block bg-gradient-to-tr from-green-500 to-green-300 text-white px-5 py-2 rounded-lg mt-2 md:mt-0
-    hover:from-green-600 hover:to-green-400 focus:outline-none transition duration-300 ease-in-out;
-}
+/*.tw-custom-header-add-button {*/
+/*    @apply inline-block bg-gradient-to-tr from-green-500 to-green-300 text-white px-4 py-2 rounded-lg mt-2 md:mt-0*/
+/*    hover:from-green-600 hover:to-green-400 focus:outline-none transition duration-300 ease-in-out;*/
+/*}*/
 
 .tw-custom-header-search {
-    @apply w-56 sm:w-72 px-5 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-300 text-black p-2;
+    @apply w-full lg:w-72 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-300 text-black;
 }
 
 .tw-custom-header-add-search {
-    @apply flex items-center space-x-4 ml-auto w-full md:w-auto;
+    @apply flex items-center space-x-2 ml-0 lg:ml-auto w-full lg:w-auto mb-4 lg:mb-0;
 }
 
-/*employee table*/
+/*booking table*/
 .tw-custom-table {
     @apply w-full border-collapse block md:table bg-white text-left text-sm text-gray-500;
 }
@@ -154,7 +178,7 @@
 .tw-custom-disabled {
     @apply cursor-not-allowed opacity-50;
 }
-/*employee detail*/
+/*booking detail*/
 .tw-custom-modal {
     @apply fixed inset-0 z-50 overflow-y-auto;
 }

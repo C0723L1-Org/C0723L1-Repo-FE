@@ -1,5 +1,4 @@
 import React from 'react';
-
 import "../../../css/booking/styles.css";
 import {formatDate} from "../utils/Utils";
 const BookingTable = ({bookings,handleOpenModalReceive}) => {
