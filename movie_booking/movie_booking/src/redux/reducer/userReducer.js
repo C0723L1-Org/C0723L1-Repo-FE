@@ -1,6 +1,6 @@
 import {GET_USER} from "../action/type-action";
 
-const init ={}
+const init =0
 const userReducer =(user = init, action) =>{
     const {type, payload} = action
     switch (type) {

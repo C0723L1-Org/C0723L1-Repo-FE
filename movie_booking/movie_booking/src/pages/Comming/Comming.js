@@ -66,9 +66,9 @@ const Comming = () => {
                                             )}
                                             <button
                                                 onClick={() => {
-                                                    navigate(`/movie/information/${data.id}`);
+                                                    navigate(`/see-movie-details/${data.id}`);
                                                 }}
-                                                className="w-full bg-blue-500 text-white px-5 py-2 rounded-lg hover:bg-blue-600">
+                                                className="text-white justify-center bg-[#f26b38] w-[120px] h-[40px] hover:bg-[#fb9440] rounded text-sm px-5 py-2.5 text-center inline-flex items-center mx-auto dark:hover:bg-[#fb9440] dark:focus:ring-[#fb9440]">
                                                 Thông tin
                                             </button>
                                         </div>

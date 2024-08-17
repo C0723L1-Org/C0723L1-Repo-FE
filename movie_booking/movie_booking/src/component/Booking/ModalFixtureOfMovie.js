@@ -2,17 +2,17 @@ import {useEffect, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import {Bounce, toast} from "react-toastify";
 import request from "../../redux/axios-config";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {setShowtime} from "../../redux/action/showtime-action";
-import {logDOM} from "@testing-library/react";
+import Swal from "sweetalert2";
 import {Main} from "../../layout/main/Main";
 
 function ModalFixtureOfMovie() {
     const dispatch = useDispatch();
+    const showtime = useSelector(state => state.showtime)
     const navigate = useNavigate();
     const params = useParams()
     const [movie, setMovie] = useState({})
-    const [selectedSlot, setSelectedSlot] = useState(null);
     // Lấy ngày hiện tại
     const initialDate = new Date();
     const today = new Date()
@@ -31,10 +31,13 @@ function ModalFixtureOfMovie() {
         setDays(days => dates)
     }, [currentDate]);
     useEffect(() => {
+
         const fetchDataMovie = async () => {
             try {
                 const res = await request.get(`/movie/public/${params.id}`)
+                document.title = `Movie: ${res.data?.nameMovie || 'Tên Phim'}` ;
                 await setMovie(prevState => res.data)
+
             } catch (e) {
                 toast.error(`Error: ${e}`, {
                     position: "bottom-right",
@@ -59,8 +62,6 @@ function ModalFixtureOfMovie() {
             const month = (currentDate.getMonth() + 1).toString().padStart(2, '0')
             const day = currentDate.getDate().toString().padStart(2, '0');
             const formattedDate = `${year}-${month}-${day}`
-            console.log("Ngày:", formattedDate);
-            console.log("Time:", timePart);
             try {
                 const res = await request.get(`/showtime/public/list`, {
                     params: {
@@ -110,25 +111,31 @@ function ModalFixtureOfMovie() {
     }
 
     const handleSlotClick = (index) => {
-        setSelectedSlot(index);
         dispatch(setShowtime(listShowtime[index]))
     };
 
     function handelClickMoveToSeatScreen() {
-        navigate("/seat")
+        console.log(showtime)
+        if (showtime) {
+            navigate(`/seat/${movie.id}`)
+        } else {
+            Swal.fire({
+                title: "Warning!!!",
+                text:"Vui lòng chọn suất chiếu",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Ok!"
+            })
+        }
+
     }
     const convertTime = (time) =>{
-        const date = new Date(time);
-        const hour = date.getHours();
-        const minutes = date.getMinutes();
-        return `${hour}:${minutes}`;
+        return time.substring(0, 5);
     }
-    const convertEndTime = (time, durationMovie) =>{
-        const date = new Date(time);
-        date.setMinutes(date.getMinutes() + durationMovie);
-        const newIsoString = date.toISOString();
-        return convertTime(newIsoString)
-    }
+
+
     return (
         <Main content={
         <>
@@ -236,15 +243,11 @@ function ModalFixtureOfMovie() {
                                                          onClick={() => handleSlotClick(index)}
                                                          className={`w-[140px] h-[80px] shadow-xl border-2 border-regal-blue rounded-2xl flex flex-col justify-center items-center
                                                                          gap-2 cursor-pointer pb-4 hover:shadow-regal-blue hover:shadow-lg hover-light-shadow ${
-                                                             selectedSlot === index ? 'bg-zinc-400' : 'bg-white'
+                                                             showtime?.id === s.id ? 'bg-zinc-400' : 'bg-white'
                                                          }`}>
                                                         <div className="flex flex-row items-center justify-center gap-2">
                                                             <div className="flex flex-row items-center justify-center">
-                                                                {/*<span>{convertTime(s.startTime)}</span>*/}
-                                                            </div>
-                                                            <span>-</span>
-                                                            <div className="flex items-center justify-center">
-                                                                {/*<span>{convertEndTime(s.startTime,s.movie.durationMovie)}</span>*/}
+                                                                <span>{convertTime(s.startTime)}</span>
                                                             </div>
                                                         </div>
                                                         <span className="flex items-center">

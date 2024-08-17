@@ -37,7 +37,7 @@ const MovieComming = () => {
                                     />
                                     <div className="absolute inset-0 flex flex-col p-4 bg-black bg-opacity-75 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-md">
                                         <h2 className="text-white text-center text-lg font-bold">{data.nameMovie}</h2>
-                                        <div className="text-orange-400 items-center grid grid-rows-1">
+                                        <div className="text-orange-400 text-center items-center grid grid-rows-1">
                                             <p>⏰ Thời lượng: {data.durationMovie} phút</p>
                                         </div>
                                         <p className="text-white mb-2 text-center">Thể loại:</p>
@@ -64,9 +64,9 @@ const MovieComming = () => {
                                             )}
                                             <button
                                                 onClick={() => {
-                                                    navigate(`/movie/information/${data.id}`);
+                                                    navigate(`/see-movie-details/${data.id}`);
                                                 }}
-                                                className="w-full bg-blue-500 text-white px-5 py-2 rounded-lg hover:bg-blue-600">
+                                                className="text-white justify-center bg-[#f26b38] w-[120px] h-[40px] hover:bg-[#fb9440] rounded text-sm px-5 py-2.5 text-center inline-flex items-center mx-auto dark:hover:bg-[#fb9440] dark:focus:ring-[#fb9440]">
                                                 Thông tin
                                             </button>
                                         </div>
@@ -77,8 +77,11 @@ const MovieComming = () => {
                     </div>
                     {/* View all */}
                     <div className="flex justify-center">
-                        <button onClick={() => navigate("/search-movie")} className="text-center cursor-pointer bg-blue-500 text-white px-5 py-2 rounded-lg mt-4 hover:bg-blue-600">
-                            Xem thêm
+                        <button onClick={() => navigate("/search-movie")}
+                                className="  cursor-pointer   px-5 py-2 rounded-lg mt-4 hover:
+                                text-white justify-center bg-[#f26b38] w-[120px] h-[40px] hover:bg-[#fb9440]  text-sm  .5 text-center inline-flex items-center mx-auto dark:hover:bg-[#fb9440] dark:focus:ring-[#fb9440]
+                                ">
+                        Xem thêm
                         </button>
                     </div>
                 </div>

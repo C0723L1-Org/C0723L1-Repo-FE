@@ -46,7 +46,7 @@ const Navbar = () => {
             <div className="bg-slate-100 py-3 sm:py-0">
                 <div className="container flex justify-between  items-center">
                     <div>
-                        <a href="/movie_booking/movie_booking/public" className="font-bold text-xl sm:text-3xl flex items-center ">
+                        <a href="/" className="font-bold text-xl sm:text-3xl flex items-center ">
                             <MdLocalMovies className=" w-10 h-auto text-red-600 "/>
                             CINEMA
                         </a>

@@ -1,17 +1,21 @@
 import './receipt.css'
 import {useEffect, useState} from "react";
-import {PayPalButtons} from "@paypal/react-paypal-js";
+// import {PayPalButtons} from "@paypal/react-paypal-js";
+import { PayPalButtons } from '@paypal/react-paypal-js';
 import Swal from "sweetalert2";
 import axios from "axios";
 import request from "../../redux/axios-config";
 import {useDispatch, useSelector} from "react-redux";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {setListBooking} from "../../redux/action/booking-action";
 import {Main} from "../../layout/main/Main";
 function Receipt(){
     const dispatch = useDispatch();
     const navigate = useNavigate()
+    const params = useParams()
     const listBooking = useSelector(state => state.booking)
+    // const userId = useSelector(state => state.user)
+    const userId = 1
     const totalAmount = listBooking.reduce((total, booking) => {
         return total + booking.seat.price;
     }, 0);
@@ -41,12 +45,18 @@ function Receipt(){
 
     const onApproveOrder = (data,actions) => {
         return actions.order.capture().then((details) => {
-            updateBookings().then(()=>(Swal.fire({
+            updateBookings().then(()=>(
+                Swal.fire({
                     icon: "success",
-                    title: "Thanh toán thành công",
-                    showConfirmButton: false,
-                    timer: 5000
-                }))
+                    title: "đặt vé thành công",
+                    text: "Vui lòng kiểm tra email để xem lại thông tin vé",
+                    showConfirmButton: true,
+                }).then((result) =>{
+                        if (result.isConfirmed){
+                            navigate("/")
+                        }
+                    }
+                ))
             )
         })
     }
@@ -74,13 +84,14 @@ function Receipt(){
     const saveBookingToBackend = async (booking) => {
         try {
             console.log(booking)
-            await request.post("/booking/create",booking)
+            await request.post(`/booking/create/${userId}`,booking)
         } catch (e){
             console.log(e)
         }
     };
     useEffect(() => {
-        console.log(listBooking)
+        console.log(userId)
+        document.title = `Movie: ${listBooking[1]?.showTime?.movie?.nameMovie || 'Tên Phim'}` ;
         const fetchExchangeRate = async () => {
             try {
                 const response = await axios.get('https://v6.exchangerate-api.com/v6/c6e9382a6961e5a03e3ee78e/latest/VND');
@@ -95,7 +106,7 @@ function Receipt(){
     function handelClickBackSeatScreen() {
         Swal.fire({
             title: "Warning!!!",
-            text:"Ary you sure get back to select seat",
+            text:"Bạn muốn chọn lại ghế",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
@@ -103,23 +114,20 @@ function Receipt(){
             confirmButtonText: "Yes!"
         }).then((result) => {
             if (result.isConfirmed) {
-                navigate(`/seat`)
+                navigate(`/seat/${params.id}`)
             }
         });
 
     }
     const convertTime = (time) =>{
-        const date = new Date(time);
-        const hour = date.getHours();
-        const minutes = date.getMinutes();
-        return `${hour}:${minutes}`;
+        return time.substring(0, 5);
     }
-    const convertEndTime = (time, durationMovie) =>{
-        const date = new Date(time);
-        date.setMinutes(date.getMinutes() + durationMovie);
-        const newIsoString = date.toISOString();
-        return convertTime(newIsoString)
-    }
+    // const convertEndTime = (time, durationMovie) =>{
+    //     const date = new Date(time);
+    //     date.setMinutes(date.getMinutes() + durationMovie);
+    //     const newIsoString = date.toISOString();
+    //     return convertTime(newIsoString)
+    // }
     function formatDate(isoString) {
         const date = new Date(isoString);
         const day = String(date.getDate()).padStart(2, '0');
@@ -152,13 +160,13 @@ function Receipt(){
                                 <table className="w-full border-collapse bg-white text-left text-sm text-gray-500">
                                     <thead className="bg-gray-50">
                                     <tr>
-                                        <th scope="col" className="px-6 py-4 font-medium text-gray-900">Movie Name</th>
-                                        <th scope="col" className="px-6 py-4 font-medium text-gray-900">Seat</th>
-                                        <th scope="col" className="px-6 py-4 font-medium text-gray-900">Theater</th>
-                                        <th scope="col" className="px-6 py-4 font-medium text-gray-900">Time</th>
-                                        <th scope="col" className="px-6 py-4 font-medium text-gray-900">Date</th>
-                                        <th scope="col" className="px-6 py-4 font-medium text-gray-900">Price</th>
-                                        <th scope="col" className="px-6 py-4 font-medium text-gray-900"></th>
+                                        <th scope="col" className="px-6 py-4 font-medium text-lg text-gray-900">Movie Name</th>
+                                        <th scope="col" className="px-6 py-4 font-medium text-lg text-gray-900">Seat</th>
+                                        <th scope="col" className="px-6 py-4 font-medium text-lg text-gray-900">Theater</th>
+                                        <th scope="col" className="px-6 py-4 font-medium text-lg text-gray-900">Time</th>
+                                        <th scope="col" className="px-6 py-4 font-medium text-lg text-gray-900">Date</th>
+                                        <th scope="col" className="px-6 py-4 font-medium text-lg text-gray-900">Price</th>
+                                        <th scope="col" className="px-6 py-4 font-medium text-lg text-gray-900"></th>
                                     </tr>
                                     </thead>
                                     <tbody className="divide-y divide-gray-100 border-t border-gray-100">
@@ -182,12 +190,12 @@ function Receipt(){
                                             <td className="px-6 py-4">
                                                 <div className="flex gap-2">
                                                   <span className="inline-flex items-center gap-1 rounded-full bg-blue-50 px-2 py-1 text-xs font-semibold text-blue-600">
-                                                    {convertTime(item.showTime.startTime)} - {convertEndTime(item.showTime.startTime,item.showTime.movie.durationMovie)}
+                                                    {convertTime(item.showTime.startTime)}
                                                   </span>
                                                 </div>
                                             </td>
-                                            <td className="px-6 py-4">{formatDate(item.showTime.startTime)}</td>
-                                            <td className="px-6 py-4">{item.totalAmount}</td>
+                                            <td className="px-6 py-4">{formatDate(item.showTime.showDate)}</td>
+                                            <td className="px-6 py-4">{item.totalAmount} VNĐ</td>
                                             <td className="px-6 py-4">
                                                 <div onClick={() =>removeBooking(index)}
                                                      className="flex justify-end gap-4">
@@ -216,98 +224,86 @@ function Receipt(){
                         </div>
 
                     </div>
-                    <div className="bg-gray-50 dark:bg-gray-800 w-full xl:w-96 flex justify-between items-center md:items-start px-4 py-6 md:p-6 xl:p-8 flex-col">
-                        <p className="text-lg md:text-xl font-semibold leading-6 xl:leading-5 text-gray-800">
+                    <div className="bg-gray-50 dark:bg-gray-900 w-full xl:w-96 flex flex-col justify-between items-center p-6 shadow-lg rounded-lg">
+                        <p className="text-xl font-semibold text-gray-900 mb-4">
                             Tổng cộng
                         </p>
-                        <div className="flex justify-center items-center w-full bg-orange-100 rounded">
-                            <div className="total-money">
+                        <div className="flex justify-center items-center w-full bg-orange-100 rounded p-2 mb-4">
+                            <div className="total-money text-2xl font-bold text-orange-600">
                                 {totalAmount} VNĐ
                             </div>
                         </div>
-                        <p className="text-lg md:text-xl font-semibold leading-6 xl:leading-5 text-gray-800">
+                        <p className="text-lg font-semibold text-gray-900 mb-4">
                             Phương thức:
                         </p>
-                        <ul>
-                            <li>
-                                <div className="flex">
+                        <ul className="space-y-3 w-full">
+                            <li className="flex items-center space-x-3">
                                     <input type="radio"
                                            value="PAYPAL"
+                                           id="PAYPAL"
                                            name="payment-method"
                                            onChange={(event) =>handlePaymentChange(event.target.value)}/>
-                                        <div className="w-8 h-8 overflow-hidden rounded-lg border border-gray-200 shadow-md m-1">
+                                    <div className="w-8 h-8 overflow-hidden rounded-lg border border-gray-300 shadow-sm">
                                             <img
-                                                className="w-full h-full"
+                                                className="w-full h-full object-contain"
                                                 alt="logo"
                                                 src="https://www.paypalobjects.com/paypal-ui/logos/svg/paypal-mark-color.svg"
                                             />
-                                        </div>
-                                        <div className=" flex justify-center items-center">
-                                            PayPal
-                                        </div>
-                                </div>
+                                    </div>
+                                        <label className="text-gray-800" for="PAYPAL">PayPal</label>
 
                             </li>
-                            <li>
-                                <div className="flex">
+                            <li className="flex items-center space-x-3">
                                     <input type="radio"
                                            value="MOMO"
+                                           id="MOMO"
                                            name="payment-method"
                                            onChange={(event) =>handlePaymentChange(event.target.value)}/>
-                                        <div className="w-8 h-8 overflow-hidden rounded-lg border border-gray-200 shadow-md m-1">
+                                    <div className="w-8 h-8 overflow-hidden rounded-lg border border-gray-300 shadow-sm">
                                             <img
-                                                className="w-full h-full"
+                                                className="w-full h-full object-contain"
                                                 alt="logo"
                                                 src="https://iguov8nhvyobj.vcdn.cloud/media/catalog/product/placeholder/default/momo_icon.png"
                                             />
-                                        </div>
-                                        <div className=" flex justify-center items-center">
-                                            MOMO
-                                        </div>
-                                </div>
+                                    </div>
+                                    <label className="text-gray-800" for="MOMO">MOMO</label>
                             </li>
-                            <li>
-                                <div className="flex">
+                            <li className="flex items-center space-x-3">
                                     <input type="radio"
                                            value="ZALOPAY"
+                                           id="ZALOPAY"
                                            name="payment-method"
                                            onChange={(event) =>handlePaymentChange(event.target.value)}/>
-                                        <div className="w-8 h-8 overflow-hidden rounded-lg border border-gray-200 shadow-md m-1">
+                                    <div className="w-8 h-8 overflow-hidden rounded-lg border border-gray-300 shadow-sm">
                                             <img
-                                                className="w-full h-full"
+                                                className="w-full h-full object-contain"
                                                 alt="logo"
                                                 src="https://iguov8nhvyobj.vcdn.cloud/media/catalog/product/placeholder/default/icon-HOT-96x96.png"
                                             />
-                                        </div>
-                                        <div className=" flex justify-center items-center">
-                                            Zalopay
-                                        </div>
-                                </div>
+                                    </div>
+                                    <label className="text-gray-800" for="ZALOPAY">Zalopay</label>
 
                             </li>
-                            <li>
-                                <div className="flex">
+                            <li className="flex items-center space-x-3">
                                     <input type="radio"
                                            value="VNPAY"
+                                           id="VNPAY"
                                            name="payment-method"
                                            onChange={(event) =>handlePaymentChange(event.target.value)}
                                     />
-                                        <div className="w-8 h-8 overflow-hidden rounded-lg border border-gray-200 shadow-md m-1">
+                                        <div className="w-8 h-8 overflow-hidden rounded-lg border border-gray-300 shadow-sm">
                                             <img
-                                                className="w-full h-full"
+                                                className="w-full h-full object-contain"
                                                 alt="logo"
                                                 src="https://iguov8nhvyobj.vcdn.cloud/media/catalog/product/placeholder/default/vnpay_newlogo.png"
                                             />
                                         </div>
-                                        <div className=" flex justify-center items-center">
-                                            VNPAY
-                                        </div>
-                                </div>
+                                    <label className="text-gray-800" for="VNPAY">VNPAY</label>
                             </li>
                         </ul>
                         {
                             paymentSelector === "PAYPAL" ? (
-                                <div className="w-full">
+                                <div className="w-full flex justify-center items-center mt-6">
                                         <PayPalButtons
                                             style={{ layout: "vertical" }}
                                             createOrder={(data, actions) => onCreateOrder(data, actions)}
@@ -316,7 +312,7 @@ function Receipt(){
                                             fundingSource={"paypal"}
                                         />
                                 </div>
-                            ):(<div className="w-full flex justify-center items-center">
+                            ):(<div className="w-full flex justify-center items-center mt-6">
                                 <button onClick={()=>{console.log(paymentSelector)}}
                                         className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded ">
                                     Thanh Toán
