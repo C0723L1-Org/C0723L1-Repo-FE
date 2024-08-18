@@ -7,7 +7,6 @@ import Director from "../pages/Director/Director";
 import Studio from "../pages/Studio/Studio";
 import SupportPage from "../pages/Support/SupportPage";
 import SearchMovies from "../pages/Search/SearchMovies";
-import SeeMovieDetails from "../component/movies-detail/SeeMovieDetails";
 import Comming from "../pages/Comming/Comming";
 import ModalFixtureOfMovie from "../component/Booking/ModalFixtureOfMovie";
 import SeatScreen from "../component/Booking/SeatScreen";
@@ -17,6 +16,8 @@ import Register from "../component/Register/Register";
 import Login from "../component/Login/Login";
 import ChangePassword from "../component/Information Account/ChangePassword";
 import HoSo from "../component/Information Account/HoSo";
+import PageDetail from "../component/movies-detail/PageDetail";
+import FAQ from "../component/Home/q&a/FAQ";
 
 
 const routes = [
@@ -42,6 +43,10 @@ const routes = [
         element: <Booking />,
     },
     {
+        path: '/faq',
+        element: <FAQ />,
+    },
+    {
         path: '/actor',
         element: <Actor />,
     },
@@ -54,7 +59,7 @@ const routes = [
         element: <Studio/>,
     },
     {
-        path: '/faq',
+        path: '/support',
         element: <SupportPage />,
     },
     {
@@ -67,7 +72,7 @@ const routes = [
     },
     {
         path: '/see-movie-details/:id',
-        element: <SeeMovieDetails />,
+        element: <PageDetail />,
     },
     {
         path: '/register',

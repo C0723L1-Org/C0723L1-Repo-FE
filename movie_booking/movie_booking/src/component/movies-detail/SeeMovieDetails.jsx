@@ -36,7 +36,6 @@ function SeeMovieDetails() {
     : [];
 
   return (
-      <Main content={
     <>
       <div className="book__ticket__wrapper">
         <div className="relative bg-black flex justify-center w-full h-full ">
@@ -326,8 +325,6 @@ function SeeMovieDetails() {
         </div>
       </div>
     </>
-      }/>
-
   );
 }
 

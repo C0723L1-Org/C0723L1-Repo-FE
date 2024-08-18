@@ -46,7 +46,7 @@ const Navbar = () => {
             <div className="bg-slate-100 py-3 sm:py-0">
                 <div className="container flex justify-between  items-center">
                     <div>
-                        <a href="/" className="font-bold text-xl sm:text-3xl flex items-center ">
+                        <a href="/movie_booking/movie_booking/public" className="font-bold text-xl sm:text-3xl flex items-center ">
                             <MdLocalMovies className=" w-10 h-auto text-red-600 "/>
                             CINEMA
                         </a>
@@ -68,7 +68,7 @@ const Navbar = () => {
                         </form>
                     </div>
                     {/* Button */}
-                    {a = !null ? (
+                    {a = null ? (
                         <div className="min-w-32 flex justify-center items-center gap-1">
                             <div className="flex">
                                 <div className="hover:bg-slate-200">

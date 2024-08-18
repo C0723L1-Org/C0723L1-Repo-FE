@@ -23,6 +23,13 @@ const SearchMovies = () => {
     const [loading, setLoading] = useState(true);
     const { register, handleSubmit, formState: { errors } } = useForm({ criteriaMode: "all" });
 
+    const [searchCriteria, setSearchCriteria] = useState({
+        nameMovie: '',
+        director: '',
+        actor: '',
+        nameStatus: '',
+        releaseDate: '',
+    });
     useEffect(() => {
         const fetchMovies = async () => {
             setLoading(true);
@@ -66,14 +73,21 @@ const SearchMovies = () => {
     };
 
     const handlePage = (pageNo) => {
-        setPageNumber(pageNo);
+        searchMovieByAll(
+            searchCriteria.nameMovie,
+            searchCriteria.director,
+            searchCriteria.actor,
+            searchCriteria.nameStatus,
+            searchCriteria.releaseDate,
+            pageNo
+        );
     };
 
     const showPageNo = () => {
         return Array.from({ length: totalPages }, (_, i) => (
             <a
                 key={i}
-                className={`h-10 w-10 hover:bg-blue-700 font-semibold text-white text-sm flex items-center justify-center ${i === pageNumber ? 'bg-blue-500 text-white' : 'bg-blue-500 text-black'}`}
+                className={`h-10 w-10 hover:bg-blue-700 rounded-full font-semibold text-white text-sm flex items-center justify-center ${i === pageNumber ? 'bg-blue-500 text-white' : 'bg-blue-500 text-black'}`}
                 onClick={() => handlePage(i)}
             >
                 {i + 1}
@@ -89,7 +103,7 @@ const SearchMovies = () => {
         return Array.from({ length: totalPages1 }, (_, i) => (
             <a
                 key={i}
-                className={`h-10 w-10 hover:bg-blue-700 font-semibold text-white text-sm flex items-center justify-center ${i === pageNumber1 ? 'bg-blue-500 text-white' : 'bg-blue-500 text-black'}`}
+                className={`h-10 w-10 hover:bg-blue-700 rounded-full font-semibold text-white text-sm flex items-center justify-center ${i === pageNumber1 ? 'bg-blue-500 text-white' : 'bg-blue-500 text-black'}`}
                 onClick={() => handlePage1(i)}
             >
                 {i + 1}
@@ -132,6 +146,8 @@ const SearchMovies = () => {
 
     const onSubmit = async (data) => {
         const { nameMovie = '', director = '', actor = '', nameStatus = '', releaseDate = '' } = data;
+        setSearchCriteria({ nameMovie, director, actor, nameStatus, releaseDate });
+
         if (!nameMovie && !director && !releaseDate && !nameStatus && !actor) {
             toast.warning('Hãy nhập hoặc chọn một trường bất kỳ!');
             return searchMovieByAll('', '', '', '', '', pageNumber);
@@ -278,7 +294,7 @@ const SearchMovies = () => {
                         <div className="flex space-x-2">
                             {pageNumber > 0 && (
                                 <a
-                                    className="h-10 w-15 font-semibold text-gray-800 hover:text-gray-900 text-sm flex items-center justify-center ml-3"
+                                    className="h-10 px-4 font-semibold text-white bg-blue-500 hover:bg-blue-700 text-sm flex items-center justify-center rounded-full transition duration-200"
                                     onClick={() => handlePage(pageNumber - 1)}
                                 >
                                     Trang trước
@@ -288,7 +304,7 @@ const SearchMovies = () => {
                             {showPageNo()}
                             {pageNumber < totalPages - 1 && (
                                 <a
-                                    className="h-10 w-15 font-semibold text-gray-800 hover:text-gray-900 text-sm flex items-center justify-center ml-3"
+                                    className="h-10 px-4 font-semibold text-white bg-blue-500 hover:bg-blue-700 text-sm flex items-center justify-center rounded-full transition duration-200"
                                     onClick={() => handlePage(pageNumber + 1)}
                                 >
                                     Trang sau
@@ -316,7 +332,7 @@ const SearchMovies = () => {
                         <div className="flex space-x-4">
                             {pageNumber1 > 0 && (
                                 <a
-                                    className="h-10 px-4 font-semibold text-gray-800 bg-gray-200 hover:bg-gray-300 text-sm flex items-center justify-center rounded-full transition duration-200"
+                                    className="h-10 px-4 font-semibold text-white bg-blue-500 hover:bg-blue-700 text-sm flex items-center justify-center rounded-full transition duration-200"
                                     onClick={() => handlePage1(pageNumber1 - 1)}
                                 >
                                     <CgArrowLeft className="mr-2"/>
@@ -326,7 +342,7 @@ const SearchMovies = () => {
                             {showPageNo1()}
                             {pageNumber1 < totalPages1 - 1 && (
                                 <a
-                                    className="h-10 px-4 font-semibold text-gray-800 bg-gray-200 hover:bg-gray-300 text-sm flex items-center justify-center rounded-full transition duration-200"
+                                    className="h-10 px-4 font-semibold text-white bg-blue-500 hover:bg-blue-700 text-sm flex items-center justify-center rounded-full transition duration-200"
                                     onClick={() => handlePage1(pageNumber1 + 1)}
                                 >
                                     Trang sau
