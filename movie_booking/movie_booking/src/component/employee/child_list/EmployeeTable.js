@@ -13,7 +13,7 @@ const EmployeeTable = ({employees, handleOpenModalDelete}) => {
                     <th scope="col" className="tw-custom-th"> Nhân viên</th>
                     <th scope="col" className="tw-custom-th"> Giới tính</th>
                     <th scope="col" className="tw-custom-th"> Ngày sinh</th>
-                    <th scope="col" className="tw-custom-th"> Số CCCD</th>
+                    {/*<th scope="col" className="tw-custom-th"> Số CCCD</th>*/}
                     <th scope="col" className="tw-custom-th"> Email</th>
                     <th scope="col" className="tw-custom-th"> Số điện thoại</th>
                     <th scope="col" className="tw-custom-th"> Địa chỉ</th>
@@ -39,10 +39,10 @@ const EmployeeTable = ({employees, handleOpenModalDelete}) => {
                             <span className="tw-custom-span-1">Ngày sinh</span>
                             {formatDate(employee.dateOfBirth)}
                         </td>
-                        <td className="tw-custom-td">
-                            <span className="tw-custom-span-1">Số CCCD</span>
-                            {employee.cardId}
-                        </td>
+                        {/*<td className="tw-custom-td">*/}
+                        {/*    <span className="tw-custom-span-1">Số CCCD</span>*/}
+                        {/*    {employee.cardId}*/}
+                        {/*</td>*/}
                         <td className="tw-custom-td">
                             <span className="tw-custom-span-1">Email</span>
                             {employee.email}

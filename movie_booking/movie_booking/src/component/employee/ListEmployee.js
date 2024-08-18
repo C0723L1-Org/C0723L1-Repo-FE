@@ -7,6 +7,7 @@ import Pagination from "./child_list/Pagination";
 import DeleteEmployeeModal from "./child_list/DeleteEmployeeModal";
 import SearchNotFound from "./child_list/SearchNotFound";
 import { ClipLoader } from 'react-spinners';
+import {SidebarCollection} from "./child_list/SidebarCollection";
 const ListEmployee = (() => {
     const [employees, setEmployees] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
@@ -72,78 +73,113 @@ const ListEmployee = (() => {
 
     return (
         <>
-
-            <div className="tw-custom-header-table-zone sticky top-0 z-50">
-                {/* Header */}
-                <HeaderEmployee onSearch={handleSearch}/>
-            </div>
-
-            {/*<div className="tw-table-zone">*/}
-            {/*    /!* Table *!/*/}
-            {/*    <EmployeeTable*/}
-            {/*        employees={employees}*/}
-            {/*        handleOpenModalDelete={handleOpenModalDelete}*/}
-            {/*    />*/}
+            {/*<div className="tw-custom-header-table-zone sticky top-0 z-50">*/}
+            {/*    /!* Header *!/*/}
+            {/*    <HeaderEmployee onSearch={handleSearch}/>*/}
             {/*</div>*/}
-            <div>
-                {isLoading ? (
-                    <div className="flex justify-center items-center h-full">
-                        <ClipLoader color="#123abc" loading={isLoading} size={40}/> {/* Vòng tròn loading */}
+            {/*<div>*/}
+            {/*    {isLoading ? (*/}
+            {/*        <div className="flex justify-center items-center h-full">*/}
+            {/*            <ClipLoader color="#123abc" loading={isLoading} size={40}/> /!* Vòng tròn loading *!/*/}
+            {/*        </div>*/}
+            {/*    ) : (*/}
+            {/*        <>*/}
+            {/*            {employees.length > 0 ? (*/}
+            {/*                <div className="tw-table-zone">*/}
+            {/*                    /!* Table *!/*/}
+            {/*                    <EmployeeTable*/}
+            {/*                        employees={employees}*/}
+            {/*                        handleOpenModalDelete={handleOpenModalDelete}*/}
+            {/*                    />*/}
+            {/*                </div>*/}
+            {/*            ) : (*/}
+            {/*                <div className="mx-16 h-10">*/}
+            {/*                    <SearchNotFound onFetchData={() => {*/}
+            {/*                        setValueSearch({valueSearch: ''});*/}
+            {/*                    }}/>*/}
+            {/*                </div>*/}
+            {/*            )}*/}
+            {/*        </>*/}
+            {/*    )}*/}
+            {/*</div>*/}
+            {/*{!isLoading && (*/}
+            {/*    <Pagination*/}
+            {/*        currentPage={currentPage}*/}
+            {/*        totalPages={totalPages}*/}
+            {/*        onPageChange={handlePageChange}*/}
+            {/*        onPreviousPage={handlePreviousPage}*/}
+            {/*        onNextPage={handleNextPage}*/}
+            {/*    />*/}
+            {/*)}*/}
+
+            {/*{employeeDelete && (*/}
+            {/*    <DeleteEmployeeModal*/}
+            {/*        employee={employeeDelete}*/}
+            {/*        isOpen={!!employeeDelete}*/}
+            {/*        onClose={handleCloseModalDelete}*/}
+            {/*        onEmployeeDeleted={handleEmployeeDeleted}*/}
+            {/*    />*/}
+            {/*)}*/}
+
+            <div className="grid grid-cols-1 xl:grid-cols-12">
+                {/* Sidebar */}
+                <div className="col-span-2 hidden xl:block text-white sticky top-0 h-screen">
+                    <div className="h-full">
+                        <SidebarCollection/>
                     </div>
-                ) : (
-                    <>
-                        {employees.length > 0 ? (
-                            <div className="tw-table-zone">
-                            {/* Table */}
-                                <EmployeeTable
-                                    employees={employees}
-                                    handleOpenModalDelete={handleOpenModalDelete}
-                                />
+                </div>
+
+                {/* Nội dung chính */}
+                <div className="col-span-10 w-full">
+                    <div className="tw-custom-header-table-zone sticky top-0 z-50 bg-white">
+                        <HeaderEmployee onSearch={handleSearch}/>
+                    </div>
+
+                    <div className="mt-4">
+                        {isLoading ? (
+                            <div className="flex justify-center items-center h-full">
+                                <ClipLoader color="#123abc" loading={isLoading} size={40}/>
                             </div>
                         ) : (
-                            <div className="mx-16 h-10">
-                                <SearchNotFound onFetchData={() => {
-                                    setValueSearch({valueSearch: ''});
-                                }}/>
-                            </div>
+                            <>
+                                {employees.length > 0 ? (
+                                    <div className="tw-table-zone">
+                                        <EmployeeTable
+                                            employees={employees}
+                                            handleOpenModalDelete={handleOpenModalDelete}
+                                        />
+                                    </div>
+                                ) : (
+                                    <div className="mx-16 h-10">
+                                        <SearchNotFound onFetchData={() => {
+                                            setValueSearch({valueSearch: ''});
+                                        }}/>
+                                    </div>
+                                )}
+                            </>
                         )}
-                    </>
-                )}
-            </div>
-            {/*{employees?.length === 0 && (*/}
-            {/*    <div className=" mx-16 h-10 ">*/}
-            {/*        <SearchNotFound onFetchData={() => {*/}
-            {/*            setValueSearch({valueSearch: ''})*/}
-            {/*            // fetchData(1, {valueSearch: ''})*/}
-            {/*        }*/}
-            {/*        }/>*/}
-            {/*    </div>*/}
-            {/*)}*/}
-            {/*<Pagination*/}
-            {/*    currentPage={currentPage}*/}
-            {/*    totalPages={totalPages}*/}
-            {/*    onPageChange={handlePageChange}*/}
-            {/*    onPreviousPage={handlePreviousPage}*/}
-            {/*    onNextPage={handleNextPage}*/}
-            {/*/>*/}
-            {!isLoading && (
-                <Pagination
-                    currentPage={currentPage}
-                    totalPages={totalPages}
-                    onPageChange={handlePageChange}
-                    onPreviousPage={handlePreviousPage}
-                    onNextPage={handleNextPage}
-                />
-            )}
+                    </div>
 
-            {employeeDelete && (
-                <DeleteEmployeeModal
-                    employee={employeeDelete}
-                    isOpen={!!employeeDelete}
-                    onClose={handleCloseModalDelete}
-                    onEmployeeDeleted={handleEmployeeDeleted}
-                />
-            )}
+                    {!isLoading && (
+                        <Pagination
+                            currentPage={currentPage}
+                            totalPages={totalPages}
+                            onPageChange={handlePageChange}
+                            onPreviousPage={handlePreviousPage}
+                            onNextPage={handleNextPage}
+                        />
+                    )}
+
+                    {employeeDelete && (
+                        <DeleteEmployeeModal
+                            employee={employeeDelete}
+                            isOpen={!!employeeDelete}
+                            onClose={handleCloseModalDelete}
+                            onEmployeeDeleted={handleEmployeeDeleted}
+                        />
+                    )}
+                </div>
+            </div>
         </>
     );
 });

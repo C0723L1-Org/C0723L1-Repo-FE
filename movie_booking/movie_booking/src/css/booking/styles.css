@@ -8,35 +8,11 @@
 }
 
 .tw-table-zone {
-    @apply overflow-hidden rounded-lg mx-16 max-xl:mx-0 border-gray-200 shadow-md ;
+    @apply overflow-hidden rounded-lg mx-8 max-xl:mx-0 border-gray-200 shadow-md ;
 }
 /*booking header*/
-/*.tw-custom-header-table-zone {*/
-/*    @apply overflow-hidden rounded-lg mx-16 max-xl:mx-0 border-gray-200 shadow-md;*/
-/*}*/
-
-/*.tw-custom-header-list {*/
-/*    @apply relative flex flex-wrap items-center bg-clip-border mx-4 rounded-xl overflow-hidden bg-gradient-to-tr from-gray-900 to-gray-800 text-white shadow-gray-900/20 shadow-lg -mt-6 mb-8 p-10;*/
-/*}*/
-
-/*.tw-custom-header-title {*/
-/*    @apply block antialiased tracking-normal font-sans text-2xl font-semibold leading-relaxed text-white mb-4 md:mb-0;*/
-/*}*/
-
-/*.tw-custom-header-add-button {*/
-/*    @apply inline-block bg-gradient-to-tr from-green-500 to-green-300 text-white px-5 py-2 rounded-lg mt-2 md:mt-0*/
-/*    hover:from-green-600 hover:to-green-400 focus:outline-none transition duration-300 ease-in-out;*/
-/*}*/
-
-/*.tw-custom-header-search {*/
-/*    @apply w-56 sm:w-72 px-5 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-300 text-black p-2;*/
-/*}*/
-
-/*.tw-custom-header-add-search {*/
-/*    @apply flex items-center space-x-4 ml-auto w-full md:w-auto;*/
-/*}*/
 .tw-custom-header-table-zone {
-    @apply overflow-hidden rounded-lg mx-4 lg:mx-16 border-gray-200 shadow-md;
+    @apply overflow-hidden rounded-lg mx-8 max-xl:mx-0 border-gray-200 shadow-md;
 }
 
 .tw-custom-header-list {
@@ -45,6 +21,7 @@
 
 .tw-custom-header-title {
     @apply block antialiased tracking-normal font-sans text-xl lg:text-2xl font-semibold leading-relaxed text-white mb-4 md:mb-0;
+    margin-right: auto; /* Đẩy tiêu đề sang bên phải */
 }
 
 /*.tw-custom-header-add-button {*/
@@ -237,4 +214,26 @@
 
 .tw-custom-close-modal {
     @apply mt-3 w-full inline-flex justify-center rounded-md bg-white px-4 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto;
+}
+
+/* CSS cho Sidebar Collection */
+.tw-sidebar-link {
+    @apply flex items-center gap-2 py-2 px-1 rounded-lg text-gray-500 hover:bg-gray-200 focus:bg-gray-200;
+}
+
+.tw-sidebar-text {
+    @apply text-sm font-medium; /* Điều chỉnh kích thước và kiểu chữ */
+}
+
+.tw-sidebar-item {
+    @apply font-medium py-1 px-4 mx-2 rounded-lg text-gray-500 hover:bg-gray-200 focus:bg-gray-200;
+}
+.tw-sidebar {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+}
+.tw-sidebar-content {
+    flex: 1;
 }
