@@ -36,7 +36,7 @@ const Studio = () => {
             pageNoTags.push(
                 <a
                     key={i}
-                    className={`h-10 w-10 hover:bg-blue-700 font-semibold text-white text-sm flex items-center justify-center ${i === pageNumber ? 'bg-blue-500 text-white' : 'bg-blue-500 text-black'}`}
+                    className={`h-10 w-10 hover:bg-blue-700 rounded-full font-semibold text-white text-sm flex items-center justify-center ${i === pageNumber ? 'bg-blue-500 text-white' : 'bg-blue-500 text-black'}`}
                     onClick={() => handlePage(i)}
                 >
                     {i + 1}
@@ -89,7 +89,7 @@ const Studio = () => {
                         <div>
                             <div className="flex flex-col col-span-2">
                                 <label className="font-medium text-sm mb-1" htmlFor="studio">Tên Studio:</label>
-                                <input {...register("director")} type="text" id="studio"
+                                <input {...register("studio")} type="text" id="studio"
                                        placeholder="Nhập tên studio"
                                        className="w-full rounded-lg border border-gray-300 px-3 py-2"/>
                             </div>
@@ -124,15 +124,17 @@ const Studio = () => {
             <div className="flex items-center justify-center py-8">
                 <div className="flex space-x-2">
                     {pageNumber > 0 && (
-                        <a className="h-10 w-15 font-semibold text-gray-800 hover:text-gray-900 text-sm flex items-center justify-center ml-3"
-                           onClick={() => handlePage(pageNumber - 1)}>Trang trước
+                        <a
+                            className="h-10 px-4 font-semibold text-white bg-blue-500 hover:bg-blue-700 text-sm flex items-center justify-center rounded-full transition duration-200"
+                            onClick={() => handlePage(pageNumber - 1)}>Trang trước
                             <CgArrowLeft className="fas fa-arrow-right ml-2"/>
                         </a>
                     )}
                     {showPageNo()}
                     {pageNumber < totalPages - 1 && (
-                        <a className="h-10 w-15 font-semibold text-gray-800 hover:text-gray-900 text-sm flex items-center justify-center ml-3"
-                           onClick={() => handlePage(pageNumber + 1)}>Trang sau
+                        <a
+                            className="h-10 px-4 font-semibold text-white bg-blue-500 hover:bg-blue-700 text-sm flex items-center justify-center rounded-full transition duration-200"
+                            onClick={() => handlePage(pageNumber + 1)}>Trang sau
                             <CgArrowRight className="fas fa-arrow-right ml-2" />
                         </a>
                     )}

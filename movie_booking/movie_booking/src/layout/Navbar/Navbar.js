@@ -68,7 +68,7 @@ const Navbar = () => {
                         </form>
                     </div>
                     {/* Button */}
-                    {a = !null ? (
+                    {a = null ? (
                         <div className="min-w-32 flex justify-center items-center gap-1">
                             <div className="flex">
                                 <div className="hover:bg-slate-200">

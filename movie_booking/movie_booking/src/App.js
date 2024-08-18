@@ -5,6 +5,11 @@ import routes from "./router/Router";
 import PrivateRoute from "./utils/PrivateRoute";
 import NotFound from "./pages/NotFound/NotFound";
 import {PayPalScriptProvider} from "@paypal/react-paypal-js";
+import Login from "./component/Login/Login";
+import ChangePassword from "./component/Information Account/ChangePassword";
+import Register from "./component/Register/Register";
+import HoSo from "./component/Information Account/HoSo";
+import {ToastContainer} from "react-toastify";
 
 
 function App() {
@@ -38,9 +43,8 @@ function App() {
                             />
                         );
                     })}
-
-                    <Route path='*' element={<NotFound/>}/>
                 </Routes>
+                <ToastContainer />
             </Router>
         </PayPalScriptProvider>
     );

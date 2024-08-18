@@ -32,7 +32,7 @@ const FooterLink1 = [
     },
     {
         title:"Giá Vé",
-        link:"/#"
+        link:"/booking"
     },
     {
         title:"Tuyển Dụng",
@@ -40,7 +40,7 @@ const FooterLink1 = [
     },
     {
         title:"FAQ",
-        link:"/#"
+        link:"/faq"
     }
 ]
 const Footer = () => {
@@ -81,7 +81,11 @@ const Footer = () => {
                                 {
                                     FooterLink1.map((link, index) => (
                                         <li className="cursor-pointer hover:text-blue-400 hover:translate-x-1 duration-300"
-                                            key={link.title}>
+                                            key={link.title}
+                                            onClick={() => {
+                                                navigate(`${link.link}`);
+                                            }}
+                                        >
                                             <span>{link.title}</span>
                                         </li>
                                     ))
