@@ -1,6 +1,7 @@
 import './receipt.css'
 import {useEffect, useState} from "react";
-import {PayPalButtons} from "@paypal/react-paypal-js";
+// import {PayPalButtons} from "@paypal/react-paypal-js";
+import { PayPalButtons } from '@paypal/react-paypal-js';
 import Swal from "sweetalert2";
 import axios from "axios";
 import request from "../../redux/axios-config";
@@ -22,7 +23,7 @@ function Receipt(){
     const [amountVND, setAmountVND] = useState(totalAmount)
     const [amountUSD, setAmountUSD] = useState(0)
     const bookingStatus ={
-        id:"1",
+        id:"2",
         name:"Đã thanh toán"
     }
 

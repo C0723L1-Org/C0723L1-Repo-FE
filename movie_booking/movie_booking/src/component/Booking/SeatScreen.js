@@ -21,18 +21,18 @@ function SeatScreen(){
     const [occupiedSeats, setOccupiedSeats] = useState([])
     useEffect(() => {
         document.title = `Movie: ${showtime?.movie?.nameMovie || 'Tên Phim'}` ;
-
         const fetchDateSeatSelected = async () =>{
             console.log(showtime)
             try {
                 let res = await request.get("/seat/public/list",{
                     params:{
-                        showtimeId : showtime.id
+                        showtimeId : showtime?.id || 0
                     }
                 })
                 console.log(res.data)
                 setOccupiedSeats(prevState => res.data)
             } catch (e) {
+                console.log(e)
                 toast.error(`Error: ${e}`, {
                     position: "bottom-right",
                     autoClose: 5000,
@@ -137,78 +137,80 @@ return listSeat.some(seat => seat.seatNumber === seatNumber);
 
     }
     return (
-       <>
-           <div className="flex justify-center align-center bg-slate-100 ">
-               <div className="seat-screen_body min-w-[1000px] rounded-lg bg-slate-600">
-                   <div className="movie-container">
-                       <p>
-                           <label>Movie: </label>
-                           <span id="movie"> {showtime?.movie?.nameMovie || 'Tên Phim'}</span>
-                       </p>
-                       <p>
-                           <label>Thời lượng: </label>
-                           <span id="movie"> {showtime?.movie?.durationMovie || "Thời Lượng"} phút</span>
-                       </p>
-                   </div>
-                   <ul className="showcase">
-                       <li>
-                           <div className="seat"></div>
-                           <small className="text-white">Hợp lệ</small>
-                       </li>
-                       <li>
-                           <div className="seat selected"></div>
-                           <small className="text-white">Đang chọn</small>
-                       </li>
-                       <li>
-                           <div className="seat occupied"></div>
-                           <small className="text-white">Đã đặt</small>
-                       </li>
-                   </ul>
-                    {/*in ra danh sách ghế*/}
-                   <div className="seat-container ">
-                       <div className="screen"></div>
-                       {rows.map((row) => (
-                           <div className="row" key={row}>
-                               {Array.from({ length: seatsPerRow }, (_, index) => {
-                                   const seatNumber = `${row}${index + 1}`;
-                                   return (
-                                       <div
-                                           className={`seat ${isSeatOccupied(seatNumber) ? 'occupied' : ''} ${isSeatSelected(seatNumber) ? 'selected' : ''}`}
-                                           key={seatNumber}
-                                           onClick={() => handleSeatClick(seatNumber)}
-                                       >
-                                           {seatNumber}
-                                       </div>
-                                   );
-                               })}
-                           </div>
-                       ))}
-                       <p className="text">
-                           Bạn đã chọn <span id="count">{listSeat.length}</span> ghế
-                       </p>
-                       <p className="text">
-                           Tổng tiền: <span id="count">{listSeat.reduce((total, seat) => {
-                           return total + seat.price;
-                       }, 0)}</span> VNĐ
-                       </p>
-                       <div className="flex justify-between items-center w-full mt-5">
-                           <div className="w-full  flex justify-center items-center">
-                               <button onClick={() => handelClickBackToMovie()}
-                                        className="bg-amber-50 hover:bg-amber-200 text-blue-700 font-semibold hover:text-black py-2 px-4 border border-amber-500 hover:border-transparent rounded ">
-                                   Quay lại
-                               </button>
-                           </div>
-                           <div className="w-full flex justify-center items-center">
-                               <button onClick={() =>handelClickMoveReceipt()}
-                                        className="bg-amber-50 hover:bg-amber-200 text-blue-700 font-semibold hover:text-black py-2 px-4 border border-amber-500 hover:border-transparent rounded ">
-                                   Tiếp theo
-                               </button>
+        <Main content={
+            <div className="my-25 ">
+               <div className="flex justify-center align-center bg-slate-100 ">
+                   <div className="seat-screen_body min-w-[900px] rounded-lg bg-slate-600">
+                       <div className="movie-container mt-20">
+                           <p>
+                               <label>Movie: </label>
+                               <span id="movie"> {showtime?.movie?.nameMovie || 'Tên Phim'}</span>
+                           </p>
+                           <p>
+                               <label>Thời lượng: </label>
+                               <span id="movie"> {showtime?.movie?.durationMovie || "Thời Lượng"} phút</span>
+                           </p>
+                       </div>
+                       <ul className="showcase">
+                           <li>
+                               <div className="seat"></div>
+                               <small className="text-white">Hợp lệ</small>
+                           </li>
+                           <li>
+                               <div className="seat selected"></div>
+                               <small className="text-white">Đang chọn</small>
+                           </li>
+                           <li>
+                               <div className="seat occupied"></div>
+                               <small className="text-white">Đã đặt</small>
+                           </li>
+                       </ul>
+                        {/*in ra danh sách ghế*/}
+                       <div className="seat-container ">
+                           <div className="screen"></div>
+                           {rows.map((row) => (
+                               <div className="row" key={row}>
+                                   {Array.from({ length: seatsPerRow }, (_, index) => {
+                                       const seatNumber = `${row}${index + 1}`;
+                                       return (
+                                           <div
+                                               className={`seat ${isSeatOccupied(seatNumber) ? 'occupied' : ''} ${isSeatSelected(seatNumber) ? 'selected' : ''}`}
+                                               key={seatNumber}
+                                               onClick={() => handleSeatClick(seatNumber)}
+                                           >
+                                               {seatNumber}
+                                           </div>
+                                       );
+                                   })}
+                               </div>
+                           ))}
+                           <p className="text">
+                               Bạn đã chọn <span id="count">{listSeat.length}</span> ghế
+                           </p>
+                           <p className="text">
+                               Tổng tiền: <span id="count">{listSeat.reduce((total, seat) => {
+                               return total + seat.price;
+                           }, 0)}</span> VNĐ
+                           </p>
+                           <div className="flex justify-between items-center w-full mt-5">
+                               <div className="w-full  flex justify-center items-center">
+                                   <button onClick={() => handelClickBackToMovie()}
+                                            className="bg-amber-50 hover:bg-amber-200 text-blue-700 font-semibold hover:text-black py-2 px-4 border border-amber-500 hover:border-transparent rounded ">
+                                       Quay lại
+                                   </button>
+                               </div>
+                               <div className="w-full flex justify-center items-center">
+                                   <button onClick={() =>handelClickMoveReceipt()}
+                                            className="bg-amber-50 hover:bg-amber-200 text-blue-700 font-semibold hover:text-black py-2 px-4 border border-amber-500 hover:border-transparent rounded ">
+                                       Tiếp theo
+                                   </button>
+                               </div>
                            </div>
                        </div>
                    </div>
                </div>
-           </div>
-       </>
+            </div>
+        }/>
     )
 }
 export default SeatScreen;

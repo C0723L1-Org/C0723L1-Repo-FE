@@ -1,11 +1,8 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import Cookies from 'js-cookie';
-
 const isAuthenticated = () => {
-    const jwt = Cookies.get('jwt');
-    // return jwt !== undefined && jwt.trim() !== '';
-    return true
+    const user = JSON.parse(localStorage.getItem('user'))
+    return !!user;
 };
 
 

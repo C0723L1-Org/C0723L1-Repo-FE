@@ -1,10 +1,15 @@
 import axios from "axios";
 
+// import axios from "axios";export const getSearchMovie = async (nameMovie, director, releaseDate, nameStatus, actor, page) => {
+//     try {
+//         const response = await axios.get(`http://localhost:8080/api/v1/movie/public/show-search-movie?nameMovie=${nameMovie}`+
+//             `&director=${director}&nameStatus=${nameStatus}&actor=${actor}&releaseDate=${releaseDate}&page=${page}`);
 
+const BASE_URL = "http://localhost:8080/api/v1";
 export const getSearchMovie = async (nameMovie, director, releaseDate, nameStatus, actor, page) => {
     try {
-        const response = await axios.get(`http://localhost:8080/api/v1/movie/public/show-search-movie?nameMovie=${nameMovie}`+
-            `&director=${director}&nameStatus=${nameStatus}&actor=${actor}&releaseDate=${releaseDate}&page=${page}`);
+        const response = await axios.get(`${BASE_URL}/movie/public/show-search-movie?nameMovie=${nameMovie}`+
+            `&director=${director}&actor=${actor}&nameStatus=${nameStatus}&releaseDate=${releaseDate}&page=${page}`);
         console.log(response.data)
         return response.data;
     } catch (error) {
@@ -17,7 +22,7 @@ export const getSearchMovie = async (nameMovie, director, releaseDate, nameStatu
 }
 export const getSearchMovieByKindOfFilm = async (nameKind, page) => {
     try {
-        const response = await axios.get(`http://localhost:8080/api/v1/movie/public/search-movie-by-kind?nameKind=${nameKind}&page=${page}`);
+        const response = await axios.get(`${BASE_URL}/movie/public/search-movie-by-kind?nameKind=${nameKind}&page=${page}`);
         console.log(response.data)
         return response.data;
     } catch (error) {
@@ -31,7 +36,7 @@ export const getSearchMovieByKindOfFilm = async (nameKind, page) => {
 
 export const getMovieComming = async () => {
     try {
-        const response = await axios.get(`http://localhost:8080/api/v1/movie/public/show-list-movie-comming`);
+        const response = await axios.get(`${BASE_URL}/movie/public/show-list-movie-comming`);
         console.log(response.data)
         return response.data;
     } catch (error) {
@@ -41,7 +46,7 @@ export const getMovieComming = async () => {
 };
 export const getMovieShowing = async () => {
     try {
-        const response = await axios.get(`http://localhost:8080/api/v1/movie/public/show-list-movie-showing`);
+        const response = await axios.get(`${BASE_URL}/movie/public/show-list-movie-showing`);
         console.log(response.data)
         return response.data;
     } catch (error) {
@@ -51,7 +56,7 @@ export const getMovieShowing = async () => {
 };
 export const getKindOfMovie = async () => {
     try {
-        const response = await axios.get(`http://localhost:8080/api/v1/movie/public/show-list-kindofmovie`);
+        const response = await axios.get(`${BASE_URL}/movie/public/show-list-kindofmovie`);
         console.log(response.data)
         return response.data;
     } catch (error) {
@@ -61,7 +66,7 @@ export const getKindOfMovie = async () => {
 };
 export const getStatusMovie = async () => {
     try {
-        const response = await axios.get(`http://localhost:8080/api/v1/movie/public/show-list-statusmovie`);
+        const response = await axios.get(`${BASE_URL}/movie/public/show-list-statusmovie`);
         console.log(response.data)
         return response.data;
     } catch (error) {

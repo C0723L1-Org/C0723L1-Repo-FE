@@ -3,8 +3,9 @@ import React, {useEffect} from "react";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import routes from "./router/Router";
 import PrivateRoute from "./utils/PrivateRoute";
-import NotFound from "./pages/NotFound/NotFound";
 import {PayPalScriptProvider} from "@paypal/react-paypal-js";
+
+import {ToastContainer} from "react-toastify";
 
 
 function App() {
@@ -13,8 +14,18 @@ function App() {
         currency: "USD",
         intent: "capture",
     };
+
     useEffect(() => {
         window.scrollTo(0, 0);
+        const handleBeforeUnload = () => {
+            localStorage.removeItem('yourKey'); // Xóa dữ liệu cần thiết
+        };
+
+        window.addEventListener('beforeunload', handleBeforeUnload);
+
+        return () => {
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+        };
     }, []);
     return (
         <PayPalScriptProvider options={initialOptions}>
@@ -38,9 +49,8 @@ function App() {
                             />
                         );
                     })}
-
-                    <Route path='*' element={<NotFound/>}/>
                 </Routes>
+                <ToastContainer />
             </Router>
         </PayPalScriptProvider>
     );

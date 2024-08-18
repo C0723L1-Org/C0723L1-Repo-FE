@@ -4,6 +4,7 @@ import {IoMdSearch} from "react-icons/io";
 import {FaCaretDown, FaUser} from "react-icons/fa";
 import {useNavigate} from "react-router-dom";
 import Cookies from "js-cookie";
+import request from "../../../redux/axios-config"
 
 const Menu = [{
     id: 1, name: "Trang Chủ", link: "/",
@@ -33,7 +34,7 @@ const Navbar = () => {
     const [dropdown, setDropdown] = useState(false);
     const [user, setUser] = useState({})
 
-    useEffect(() => {
+    useEffect( () => {
         setUser(JSON.parse(localStorage.getItem('user')))
     }, []);
 
@@ -43,7 +44,6 @@ const Navbar = () => {
             navigate(`/search-movie?query=${searchTerm}`);
         }
     };
-
     return (
         <>
         <div className="shadow-md bg-slate-100 dark:bg-gray-900 dark:text-white relative z-40">
@@ -104,7 +104,7 @@ const Navbar = () => {
                                             />
                                             <div className="mx-1">
                                                 {<h1 className="text-sm font-semibold text-gray-700 dark:text-gray-200">
-                                                    Nguyễn Đức Dũng
+                                                    {user.name}
                                                 </h1>}
                                                 {/*<p className="text-sm text-gray-500 dark:text-gray-400">*/}
                                                 {/*    {localStorage.getItem("email")}*/}
@@ -114,7 +114,7 @@ const Navbar = () => {
                                         <hr className="border-gray-200 dark:border-gray-700 "/>
                                         <div
                                             onClick={() => {
-                                                navigate("/user/information");
+                                                navigate("/profile");
                                             }}
                                             className="cursor-pointer block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-200 transform dark:text-gray-300 hover:bg-slate-200 "
                                         >
@@ -123,7 +123,7 @@ const Navbar = () => {
                                         <hr className="border-gray-200 dark:border-gray-700 "/>
                                         <div
                                             onClick={() => {
-                                                navigate("/user/receipt");
+                                                navigate("/use-booking-management");
                                             }}
                                             className="cursor-pointer block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-200 transform dark:text-gray-300 hover:bg-slate-200"
                                         >
@@ -135,6 +135,7 @@ const Navbar = () => {
                                             onClick={() => {
                                                 localStorage.clear();
                                                 Cookies.set('jwt', '')
+                                                setUser(prevState => {})
                                                 navigate("/");
                                             }}
                                             className="cursor-pointer block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-200 transform dark:text-gray-300 hover:bg-slate-200"
@@ -148,7 +149,7 @@ const Navbar = () => {
                     ) : (
                         <div className="flex justify-between items-center gap-3">
                             <button
-                                onClick={() => alert("onclik")}
+                                onClick={() => navigate("/login")}
                                 className=" from-primary to-secondary transition-all duration-200 justify-center  text-black py-1 px-4 rounded-full items-center gap-3 group"
                             >
                             <span className=" group-hover:text-blue-400  transition-all duration-300">
@@ -156,7 +157,7 @@ const Navbar = () => {
                             </span>
                             </button>
                             <button
-                                onClick={() => alert("onclik")}
+                                onClick={() => navigate("/register")}
                                 className=" from-primary to-secondary transition-all duration-200 text-black py-1 px-4 rounded-full items-center gap-3 group"
                             >
                             <span className="group-hover:text-blue-400  transition-all duration-300">

@@ -43,7 +43,7 @@ const SearchMovies = () => {
         fetchMoviesByKindOfFilm();
     }, [kind, pageNumber1]);
 
-    const searchMovieByAll = async (nameMovie, director, releaseDate, nameStatus, actor, page) => {
+    const searchMovieByAll = async (nameMovie, director, actor, nameStatus, releaseDate, page) => {
         try {
             const response = await MovieService.getSearchMovie(nameMovie, director, releaseDate, nameStatus, actor, page);
             setMovies(response.content);
@@ -131,7 +131,7 @@ const SearchMovies = () => {
     };
 
     const onSubmit = async (data) => {
-        const { nameMovie = '', director = '', releaseDate = '', nameStatus = '', actor = '' } = data;
+        const { nameMovie = '', director = '', actor = '', nameStatus = '', releaseDate = '' } = data;
         if (!nameMovie && !director && !releaseDate && !nameStatus && !actor) {
             toast.warning('Hãy nhập hoặc chọn một trường bất kỳ!');
             return searchMovieByAll('', '', '', '', '', pageNumber);
@@ -140,7 +140,7 @@ const SearchMovies = () => {
         try {
             setLoading(true);
             await new Promise(resolve => setTimeout(resolve, 2000));
-            await searchMovieByAll(nameMovie, director, releaseDate, nameStatus, actor, pageNumber);
+            await searchMovieByAll(nameMovie, director, actor, nameStatus, releaseDate, pageNumber);
             setLoading(false); // End loading
         } catch (error) {
             console.error("Search error:", error);
