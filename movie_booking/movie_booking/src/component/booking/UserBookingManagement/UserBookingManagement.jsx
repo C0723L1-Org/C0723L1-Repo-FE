@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Sidebar from "./Sidebar";
+import {Main} from "../../../layout/main/Main";
+import {useNavigate} from "react-router-dom";
 
 function UserBookingManagement() {
+  const navigate = useNavigate()
   const [bookingData, setBookingData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -11,12 +14,15 @@ function UserBookingManagement() {
     const fetchBookingData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8080/api/v1/booking/private/booking-customer"
+          "http://localhost:8080/api/v1/booking/private/booking-customer",{
+              withCredentials: true
+            }
         );
         setBookingData(response.data);
       } catch (error) {
         setError("Đã xảy ra lỗi khi lấy dữ liệu.");
         console.error("Error fetching data:", error);
+        navigate("/login")
       } finally {
         setLoading(false);
       }
@@ -29,6 +35,7 @@ function UserBookingManagement() {
   if (error) return <div>{error}</div>;
 
   return (
+      <Main content={
     <div className="max-w-[1170px] min-h-[calc(-69px+100vh)] mx-auto px-4 py-6">
       <div className="flex flex-row gap-[48px] justify-start items-start">
         <Sidebar />
@@ -115,6 +122,7 @@ function UserBookingManagement() {
         </div>
       </div>
     </div>
+      }/>
   );
 }
 

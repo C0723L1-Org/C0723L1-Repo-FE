@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import Sidebar from "./Sidebar";
 import { Row } from "react-bootstrap";
 import { FaPencilAlt } from "react-icons/fa";
 import { toast } from "react-toastify";
+import request from "../../redux/axios-config";
+import {Main} from "../../layout/main/Main";
+import {useNavigate} from "react-router-dom";
 
 function HoSo() {
+    const navigate = useNavigate()
     const [user, setUser] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
     const [formValues, setFormValues] = useState({
@@ -31,11 +34,11 @@ function HoSo() {
                     'Authorization': `Bearer ${token}`
                 }
             };
-            const { data } = await axios.get('/api/v1/user/public/profile', config);
+            const { data } = await request.get('/user/public/profile', config);
             setUser(data);
             setFormValues(data);
         } catch (error) {
-            console.error('Error fetching user:', error);
+            navigate("/login")
         }
     };
 
@@ -67,7 +70,7 @@ function HoSo() {
             };
 
             // Gửi yêu cầu PUT để cập nhật thông tin người dùng
-            await axios.put(`/api/v1/user/update/${user.id}`, formValues, config);
+            await request.put(`/user/update/${user.id}`, formValues, config);
             toast.success('Thông tin người dùng đã được cập nhật!');
             setIsEditing(false);
             fetchUser(); // Refresh user data after update
@@ -83,6 +86,7 @@ function HoSo() {
     }
 
     return (
+        <Main content={
         <div className="max-w-[1170px] min-h-[calc(100vh-69px)] mx-auto px-4 py-6">
             <div className="flex flex-row gap-12 justify-start items-start">
                 <Sidebar />
@@ -222,7 +226,7 @@ function HoSo() {
                     </div>
                 </div>
             </div>
-        </div>
+        </div>}/>
     );
 }
 

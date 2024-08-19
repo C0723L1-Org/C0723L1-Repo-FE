@@ -1,4 +1,10 @@
 import axios from "axios";
+import request  from "../../redux/axios-config"
+
+// import axios from "axios";export const getSearchMovie = async (nameMovie, director, releaseDate, nameStatus, actor, page) => {
+//     try {
+//         const response = await axios.get(`http://localhost:8080/api/v1/movie/public/show-search-movie?nameMovie=${nameMovie}`+
+//             `&director=${director}&nameStatus=${nameStatus}&actor=${actor}&releaseDate=${releaseDate}&page=${page}`);
 
 const BASE_URL = "http://localhost:8080/api/v1";
 export const getSearchMovie = async (nameMovie, director, releaseDate, nameStatus, actor, page) => {
@@ -72,7 +78,7 @@ export const getStatusMovie = async () => {
 
 export const getFindAllMovie = async (pageNumber , pageSize ) => {
     try {
-        const response = await axios.get('http://localhost:8080/api/v1/movie/private/list-movie', {
+        const response = await request.get('/movie/private/list-movie', {
             params: {
                 pageNumber,
                 pageSize
@@ -89,7 +95,7 @@ export const getFindAllMovie = async (pageNumber , pageSize ) => {
 
 export const getFindAllStatus = async () => {
     try {
-        const response = await axios.get('http://localhost:8080/api/v1/movie/private/list-status-film');
+        const response = await request.get('/movie/private/list-status-film');
         console.log(response);
         return response.data;
     } catch (error) {
@@ -100,7 +106,7 @@ export const getFindAllStatus = async () => {
 
 export const getFindAllKindOfFilm = async () => {
     try {
-        const response = await axios.get('http://localhost:8080/api/v1/movie/private/list-kind-of-film');
+        const response = await request.get('/movie/private/list-kind-of-film');
         console.log(response);
         return response.data;
     } catch (error) {
@@ -111,7 +117,7 @@ export const getFindAllKindOfFilm = async () => {
 
 export const deleteById = async (id) => {
     try {
-        const response = await axios.put(`http://localhost:8080/api/v1/movie/private/delete/${id}`);
+        const response = await request.put(`/movie/private/delete/${id}`);
         return response.data;
     } catch (error) {
         console.log(error + " error");
@@ -124,7 +130,7 @@ export const deleteByIds = async (ids) => {
         const params = new URLSearchParams();
         ids.forEach(id => params.append('id', id));
 
-        const response = await axios.put('http://localhost:8080/api/v1/movie/private/list-delete', null, { params });
+        const response = await request.put('/movie/private/list-delete', null, { params });
         return response.data;
     } catch (error) {
         console.log(error + " error");
@@ -135,7 +141,7 @@ export const deleteByIds = async (ids) => {
 export const searchMovie = async (nameMovie, content, director, releaseDateFrom,
                                   releaseDateTo, nameStatus, actor, pageNumber, pageSize) => {
     try {
-        const response = await axios.get(`http://localhost:8080/api/v1/movie/private/searches`, {
+        const response = await request.get(`/movie/private/searches`, {
             params: {
                 nameMovie,
                 content,

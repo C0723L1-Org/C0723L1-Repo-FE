@@ -149,7 +149,7 @@ const SearchMovies = () => {
         setSearchCriteria({ nameMovie, director, actor, nameStatus, releaseDate });
 
         if (!nameMovie && !director && !releaseDate && !nameStatus && !actor) {
-            toast.warning('Hãy nhập hoặc chọn một trường bất kỳ!');
+            // toast.warning('Hãy nhập hoặc chọn một trường bất kỳ!');
             return searchMovieByAll('', '', '', '', '', pageNumber);
         }
 

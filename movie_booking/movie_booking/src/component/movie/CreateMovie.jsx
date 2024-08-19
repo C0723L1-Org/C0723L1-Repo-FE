@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import request from "../../redux/axios-config"
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -8,6 +9,7 @@ import { storage } from "../../firebase-config";
 import { XMarkIcon } from '@heroicons/react/24/solid';
 import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
+import {Main} from "../../layout/main/Main";
 
 function CreateMovie() {
     const navigate = useNavigate();
@@ -60,8 +62,8 @@ function CreateMovie() {
     useEffect(() => {
         const fetchKindOfFilms = async () => {
             try {
-                const response = await axios.get(
-                    "http://localhost:8080/api/v1/movie/private/list-kind-of-film"
+                const response = await request.get(
+                    "/movie/private/list-kind-of-film"
                 );
                 setKindOfFilms(response.data);
             } catch (error) {
@@ -93,12 +95,12 @@ function CreateMovie() {
                 kindOfFilm: values.kindOfFilm.map((id) => ({ id })),
             };
 
-            const response = await axios.post(
-                "http://localhost:8080/api/v1/movie/private/create",
+            const response = await request.post(
+                "/movie/private/create",
                 data
             );
             toast.success(`Phim ${data.nameMovie} đã được thêm mới thành công.`);
-            navigate("/");
+            navigate("/movie-manager");
         } catch (error) {
             console.error("Lỗi khi tạo phim:", error);
             toast.error("Có lỗi xảy ra khi thêm mới phim.");
@@ -116,6 +118,7 @@ function CreateMovie() {
     };
 
     return (
+        <Main content={
         <div className="container mx-auto p-8 max-w-6xl bg-white shadow-lg rounded-lg">
             <h2 className="text-3xl font-bold mb-8 text-center text-gray-800 uppercase">Thêm mới Phim</h2>
             <Formik
@@ -392,6 +395,7 @@ function CreateMovie() {
                 )}
             </Formik>
         </div>
+        }/>
     );
 }
 

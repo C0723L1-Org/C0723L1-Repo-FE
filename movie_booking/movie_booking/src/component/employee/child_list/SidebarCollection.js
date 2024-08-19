@@ -39,7 +39,7 @@ export const SidebarCollection = () => {
                             </Link>
                         </li>
                         <li className="tw-sidebar-item">
-                            <a className="tw-sidebar-link" href="/">
+                            <a className="tw-sidebar-link" href="#">
                                 <UserIcon />
                                 <p className="tw-sidebar-text">Quản lý thành viên</p>
                             </a>
@@ -51,19 +51,19 @@ export const SidebarCollection = () => {
                             </Link>
                         </li>
                         <li className="tw-sidebar-item">
-                            <a className="tw-sidebar-link" href="/">
+                            <a className="tw-sidebar-link" href="#">
                                 <PromotionIcon />
                                 <p className="tw-sidebar-text">Khuyến mãi</p>
                             </a>
                         </li>
                         <li className="tw-sidebar-item">
-                            <a className="tw-sidebar-link" href="/">
+                            <a className="tw-sidebar-link" href="#">
                                 <RoomIcon />
                                 <p className="tw-sidebar-text">Quản lý phòng chiếu</p>
                             </a>
                         </li>
                         <li className="tw-sidebar-item">
-                            <a className="tw-sidebar-link" href="/">
+                            <a className="tw-sidebar-link" href="#">
                                 <StatisticalIcon />
                                 <p className="tw-sidebar-text">Thống kê</p>
                             </a>

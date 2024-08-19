@@ -28,7 +28,7 @@ const Register = () => {
                 autoClose: 3000,
             });
             setTimeout(() =>{
-                navigate("/login-account")
+                navigate("/login")
             },3000)
         } catch (error) {
             if (error.response && error.response.status === 400) {
@@ -196,6 +196,21 @@ const Register = () => {
                             >
                                 Đăng ký
                             </button>
+                            <div className="text-center">
+                                    <span className="text-white">
+                                        Bạn đã  có tài khoản? Bạn có thể{" "}
+                                    </span>
+                                <button
+                                    onClick={() => {
+                                        navigate("/login")
+                                    }}
+                                    type="button"
+                                    className="text-blue-400 font-semibold underline hover:text-blue-700"
+                                >
+                                    đăng nhập tại đây
+                                </button>
+                                .
+                            </div>
                         </Form>
                     )}
                 </Formik>

@@ -1,21 +1,23 @@
-import React from "react";
+import React, {useEffect} from "react";
 import 'tailwindcss/tailwind.css';
 
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
-
-import axios from "axios";
 import { toast } from "react-toastify";
 import { FaEnvelope, FaLock, FaGoogle } from 'react-icons/fa';
-import { useNavigate } from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
+import request from "../../redux/axios-config";
+import {useDispatch} from "react-redux";
+import {setUser} from "../../redux/action/user-action";
 
 const Login = () => {
     const navigate = useNavigate();
-
+    const dispatch = useDispatch()
     const validationSchema = Yup.object({
         email: Yup.string().email('Invalid email address').required('Email is required'),
         password: Yup.string().required('Password is required'),
     });
+
     function setCookie(name, value, minutes) {
         let expires = "";
         if (minutes) {
@@ -23,23 +25,20 @@ const Login = () => {
             date.setTime(date.getTime() + (minutes * 60 * 1000));
             expires = "expires=" + date.toUTCString();
         }
-        document.cookie = name + "=" + (value || "") + ";" + expires + ";path=/";
+        document.cookie = `${name}=${encodeURIComponent(value)};${expires};path=/`;
     }
     const handleSubmit = async (values) => {
         try {
-            const response = await axios.post('http://localhost:8080/api/v1/auth/public/authenticate', values)
+            const response = await request.post('/auth/public/authenticate', values)
             const token = response.data;
-            console.log(token);
             // Lưu token vào localStorage hoặc cookie
             const jwtToken = response.data
-            await setCookie('jwt', jwtToken, 30)
+            await setCookie(`jwt`,jwtToken,30)
             toast.success('Đăng nhập thành công!');
-            const user =  await  axios.get('http://localhost:8080/api/v1/auth/info')
-            //lưu user vào localStorage
-            localStorage.setItem('user', JSON.stringify(user));
+            await getUser()
             setTimeout( ()=>{
-                navigate('/'); // Điều hướng đến trang hồ sơ sau khi đăng nhập thành công
-            },3000)
+                navigate("/"); // Điều hướng đến trang hồ sơ sau khi đăng nhập thành công
+            },1000)
         } catch (error) {
             if (error.response && error.response.status === 400) {
                 const errorMessage = error.response.data;
@@ -49,15 +48,23 @@ const Login = () => {
                     toast.error(errorMessage);
                 }
             } else {
-                toast.error('Đã xảy ra lỗi không mong muốn');
+                toast.error('Sai thông tin email/  mật khẩu');
             }
             console.log(error);
         }
     };
+    const getUser = async ()=>{
+        try {
+            let res= await request.get(`/auth/info`)
+            dispatch(setUser(res.data))
+        } catch (e) {
+            console.log(e)
+        }
+    }
 
     const handleGoogleLogin = () => {
         // Thay thế URL này bằng URL OAuth của Google từ backend của bạn
-        window.location.href = "https://your-backend-api.com/oauth2/authorize/google";
+        console.log("abc")
     };
 
     return (
@@ -109,7 +116,6 @@ const Login = () => {
                             >
                                 Đăng nhập
                             </button>
-
                             <div className="flex items-center justify-center mt-6">
                                 <button
                                     type="button"
@@ -119,6 +125,21 @@ const Login = () => {
                                     <FaGoogle className="mr-3"/>
                                     Đăng nhập với Google
                                 </button>
+                            </div>
+                            <div className="text-center">
+                                    <span className="text-white">
+                                        Bạn đã chưa có tài khoản? Bạn có thể{" "}
+                                    </span>
+                                <button
+                                    onClick={() => {
+                                        navigate("/register")
+                                    }}
+                                    type="button"
+                                    className="text-blue-400 font-semibold underline hover:text-blue-700"
+                                >
+                                    đăng ký tại đây
+                                </button>
+                                .
                             </div>
                         </Form>
                     )}

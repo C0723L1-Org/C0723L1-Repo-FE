@@ -1,10 +1,12 @@
-import {SET_SHOWTIME} from "../action/type-action";
+import {REMOVE_SHOWTIME, SET_SHOWTIME} from "../action/type-action";
 
 const init =null
 const showtimeReducer = (showtime = init, action) => {
     const {type, payload} = action
     switch (type) {
         case SET_SHOWTIME:
+            return payload
+        case REMOVE_SHOWTIME:
             return payload
         default:
             return showtime

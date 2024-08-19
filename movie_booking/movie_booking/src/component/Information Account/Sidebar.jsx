@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
+import {NavLink, useNavigate} from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBars,
@@ -10,8 +10,10 @@ import {
   faQuestionCircle,
   faSignOutAlt,
 } from "@fortawesome/free-solid-svg-icons";
+import Cookies from "js-cookie";
 
 function Sidebar() {
+    const navigate = useNavigate()
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleSidebar = () => {
@@ -34,7 +36,7 @@ function Sidebar() {
         >
           <div className="flex flex-col p-4 space-y-2">
             <NavLink
-                to="/"
+                to="/profile"
                 className={({ isActive }) =>
                     `flex items-center px-3 py-2.5 font-semibold ${
                         isActive
@@ -62,7 +64,7 @@ function Sidebar() {
             </NavLink>
 
             <NavLink
-                to="/lich-su-dat-ve"
+                to="/use-booking-management"
                 className={({ isActive }) =>
                     `flex items-center px-3 py-2.5 font-semibold ${
                         isActive
@@ -76,7 +78,7 @@ function Sidebar() {
             </NavLink>
 
             <NavLink
-                to="/canceled-tickets"
+                to="#"
                 className={({ isActive }) =>
                     `flex items-center px-3 py-2.5 font-semibold ${
                         isActive
@@ -90,7 +92,7 @@ function Sidebar() {
             </NavLink>
 
             <NavLink
-                to="/help"
+                to="/faq"
                 className={({ isActive }) =>
                     `flex items-center px-3 py-2.5 font-semibold ${
                         isActive
@@ -107,7 +109,11 @@ function Sidebar() {
             </NavLink>
 
             <NavLink
-                to="/logout"
+                to="/"
+                onClick={() => {
+                    localStorage.clear();
+                    Cookies.set('jwt', '')
+                }}
                 className={({ isActive }) =>
                     `flex items-center px-3 py-2.5 font-semibold ${
                         isActive

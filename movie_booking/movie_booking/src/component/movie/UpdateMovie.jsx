@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import request from "../../redux/axios-config"
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -50,7 +51,7 @@ function UpdateMovie() {
     useEffect(() => {
         const fetchMovieDetails = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/api/v1/movie/private/find/${movieId}`);
+                const response = await request.get(`/movie/private/find/${movieId}`);
                 setMovie(response.data);
                 setAvatarPreview(response.data.avatar);
                 setPosterPreview(response.data.poster);
@@ -62,7 +63,7 @@ function UpdateMovie() {
 
         const fetchKindOfFilms = async () => {
             try {
-                const response = await axios.get("http://localhost:8080/api/v1/movie/private/list-kind-of-film");
+                const response = await request.get("/movie/private/list-kind-of-film");
                 setKindOfFilms(response.data);
             } catch (error) {
                 console.error("Không thể tải danh sách thể loại phim", error);
@@ -94,9 +95,9 @@ function UpdateMovie() {
                 kindOfFilm: values.kindOfFilm.map(id => ({ id })),
             };
 
-            await axios.put(`http://localhost:8080/api/v1/movie/private/update/${movieId}`, data);
+            await request.put(`/movie/private/update/${movieId}`, data);
             toast.success(`Phim ${data.nameMovie} đã được cập nhật thành công.`);
-            navigate("/");
+            navigate("/movie-manager");
         } catch (error) {
             console.error("Không thể cập nhật phim:", error);
             toast.error("Có lỗi xảy ra khi cập nhật phim.");

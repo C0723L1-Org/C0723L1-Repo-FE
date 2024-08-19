@@ -1,15 +1,19 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import axios from "axios";
+import {useNavigate, useParams} from "react-router-dom";
 import { Modal } from "react-responsive-modal";
 import "react-responsive-modal/styles.css";
 import { FaCalendarAlt, FaClock } from "react-icons/fa";
 import MoviesShowing from "./MoviesShowing";
-import {Main} from "../../layout/main/Main";
+import request from "../../redux/axios-config";
+import {useSelector} from "react-redux";
+
 
 function SeeMovieDetails() {
+  const navigate = useNavigate()
   const [open, setOpen] = useState(false);
   const [movie, setMovie] = useState(null);
+  const user = useSelector(state => state.user.user)
+
   const { id } = useParams();
   const openModal = () => setOpen(true);
   const closeModal = () => setOpen(false);
@@ -18,8 +22,8 @@ function SeeMovieDetails() {
     const fetchMovie = async () => {
       try {
         if (id) {
-          const response = await axios.get(
-            `http://localhost:8080/api/v1/movie/public/find/${id}`
+          const response = await request.get(
+            `/movie/private/find/${id}`
           );
           setMovie(response.data);
         }
@@ -39,7 +43,7 @@ function SeeMovieDetails() {
     <>
       <div className="book__ticket__wrapper">
         <div className="relative bg-black flex justify-center w-full h-full ">
-          <div className="absolute w-full h-full z-[300] bg-[#0003]"></div>
+          <div className="absolute w-full h-full  bg-[#0003]"></div>
           <div className="relative h-full overflow-hidden">
             <div className="absolute top-0 -left-[0%] z-100">
               <img
@@ -189,19 +193,25 @@ function SeeMovieDetails() {
                         ))}
                       </ul>
                     </div>
-                    <div className="flex flex-nowrap  items-center text-sm">
-                      <button className="py-2 px-5 bg-blue-500 text-dark font-semibold rounded-full shadow-md hover:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-400 focus:ring-opacity-75 text-white">
-                        Đặt vé
-                      </button>
-                    </div>
+                    {movie?.statusFilm?.name === "Showing" && user?.role !== "employee" ?(
+                        <div className="flex flex-nowrap  items-center text-sm">
+                          <button onClick={() => {
+                            navigate(`/movie/${id}`)
+                          }}
+                                  className="py-2 px-5 bg-blue-500 text-dark font-semibold rounded-full shadow-md hover:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-400 focus:ring-opacity-75 text-white">
+                            Đặt vé
+                          </button>
+                        </div>
+                    ):""}
+
                   </div>
                 </div>
               </div>
               <div className="movie__info relative md:hidden grid grid-cols-1 grid-flow-row  lg:items-end ">
                 <div className="movie__thumbnail grid grid-cols-3 gap-3 grid-flow-col">
                   <img
-                    alt="Deadpool &amp; Wolverine"
-                    className='border-2 rounded border-white lg:w-[320px] lg:h-[400px] md:w-full md:h-full w-[120px] h-[160px] col-span-1 object-cover duration-500 ease-in-out group-hover:opacity-100"
+                      alt="Deadpool &amp; Wolverine"
+                      className='border-2 rounded border-white lg:w-[320px] lg:h-[400px] md:w-full md:h-full w-[120px] h-[160px] col-span-1 object-cover duration-500 ease-in-out group-hover:opacity-100"
                         scale-100 blur-0 grayscale-0'
                     src={movie?.avatar}
                     style={{ color: "transparent" }}
@@ -312,7 +322,7 @@ function SeeMovieDetails() {
                       >
                         Phim mới
                         <strong> {movie?.nameMovie}</strong>&nbsp;ra mắt tại các
-                        <em>rạp chiếu phim</em>
+                        <em> rạp chiếu phim </em>
                         toàn quốc từ {movie?.releaseDate}.
                       </span>
                     </span>
