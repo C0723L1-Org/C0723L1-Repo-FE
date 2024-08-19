@@ -1,7 +1,7 @@
-import Navbar from "../../component/Home/Navbar/Navbar";
+import Navbar from "../Navbar/Navbar";
 import React from "react";
-import Footer from "../../component/Home/Footer/Footer";
-import SpeedDial from "../../component/Home/SpeedDial/SpeedDial";
+import Footer from "../Footer/Footer";
+import SpeedDial from "../SpeedDial/SpeedDial";
 
 
 export const Main = ({ content }) => {

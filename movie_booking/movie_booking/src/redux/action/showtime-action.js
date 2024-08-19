@@ -1,12 +1,15 @@
-import {SET_SHOWTIME} from "./type-action";
+import {SET_SHOWTIME,REMOVE_SHOWTIME} from "./type-action";
 
 export  const setShowtime =(showtime) => async (dispatch)=>{
-    try {
         dispatch({
             type:SET_SHOWTIME,
             payload:showtime
         })
-    }catch (e) {
-        console.log(e)
-    }
+
+}
+export const removeShowtime = (dispatch)=>{
+        dispatch({
+            type:REMOVE_SHOWTIME,
+            payload:{}
+        })
 }

@@ -40,8 +40,8 @@ const Comming = () => {
                                     <div
                                         className="absolute inset-0 flex flex-col p-4 bg-black bg-opacity-75 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-md">
                                         <h2 className="text-white text-center text-lg font-bold">{data.nameMovie}</h2>
-                                        <div className="text-orange-400 items-center grid grid-rows-1">
-                                            <p>⏰Thời lượng:{data.durationMovie}</p>
+                                        <div className="text-orange-400 text-center items-center grid grid-rows-1">
+                                            <p>⏰Thời lượng:{data.durationMovie} phút</p>
                                         </div>
                                         <div className="flex flex-wrap justify-center mb-2">
                                             {data.kindOfFilms && data.kindOfFilms.map((item) => (

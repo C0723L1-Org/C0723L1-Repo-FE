@@ -1,5 +1,4 @@
 import React, {useEffect} from 'react';
-import FAQ from "../../component/Home/q&a/FAQ";
 import Comments from "../../component/Home/Support/Comments";
 import Assess from "../../component/Home/Assess/Assess";
 import {Main} from "../../layout/main/Main";
@@ -9,8 +8,7 @@ const SupportPage = () => {
     }, []);
     return (
     <Main content={
-        <div>
-            <FAQ/>
+        <div className="py-20">
             <Comments/>
             <Assess />
         </div>

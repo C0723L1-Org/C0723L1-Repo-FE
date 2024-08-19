@@ -2,9 +2,11 @@ import {MdLocalMovies} from "react-icons/md";
 import React, {useEffect, useState} from "react";
 import {IoMdSearch} from "react-icons/io";
 import {FaCaretDown, FaUser} from "react-icons/fa";
-import {useNavigate} from "react-router-dom";
-import Cookies from "js-cookie";
-import request from "../../../redux/axios-config"
+import {NavLink, useNavigate} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {setUser} from "../../redux/action/user-action";
+import request from "../../redux/axios-config"
+import {toast} from "react-toastify";
 
 const Menu = [{
     id: 1, name: "Trang Chủ", link: "/",
@@ -31,30 +33,30 @@ let a = null;
 const Navbar = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const [dropdown, setDropdown] = useState(false);
-    const [user, setUser] = useState({})
-
-    useEffect( () => {
-        setUser(JSON.parse(localStorage.getItem('user')))
-    }, []);
-
+    const user = useSelector(state => state.user.user)
     const handleSearch = (e) => {
         e.preventDefault();
         if (searchTerm.trim()) {
             navigate(`/search-movie?query=${searchTerm}`);
         }
     };
+    const logout = async ()=>{
+        let res = await request.post('/auth/log-out')
+        toast.success(res.data)
+    }
     return (
         <>
-        <div className="shadow-md bg-slate-100 dark:bg-gray-900 dark:text-white relative z-40">
+        <div className="shadow-md bg-slate-100 dark:bg-gray-900 dark:text-white relative z-9999">
             {/* Upper Navbar */}
             <div className="bg-slate-100 py-3 sm:py-0">
                 <div className="container flex justify-between  items-center">
                     <div>
-                        <a href="/" className="font-bold text-xl sm:text-3xl flex items-center ">
+                        <NavLink to="/" className="font-bold text-xl sm:text-3xl flex items-center ">
                             <MdLocalMovies className=" w-10 h-auto text-red-600 "/>
                             CINEMA
-                        </a>
+                        </NavLink>
                     </div>
                     {/* Search Bar */}
                     <div>
@@ -112,31 +114,44 @@ const Navbar = () => {
                                             </div>
                                         </div>
                                         <hr className="border-gray-200 dark:border-gray-700 "/>
-                                        <div
-                                            onClick={() => {
-                                                navigate("/profile");
-                                            }}
-                                            className="cursor-pointer block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-200 transform dark:text-gray-300 hover:bg-slate-200 "
-                                        >
-                                            Xem thông tin cá nhân
-                                        </div>
-                                        <hr className="border-gray-200 dark:border-gray-700 "/>
-                                        <div
-                                            onClick={() => {
-                                                navigate("/use-booking-management");
-                                            }}
-                                            className="cursor-pointer block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-200 transform dark:text-gray-300 hover:bg-slate-200"
-                                        >
-                                            Lịch sử đặt vé
-                                        </div>
+                                        {user?.role == "employee" ? (
+                                            <div
+                                                onClick={() => {
+                                                    navigate("/movie-manager");
+                                                }}
+                                                className="cursor-pointer block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-200 transform dark:text-gray-300 hover:bg-slate-200 "
+                                            >
+                                                Quản lý phim
+                                            </div>
+                                        ) : (
 
+                                       <>
+                                            <div
+                                                onClick={() => {
+                                                    navigate("/profile");
+                                                }}
+                                                className="cursor-pointer block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-200 transform dark:text-gray-300 hover:bg-slate-200 "
+                                            >
+                                                Xem thông tin cá nhân
+                                            </div>
+                                            <hr className="border-gray-200 dark:border-gray-700 "/>
+                                            <div
+                                                onClick={() => {
+                                                    navigate("/use-booking-management");
+                                                }}
+                                                className="cursor-pointer block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-200 transform dark:text-gray-300 hover:bg-slate-200"
+                                            >
+                                                Lịch sử đặt vé
+                                            </div>
+                                       </>
+                                            )}
                                         <hr className="border-gray-200 dark:border-gray-700 "/>
                                         <div
                                             onClick={() => {
-                                                localStorage.clear();
-                                                Cookies.set('jwt', '')
-                                                setUser(prevState => {})
+                                                logout()
+                                                dispatch(setUser(null))
                                                 navigate("/");
+                                                console.log(user)
                                             }}
                                             className="cursor-pointer block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-200 transform dark:text-gray-300 hover:bg-slate-200"
                                         >
@@ -174,9 +189,9 @@ const Navbar = () => {
             <div className="flex justify-center">
                 <ul className="sm:flex hidden items-center gap-5 ">
                     {Menu.map((data) => (<li key={data.id}>
-                        <a href={data.link} className="inline-block px-4 hover:text-blue-400 duration-200">
+                        <NavLink to={data.link} className="inline-block px-4 hover:text-blue-400 duration-200">
                             {data.name}
-                        </a>
+                        </NavLink>
                     </li>))}
                     {/* Li movie */}
                     <li className="group relative cursor-pointer">

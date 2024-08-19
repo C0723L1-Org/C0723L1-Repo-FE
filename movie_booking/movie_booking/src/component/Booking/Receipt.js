@@ -1,6 +1,5 @@
 import './receipt.css'
 import {useEffect, useState} from "react";
-// import {PayPalButtons} from "@paypal/react-paypal-js";
 import { PayPalButtons } from '@paypal/react-paypal-js';
 import Swal from "sweetalert2";
 import axios from "axios";
@@ -9,18 +8,20 @@ import {useDispatch, useSelector} from "react-redux";
 import {useNavigate, useParams} from "react-router-dom";
 import {setListBooking} from "../../redux/action/booking-action";
 import {Main} from "../../layout/main/Main";
+import Loader from "./Loader";
+import {removeAllSelectedSeat, removeSeat} from "../../redux/action/seat-action";
+import {removeShowtime, setShowtime} from "../../redux/action/showtime-action";
+
 function Receipt(){
     const dispatch = useDispatch();
     const navigate = useNavigate()
     const params = useParams()
+    const [isLoading, setIsLoading] = useState(false)
     const listBooking = useSelector(state => state.booking)
-    // const userId = useSelector(state => state.user)
-    const userId = 1
-    const totalAmount = listBooking.reduce((total, booking) => {
-        return total + booking.seat.price;
-    }, 0);
+    const user = useSelector(state => state.user.user)
+    const [totalAmount, setTotalAmount] = useState()
     const [paymentSelector, setPaymentSelector] = useState()
-    const [amountVND, setAmountVND] = useState(totalAmount)
+    const [amountVND, setAmountVND] = useState(0)
     const [amountUSD, setAmountUSD] = useState(0)
     const bookingStatus ={
         id:"2",
@@ -31,7 +32,6 @@ function Receipt(){
         setPaymentSelector(value);
     }
     const onCreateOrder = async (data,actions) => {
-        console.log(amountUSD)
         return actions.order.create({
             purchase_units: [
                 {
@@ -45,7 +45,9 @@ function Receipt(){
 
     const onApproveOrder = (data,actions) => {
         return actions.order.capture().then((details) => {
-            updateBookings().then(()=>(
+            setIsLoading(prevState => true)
+            updateBookings().then(()=>{
+                setIsLoading(prevState => false)
                 Swal.fire({
                     icon: "success",
                     title: "đặt vé thành công",
@@ -53,10 +55,14 @@ function Receipt(){
                     showConfirmButton: true,
                 }).then((result) =>{
                         if (result.isConfirmed){
-                            navigate("/")
+                            dispatch(removeAllSelectedSeat())
+                            dispatch(setShowtime({}))
+                            navigate("/use-booking-management")
                         }
                     }
-                ))
+                )
+                }
+
             )
         })
     }
@@ -67,30 +73,28 @@ function Receipt(){
             text: "Thanh toán không thành công! lỗi :" +err
         });
     }
+    const updateBookingToBackend = async (booking) => {
+        try {
+            const bookingRequest ={
+                seatId: booking.seat.id,
+                showtimeId: booking.showTime.id
+            }
+            await request.post(`/booking/update`,bookingRequest)
+        } catch (e){
+            console.log(e)
+        }
+    };
     const updateBookings = async () => {
         for (const item of listBooking) {
-            let newItem = {
-                ...item,
-                bookingStatus: bookingStatus
-            };
             try {
-                console.log(newItem)
-                await saveBookingToBackend(newItem);
+                await updateBookingToBackend(item);
             } catch (error) {
                 console.error('Error saving booking:', error);
             }
         }
     };
-    const saveBookingToBackend = async (booking) => {
-        try {
-            console.log(booking)
-            await request.post(`/booking/create/${userId}`,booking)
-        } catch (e){
-            console.log(e)
-        }
-    };
+
     useEffect(() => {
-        console.log(userId)
         document.title = `Movie: ${listBooking[1]?.showTime?.movie?.nameMovie || 'Tên Phim'}` ;
         const fetchExchangeRate = async () => {
             try {
@@ -102,7 +106,14 @@ function Receipt(){
         };
 
         fetchExchangeRate();
-    }, []);
+    }, [totalAmount]);
+    useEffect(() => {
+        const totalAmount = listBooking.reduce((total, booking) => {
+            return total + booking.seat.price;
+        }, 0);
+        setTotalAmount(prevState => totalAmount)
+        setAmountVND(prevState => totalAmount)
+    }, [listBooking]);
     function handelClickBackSeatScreen() {
         Swal.fire({
             title: "Warning!!!",
@@ -136,13 +147,27 @@ function Receipt(){
 
         return `${day}/${month}/${year}`;
     }
-    const removeBooking=(index)=>{
-        const newListBooking =  listBooking.filter((item, i) => index !== i)
-       dispatch(setListBooking(newListBooking))
+    const removeBooking=(index,item)=>{
+        Swal.fire({
+            title: "Warning!!!",
+            text:"Bạn muốn xóa ghế đã chọn ?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const newListBooking =  listBooking.filter((item, i) => index !== i)
+                dispatch(removeSeat(item.showTime.room.id,item.seat.seatNumber))
+                dispatch(setListBooking(newListBooking))
+            }
+        });
+
     }
     return (
         <Main content={
-        <>
+        <>  {isLoading ? (<Loader/>):("")}
             <div className="py-14  md:px-6 2xl:px-20 2xl:container 2xl:mx-auto dark:bg-gray-800 rounded-3xl mt-10">
                 <div className="w-full flex items-center ml-2">
                     <button onClick={() =>handelClickBackSeatScreen()}
@@ -197,7 +222,7 @@ function Receipt(){
                                             <td className="px-6 py-4">{formatDate(item.showTime.showDate)}</td>
                                             <td className="px-6 py-4">{item.totalAmount} VNĐ</td>
                                             <td className="px-6 py-4">
-                                                <div onClick={() =>removeBooking(index)}
+                                                <div onClick={() =>removeBooking(index,item)}
                                                      className="flex justify-end gap-4">
                                                     <svg
                                                         xmlns="http://www.w3.org/2000/svg"
@@ -313,7 +338,7 @@ function Receipt(){
                                         />
                                 </div>
                             ):(<div className="w-full flex justify-center items-center mt-6">
-                                <button onClick={()=>{console.log(paymentSelector)}}
+                                <button onClick={()=>updateBookings()}
                                         className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded ">
                                     Thanh Toán
                                 </button>

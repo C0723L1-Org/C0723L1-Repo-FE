@@ -8,6 +8,8 @@ import {useNavigate, useParams} from "react-router-dom";
 import Swal from "sweetalert2";
 import {setListBooking} from "../../redux/action/booking-action";
 import {Main} from "../../layout/main/Main";
+import {saveBookingToBackend} from "./Receipt";
+import BtnLoader from "./BtnLoader";
 
 function SeatScreen(){
     const dispatch = useDispatch();
@@ -15,22 +17,51 @@ function SeatScreen(){
     const navigate = useNavigate();
     const listSeat = useSelector(state => state.seat);
     const showtime = useSelector(state => state.showtime)
-    const user = useSelector(state => state.user)
+    const user = useSelector(state => state.user.user)
     const rows = ['A', 'B', 'C', 'D', 'E', 'F','G','H'];
     const seatsPerRow = 12;
-    const [occupiedSeats, setOccupiedSeats] = useState([])
+    const [selectedSeats, setSelectedSeats] = useState([])
+    const [selectingSeats, setSelectingSeats] = useState([])
+    const [isLoading, setIsLoading] = useState(false)
+    const bookingStatus ={
+        id:"1",
+        name:"Chưa thanh toán"
+    }
     useEffect(() => {
         document.title = `Movie: ${showtime?.movie?.nameMovie || 'Tên Phim'}` ;
         const fetchDateSeatSelected = async () =>{
             console.log(showtime)
             try {
-                let res = await request.get("/seat/public/list",{
+                let res = await request.get("/seat/public/selected",{
                     params:{
                         showtimeId : showtime?.id || 0
                     }
                 })
                 console.log(res.data)
-                setOccupiedSeats(prevState => res.data)
+                setSelectedSeats(prevState => res.data)
+            } catch (e) {
+                console.log(e)
+                toast.error(`Error: ${e}`, {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                    transition: Bounce,
+                });
+            }
+        }
+        const fetchDateSeatSelecting = async () =>{
+            try {
+                let res = await request.get("/seat/public/selecting",{
+                    params:{
+                        showtimeId : showtime?.id || 0
+                    }
+                })
+                setSelectingSeats(prevState => res.data)
             } catch (e) {
                 console.log(e)
                 toast.error(`Error: ${e}`, {
@@ -47,15 +78,19 @@ function SeatScreen(){
             }
         }
         fetchDateSeatSelected()
-
+        fetchDateSeatSelecting()
     }, []);
     const isSeatSelected = (seatNumber) => {
 return listSeat.some(seat => seat.seatNumber === seatNumber);
     };
     const isSeatOccupied = (seatNumber) => {
-        const newArray = [...occupiedSeats];
+        const newArray = [...selectedSeats];
         return newArray.some(seat => seat.seatNumber === seatNumber);
     };
+    const isSelectingByOther =(seatNumber) =>{
+        const newArray = [...selectingSeats];
+        return newArray.some(seat => seat.seatNumber === seatNumber);
+    }
 
     const handleSeatClick = (seatNumber) => {
         if(!(showtime)){
@@ -90,7 +125,8 @@ return listSeat.some(seat => seat.seatNumber === seatNumber);
             totalAmount: seat.price,
             user: null,
             showTime: showtime,
-            seat: seat
+            seat: seat,
+            bookingStatus: bookingStatus
         }));
     }
     const formatDateToDDMMYYYY =(date) =>{
@@ -99,9 +135,14 @@ return listSeat.some(seat => seat.seatNumber === seatNumber);
         const year = date.getFullYear();
         return `${day}/${month}/${year}`;
     }
+    const saveBookingToBackend = async (booking, userId) => {
+        try {
+            await request.post(`/booking/create/${userId}`,booking)
+        } catch (e){
+            console.log(e)
+        }
+    };
     function handelClickMoveReceipt() {
-        console.log(listSeat);
-        console.log(showtime)
         Swal.fire({
             title: "Warning!!!",
             text:"Vui lòng kiễm tra kỹ trước khi chuyển sang bước tiếp theo",
@@ -112,8 +153,18 @@ return listSeat.some(seat => seat.seatNumber === seatNumber);
             confirmButtonText: "Yes!"
         }).then(async (result) => {
             if (result.isConfirmed) {
+                setIsLoading(prevState => true)
                 const listBooking = creatListBooking()
+                for (const item of listBooking) {
+                    try {
+                        console.log(item)
+                        await saveBookingToBackend(item,user.id);
+                    } catch (error) {
+                        console.error('Error saving booking:', error);
+                    }
+                }
                 await dispatch(setListBooking(listBooking))
+                setIsLoading(prevState => false)
                 navigate(`/receipt/${params.id}`)
             }
         });
@@ -138,10 +189,10 @@ return listSeat.some(seat => seat.seatNumber === seatNumber);
     }
     return (
         <Main content={
-            <div className="my-25 ">
-               <div className="flex justify-center align-center bg-slate-100 ">
-                   <div className="seat-screen_body min-w-[900px] rounded-lg bg-slate-600">
-                       <div className="movie-container mt-20">
+            <div className="my-6 sm:my-10 md:my-16 lg:my-25">
+               <div className="flex flex-col justify-center items-center bg-slate-100 ">
+                   <div className="seat-screen_body w-full max-w-[900px] rounded-lg bg-slate-600">
+                       <div className="movie-container mt-5 sm:mt-10 md:mt-15 lg:mt-20">
                            <p>
                                <label>Movie: </label>
                                <span id="movie"> {showtime?.movie?.nameMovie || 'Tên Phim'}</span>
@@ -151,30 +202,35 @@ return listSeat.some(seat => seat.seatNumber === seatNumber);
                                <span id="movie"> {showtime?.movie?.durationMovie || "Thời Lượng"} phút</span>
                            </p>
                        </div>
-                       <ul className="showcase">
-                           <li>
+                       <ul className="showcase flex flex-wrap justify-around">
+                           <li className="m-2">
                                <div className="seat"></div>
                                <small className="text-white">Hợp lệ</small>
                            </li>
-                           <li>
+                           <li className="m-2">
                                <div className="seat selected"></div>
                                <small className="text-white">Đang chọn</small>
                            </li>
-                           <li>
+                           <li className="m-2">
                                <div className="seat occupied"></div>
                                <small className="text-white">Đã đặt</small>
                            </li>
                        </ul>
                         {/*in ra danh sách ghế*/}
-                       <div className="seat-container ">
+                       <div className="seat-container px-2 sm:px-4 md:px-8">
                            <div className="screen"></div>
                            {rows.map((row) => (
-                               <div className="row" key={row}>
+                               <div className="row flex justify-center" key={row}>
                                    {Array.from({ length: seatsPerRow }, (_, index) => {
                                        const seatNumber = `${row}${index + 1}`;
                                        return (
                                            <div
-                                               className={`seat ${isSeatOccupied(seatNumber) ? 'occupied' : ''} ${isSeatSelected(seatNumber) ? 'selected' : ''}`}
+                                               className={`seat 
+                                               ${isSeatOccupied(seatNumber) ? 'occupied pointer-events-none cursor-not-allowed' : ''} 
+                                               ${isSeatSelected(seatNumber) ? 'selected' : ''}
+                                               ${isSelectingByOther(seatNumber) ? 'other-selecting cursor-not-allowed, pointer-events-none' : ''}`
+
+                                           }
                                                key={seatNumber}
                                                onClick={() => handleSeatClick(seatNumber)}
                                            >
@@ -184,16 +240,16 @@ return listSeat.some(seat => seat.seatNumber === seatNumber);
                                    })}
                                </div>
                            ))}
-                           <p className="text">
+                           <p className="text mt-4 sm:mt-6 md:mt-8">
                                Bạn đã chọn <span id="count">{listSeat.length}</span> ghế
                            </p>
-                           <p className="text">
+                           <p className="text  mt-2 sm:mt-4 md:mt-6">
                                Tổng tiền: <span id="count">{listSeat.reduce((total, seat) => {
                                return total + seat.price;
                            }, 0)}</span> VNĐ
                            </p>
-                           <div className="flex justify-between items-center w-full mt-5">
-                               <div className="w-full  flex justify-center items-center">
+                           <div className="flex flex-col sm:flex-row justify-between items-center w-full mt-5">
+                               <div className="w-full flex justify-center items-center mb-4 sm:mb-0">
                                    <button onClick={() => handelClickBackToMovie()}
                                             className="bg-amber-50 hover:bg-amber-200 text-blue-700 font-semibold hover:text-black py-2 px-4 border border-amber-500 hover:border-transparent rounded ">
                                        Quay lại
@@ -202,7 +258,7 @@ return listSeat.some(seat => seat.seatNumber === seatNumber);
                                <div className="w-full flex justify-center items-center">
                                    <button onClick={() =>handelClickMoveReceipt()}
                                             className="bg-amber-50 hover:bg-amber-200 text-blue-700 font-semibold hover:text-black py-2 px-4 border border-amber-500 hover:border-transparent rounded ">
-                                       Tiếp theo
+                                       {isLoading ? <BtnLoader/>:"Tiếp theo"}
                                    </button>
                                </div>
                            </div>

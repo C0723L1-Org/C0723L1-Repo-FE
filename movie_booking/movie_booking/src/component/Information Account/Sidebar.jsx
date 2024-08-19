@@ -36,7 +36,7 @@ function Sidebar() {
         >
           <div className="flex flex-col p-4 space-y-2">
             <NavLink
-                to="/"
+                to="/profile"
                 className={({ isActive }) =>
                     `flex items-center px-3 py-2.5 font-semibold ${
                         isActive
@@ -78,7 +78,7 @@ function Sidebar() {
             </NavLink>
 
             <NavLink
-                to="/canceled-tickets"
+                to="#"
                 className={({ isActive }) =>
                     `flex items-center px-3 py-2.5 font-semibold ${
                         isActive
