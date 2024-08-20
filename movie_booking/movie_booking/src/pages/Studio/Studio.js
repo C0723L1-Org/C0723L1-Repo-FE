@@ -15,13 +15,13 @@ const Studio = () => {
 
     useEffect(() => {
         const fetchMovies = async () => {
-            await searchMovieByAll('', '', '', '', '', pageNumber);
+            await searchMovieByAll('', '', '', '', '', '', pageNumber);
         }
         fetchMovies();
     }, [pageNumber]);
 
-    const searchMovieByAll = async (nameMovie, director, releaseDate, nameStatus, actor, page) => {
-        const temp = await MovieService.getSearchMovie(nameMovie, director, releaseDate, nameStatus, actor, page);
+    const searchMovieByAll = async (nameMovie, director, releaseDate, nameStatus, actor, studio, page) => {
+        const temp = await MovieService.getSearchMovie(nameMovie, director, releaseDate, nameStatus, actor, studio, page);
         setMovies(temp.content);
         setTotalPages(temp.totalPages);
     };
@@ -53,21 +53,27 @@ const Studio = () => {
         const releaseDate = data.releaseDate || '';
         const nameStatus = data.nameStatus || '';
         const actor = data.actor || '';
+        const studio = data.studio || '';
 
-        if (!nameMovie && !director && !releaseDate && !nameStatus && !actor) {
-            toast.warning('Please enter at least one search criteria');
+        console.log('Dữ liệu tìm kiếm:', { nameMovie, director, releaseDate, nameStatus, actor, studio });
+
+        if (!nameMovie && !director && !releaseDate && !nameStatus && !actor && !studio) {
+            toast.warning('Hãy nhập hoặc chọn một trường bất kỳ!');
             return;
         }
 
         try {
-            const temp = await MovieService.getSearchMovie(nameMovie, director, releaseDate, nameStatus, actor, pageNumber);
+            const temp = await MovieService.getSearchMovie(nameMovie, director, releaseDate, nameStatus, actor, studio, pageNumber);
+            console.log('Kết quả tìm kiếm:', temp);
             setMovies(temp.content);
             setTotalPages(temp.totalPages);
         } catch (e) {
+            console.error('Lỗi tìm kiếm:', e);
             toast.warning('Không có điều bạn tìm kiếm!!!');
             setMovies([]);
         }
     }
+
 
     return (
         <Main content={

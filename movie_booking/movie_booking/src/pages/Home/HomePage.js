@@ -9,23 +9,31 @@ import {Main} from "../../layout/main/Main";
 const HomePage = () => {
     const [showModal, setShowModal] = useState(true);
     const hideToday = !!localStorage.getItem('hide-today');
+    const hideTime = localStorage.getItem('hide-today-time');
+
     useEffect(() => {
         window.scrollTo(0, 0);
-        if ( !hideToday ) {
-            console.log("Show Modal")
+
+        const now = new Date().getTime();
+        const fifteenMinutes = 10 * 60 * 1000;
+
+        if (hideToday && hideTime) {
+            const hideTimeMs = parseInt(hideTime, 10);
+            if (now - hideTimeMs > fifteenMinutes) {
+                localStorage.removeItem('hide-today');
+                localStorage.removeItem('hide-today-time');
+                setShowModal(true);
+            } else {
+                setShowModal(false);
+            }
+        } else {
             setShowModal(true);
             handleHideTodayChange();
-        }else{
-            console.log("Hide Modal")
-            setShowModal(false);
-            localStorage.removeItem('hide-today');
         }
-
     }, []);
-
     const handleHideTodayChange = () => {
-        console.log("create localStore")
         localStorage.setItem('hide-today', 'true');
+        localStorage.setItem('hide-today-time', new Date().getTime().toString());
     };
 
     return (

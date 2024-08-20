@@ -34,7 +34,7 @@ function MoviesShowing() {
       </div>
       <div className="movie__content">
         <ul className="flex flex-col  justify-between">
-          {showingMovies.map((showing) => (
+          {showingMovies.slice(0, 3).map((showing) => (
             <li
               key={showing.id}
               className="text-sm text-black py-1 transition-all duration-300"
@@ -66,7 +66,7 @@ function MoviesShowing() {
                     <Link to={`/see-movie-details/${showing.id}`}>
                       <img
                         alt="deadpool--wolverine"
-                        className="object-cover w-full h-[350px] duration-500 ease-in-out"
+                        className="object-cover w-full h-[320px] duration-500 ease-in-out"
                         src={showing.avatar}
                         style={{ color: "transparent" }}
                       />

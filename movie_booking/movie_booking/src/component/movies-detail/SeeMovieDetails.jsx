@@ -4,8 +4,8 @@ import { Modal } from "react-responsive-modal";
 import "react-responsive-modal/styles.css";
 import { FaCalendarAlt, FaClock } from "react-icons/fa";
 import MoviesShowing from "./MoviesShowing";
-import request from "../../redux/axios-config";
 import {useSelector} from "react-redux";
+import axios from "axios";
 
 
 function SeeMovieDetails() {
@@ -22,8 +22,8 @@ function SeeMovieDetails() {
     const fetchMovie = async () => {
       try {
         if (id) {
-          const response = await request.get(
-            `/movie/private/find/${id}`
+          const response = await axios.get(
+            `http://localhost:8080/api/v1/movie/public/find/${id}`
           );
           setMovie(response.data);
         }

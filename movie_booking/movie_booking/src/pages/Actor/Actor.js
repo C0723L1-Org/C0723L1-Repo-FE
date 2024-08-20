@@ -15,13 +15,13 @@ const Studio = () => {
 
     useEffect(() => {
         const fetchMovies = async () => {
-            await searchMovieByAll('', '', '', '', '', pageNumber);
+            await searchMovieByAll('', '', '', '', '', '',pageNumber);
         }
         fetchMovies();
     }, [pageNumber]);
 
-    const searchMovieByAll = async (nameMovie, director, releaseDate, nameStatus, actor, page) => {
-        const temp = await MovieService.getSearchMovie(nameMovie, director, releaseDate, nameStatus, actor, page);
+    const searchMovieByAll = async (nameMovie, director, releaseDate, nameStatus, actor, studio, page) => {
+        const temp = await MovieService.getSearchMovie(nameMovie, director, actor, nameStatus, releaseDate, studio, page);
         setMovies(temp.content);
         setTotalPages(temp.totalPages);
     };
@@ -53,14 +53,14 @@ const Studio = () => {
         const releaseDate = data.releaseDate || '';
         const nameStatus = data.nameStatus || '';
         const actor = data.actor || '';
+        const studio = data.studio || '';
 
-        if (!nameMovie && !director && !releaseDate && !nameStatus && !actor) {
-            toast.warning('Please enter at least one search criteria');
-            return;
+        if (!nameMovie && !director && !releaseDate && !nameStatus && !actor && !studio) {
+            // toast.warning('Hãy nhập hoặc chọn một trường bất kỳ!');
+            return searchMovieByAll('', '', '', '', '', '',  pageNumber);
         }
-
         try {
-            const temp = await MovieService.getSearchMovie(nameMovie, director, releaseDate, nameStatus, actor, pageNumber);
+            const temp = await MovieService.getSearchMovie(nameMovie, director, actor, nameStatus, releaseDate, studio, pageNumber);
             setMovies(temp.content);
             setTotalPages(temp.totalPages);
         } catch (e) {
@@ -88,7 +88,7 @@ const Studio = () => {
                         <form className="space-y-4 w-full" onSubmit={handleSubmit(onSubmit)}>
                             <div>
                                 <div className="flex flex-col col-span-2">
-                                    <label className="font-medium text-sm mb-1" htmlFor="studio">Tên Studio:</label>
+                                    <label className="font-medium text-sm mb-1" htmlFor="actor">Tên diễn viên:</label>
                                     <input {...register("actor")} type="text" id="actor"
                                            placeholder="Nhập tên diễn viên"
                                            className="w-full rounded-lg border border-gray-300 px-3 py-2"/>

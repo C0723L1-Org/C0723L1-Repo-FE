@@ -1,5 +1,5 @@
 import {MdLocalMovies} from "react-icons/md";
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import {IoMdSearch} from "react-icons/io";
 import {FaCaretDown, FaUser} from "react-icons/fa";
 import {NavLink, useNavigate} from "react-router-dom";
@@ -31,17 +31,13 @@ const InformationDropdown = [{
 },];
 let a = null;
 const Navbar = () => {
-    const [searchTerm, setSearchTerm] = useState("");
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [dropdown, setDropdown] = useState(false);
+
+
+
     const user = useSelector(state => state.user.user)
-    const handleSearch = (e) => {
-        e.preventDefault();
-        if (searchTerm.trim()) {
-            navigate(`/search-movie?query=${searchTerm}`);
-        }
-    };
     const logout = async ()=>{
         let res = await request.post('/auth/log-out')
         toast.success(res.data)
@@ -57,22 +53,6 @@ const Navbar = () => {
                             <MdLocalMovies className=" w-10 h-auto text-red-600 "/>
                             CINEMA
                         </NavLink>
-                    </div>
-                    {/* Search Bar */}
-                    <div>
-                        <form className="group relative hidden sm:block" onSubmit={handleSearch}>
-                            <input
-                                type="text"
-                                placeholder="search"
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                className="w-[200px] sm:w-[200px] group-hover:w-[300px] transition-all duration-300 rounded-full border border-gray-700 px-2 py-1 focus:outline-none focus:border-1 focus:border-primary"
-                            />
-                            <button type="submit">
-                                <IoMdSearch
-                                    className="text-gray-500 group-hover:text-gray-900 absolute top-1/2 -translate-y-1/2 right-3"/>
-                            </button>
-                        </form>
                     </div>
                     {/* Button */}
                     {user != null ? (
@@ -204,11 +184,12 @@ const Navbar = () => {
                         <div
                             className="absolute z-[9999] hidden group-hover:block w-[150px] rounded-md bg-slate-200 p-2 text-black">
                             <ul>
-                                {MovieDropdown.map((data) => (<li key={data.id}>
-                                    <a href={data.link}
+                                {MovieDropdown.map((data) => (
+                                <li key={data.id}>
+                                    <NavLink to={data.link}
                                        className="inline-block w-full rounded-md p-2 hover:text-blue-400">
                                         {data.name}
-                                    </a>
+                                    </NavLink>
                                 </li>))}
                             </ul>
                         </div>
@@ -224,11 +205,12 @@ const Navbar = () => {
                         <div
                             className="absolute z-[9999] hidden group-hover:block w-[150px] rounded-md bg-slate-200 p-2 text-black shadow-md">
                             <ul>
-                                {InformationDropdown.map((data) => (<li key={data.id}>
-                                    <a href={data.link}
+                                {InformationDropdown.map((data) => (
+                                <li key={data.id}>
+                                    <NavLink to={data.link}
                                        className="inline-block w-full rounded-md p-2 hover:text-blue-400">
                                         {data.name}
-                                    </a>
+                                    </NavLink>
                                 </li>))}
                             </ul>
                         </div>
