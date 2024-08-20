@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
-import axios from 'axios';
 import Sidebar from "./Sidebar";
+import request from "../../redux/axios-config";
+import {Main} from "../../layout/main/Main";
+
 
 const ChangePassword = () => {
     const [currentPassword, setCurrentPassword] = useState('');
@@ -28,7 +30,13 @@ const ChangePassword = () => {
                     Authorization: `Bearer ${token}`
                 }
             };
-            await axios.put('http://localhost:8080/api/v1/user/change-password', { oldPassword: currentPassword, newPassword }, config);
+            let passwordRequest ={
+                currentPassword:currentPassword,
+                newPassword:newPassword,
+                confirmationPassword:confirmationPassword
+            }
+            // console.log(passwordRequest)
+            await request.put('/user/change-password', passwordRequest);
             toast.success('Mật khẩu đã được thay đổi thành công!');
         } catch (error) {
             if (error.response && error.response.data) {
@@ -43,6 +51,7 @@ const ChangePassword = () => {
 
 
     return (
+        <Main content={
         <div className="max-w-[1170px] min-h-[calc(100vh-69px)] mx-auto px-4 py-6">
             <div className="flex flex-row gap-12 justify-start items-start">
                 <Sidebar/>
@@ -100,6 +109,7 @@ const ChangePassword = () => {
                 </div>
             </div>
         </div>
+        }/>
     );
 };
 

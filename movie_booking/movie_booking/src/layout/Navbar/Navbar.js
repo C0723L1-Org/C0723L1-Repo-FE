@@ -3,6 +3,10 @@ import React, {useState} from "react";
 import {IoMdSearch} from "react-icons/io";
 import {FaCaretDown, FaUser} from "react-icons/fa";
 import {NavLink, useNavigate} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {setUser} from "../../redux/action/user-action";
+import request from "../../redux/axios-config"
+import {toast} from "react-toastify";
 
 const Menu = [{
     id: 1, name: "Trang Chủ", link: "/",
@@ -28,10 +32,16 @@ const InformationDropdown = [{
 let a = null;
 const Navbar = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const [dropdown, setDropdown] = useState(false);
 
 
 
+    const user = useSelector(state => state.user.user)
+    const logout = async ()=>{
+        let res = await request.post('/auth/log-out')
+        toast.success(res.data)
+    }
     return (
         <>
         <div className="shadow-md bg-slate-100 dark:bg-gray-900 dark:text-white relative z-9999">
@@ -45,7 +55,7 @@ const Navbar = () => {
                         </NavLink>
                     </div>
                     {/* Button */}
-                    {a = null ? (
+                    {user != null ? (
                         <div className="min-w-32 flex justify-center items-center gap-1">
                             <div className="flex">
                                 <div className="hover:bg-slate-200">
@@ -76,34 +86,52 @@ const Navbar = () => {
                                             />
                                             <div className="mx-1">
                                                 {<h1 className="text-sm font-semibold text-gray-700 dark:text-gray-200">
-                                                    Nguyễn Đức Dũng
+                                                    {user.name}
                                                 </h1>}
+                                                {/*<p className="text-sm text-gray-500 dark:text-gray-400">*/}
+                                                {/*    {localStorage.getItem("email")}*/}
+                                                {/*</p>*/}
                                             </div>
                                         </div>
                                         <hr className="border-gray-200 dark:border-gray-700 "/>
-                                        <div
-                                            onClick={() => {
-                                                navigate("/user/information");
-                                            }}
-                                            className="cursor-pointer block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-200 transform dark:text-gray-300 hover:bg-slate-200 "
-                                        >
-                                            Xem thông tin cá nhân
-                                        </div>
-                                        <hr className="border-gray-200 dark:border-gray-700 "/>
-                                        <div
-                                            onClick={() => {
-                                                navigate("/user/receipt");
-                                            }}
-                                            className="cursor-pointer block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-200 transform dark:text-gray-300 hover:bg-slate-200"
-                                        >
-                                            Lịch sử đặt vé
-                                        </div>
+                                        {user?.role == "employee" ? (
+                                            <div
+                                                onClick={() => {
+                                                    navigate("/movie-manager");
+                                                }}
+                                                className="cursor-pointer block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-200 transform dark:text-gray-300 hover:bg-slate-200 "
+                                            >
+                                                Quản lý phim
+                                            </div>
+                                        ) : (
 
+                                       <>
+                                            <div
+                                                onClick={() => {
+                                                    navigate("/profile");
+                                                }}
+                                                className="cursor-pointer block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-200 transform dark:text-gray-300 hover:bg-slate-200 "
+                                            >
+                                                Xem thông tin cá nhân
+                                            </div>
+                                            <hr className="border-gray-200 dark:border-gray-700 "/>
+                                            <div
+                                                onClick={() => {
+                                                    navigate("/use-booking-management");
+                                                }}
+                                                className="cursor-pointer block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-200 transform dark:text-gray-300 hover:bg-slate-200"
+                                            >
+                                                Lịch sử đặt vé
+                                            </div>
+                                       </>
+                                            )}
                                         <hr className="border-gray-200 dark:border-gray-700 "/>
                                         <div
                                             onClick={() => {
-                                                localStorage.clear();
+                                                logout()
+                                                dispatch(setUser(null))
                                                 navigate("/");
+                                                console.log(user)
                                             }}
                                             className="cursor-pointer block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-200 transform dark:text-gray-300 hover:bg-slate-200"
                                         >
@@ -116,9 +144,7 @@ const Navbar = () => {
                     ) : (
                         <div className="flex justify-between items-center gap-3">
                             <button
-                                onClick={() => {
-                                    navigate(`/login`);
-                                }}
+                                onClick={() => navigate("/login")}
                                 className=" from-primary to-secondary transition-all duration-200 justify-center  text-black py-1 px-4 rounded-full items-center gap-3 group"
                             >
                             <span className=" group-hover:text-blue-400  transition-all duration-300">
@@ -126,9 +152,7 @@ const Navbar = () => {
                             </span>
                             </button>
                             <button
-                                onClick={() => {
-                                    navigate(`/register`);
-                                }}
+                                onClick={() => navigate("/register")}
                                 className=" from-primary to-secondary transition-all duration-200 text-black py-1 px-4 rounded-full items-center gap-3 group"
                             >
                             <span className="group-hover:text-blue-400  transition-all duration-300">

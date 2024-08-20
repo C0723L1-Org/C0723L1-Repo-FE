@@ -1,16 +1,13 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import Cookies from 'js-cookie';
+import {useSelector} from "react-redux";
 
-const isAuthenticated = () => {
-    const jwt = Cookies.get('jwt');
-    // return jwt !== undefined && jwt.trim() !== '';
-    return true
-};
 
 
 const PrivateRoute = ({ element }) => {
-    return isAuthenticated() ? element : <Navigate to="/login" />;
+    const user = useSelector(state => state.user.user)
+    console.log("private router :"+ user != null)
+    return user != null ? element : <Navigate to="/login" />;
 };
 
 export default PrivateRoute;

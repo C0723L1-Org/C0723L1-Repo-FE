@@ -1,15 +1,20 @@
-import {Link} from "react-router-dom";
-import axios from "axios";
+import {Link, useNavigate, useNavigation} from "react-router-dom";
 import {useEffect, useState} from "react";
+import request from "../../redux/axios-config";
+import {useSelector} from "react-redux";
+
 
 
 function MoviesShowing() {
+  const navigate = useNavigate()
   const [showingMovies, setShowingMovies] = useState([]);
+  const user = useSelector(state => state.user.user)
+
   useEffect(() => {
     const fetchShowingMovies = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:8080/api/v1/movie/private/currently-showing`
+        const response = await request.get(
+          `movie/public/currently-showing`
         );
         setShowingMovies(response.data);
       } catch (error) {
@@ -38,23 +43,25 @@ function MoviesShowing() {
                 <div className="inline-block cursor-pointer rounded overflow-hidden card__movies max-w-full false ">
                   <div className="object-cover rounded relative card__img max-w-full">
                     <div className="absolute hidden md:block w-full h-full z-10 cursor-pointer bg-[#00000080] transition-all duration-300 ease-in-out opacity-0 hover:opacity-100">
-                      <div className="card__hover__content flex flex-col justify-center items-center w-full h-full">
+                      {user?.role !== "employee" ?(
+                          <div className="card__hover__content flex flex-col justify-center items-center w-full h-full">
                         <Link
-                          to={`/see-movie-details/${showing.id}`}
-                          type="button"
-                          className="text-white bg-[#f26b38] w-[120px] h-[40px] hover:bg-[#fb9440] rounded text-sm px-5 py-2.5 text-center inline-flex items-center dark:hover:bg-[#fb9440] dark:focus:ring-[#fb9440]"
+                            to={`/movie/${showing.id}`}
+                            type="button"
+                            className="text-white bg-[#f26b38] w-[120px] h-[40px] hover:bg-[#fb9440] rounded text-sm px-5 py-2.5 text-center inline-flex items-center dark:hover:bg-[#fb9440] dark:focus:ring-[#fb9440]"
                         >
                           <img
-                            alt="Logo Buy Ticket"
-                            width="400"
-                            height="250"
-                            className="mr-2"
-                            src="https://www.galaxycine.vn/_next/static/media/Vector-1.319a0d2b.svg"
-                            style={{ color: "transparent" }}
+                              alt="Logo Buy Ticket"
+                              width="400"
+                              height="250"
+                              className="mr-2"
+                              src="https://www.galaxycine.vn/_next/static/media/Vector-1.319a0d2b.svg"
+                              style={{ color: "transparent" }}
                           />
                           Mua vé
                         </Link>
-                      </div>
+                      </div>):""}
+
                     </div>
                     <Link to={`/see-movie-details/${showing.id}`}>
                       <img

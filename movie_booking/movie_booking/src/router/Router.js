@@ -23,6 +23,7 @@ import ListBooking from "../component/Booking/ListBooking";
 import {MovieManager} from "../component/movie/MovieManager";
 import CreateMovie from "../component/movie/CreateMovie";
 import UpdateMovie from "../component/movie/UpdateMovie";
+import Rejected from "../pages/NotFound/Rejected";
 
 const routes = [
     {
@@ -105,12 +106,12 @@ const routes = [
     {
         path: '/employee',
         element: <ListEmployee />,
-        // private: true,
+        private: true,
     },
     {
         path: '/ticket',
         element: <ListBooking />,
-        // private: true,
+        private: true,
     },
     {
         path: '/create-movie',
@@ -126,8 +127,13 @@ const routes = [
         private: true,
     },
     {
-    path: '/movie-manager',
-    element: <MovieManager/>
+        path: '/movie-manager',
+        element: <MovieManager/>,
+        private: true
+    },
+    {
+        path: '/rejected',
+        element: <Rejected />,
     },
     {
         path: '*',

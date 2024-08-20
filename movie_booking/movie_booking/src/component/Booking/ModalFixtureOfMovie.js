@@ -6,6 +6,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {setShowtime} from "../../redux/action/showtime-action";
 import Swal from "sweetalert2";
 import {Main} from "../../layout/main/Main";
+import {removeAllSelectedSeat} from "../../redux/action/seat-action";
 
 function ModalFixtureOfMovie() {
     const dispatch = useDispatch();
@@ -130,6 +131,22 @@ function ModalFixtureOfMovie() {
             })
         }
 
+    }
+    const handelClickBackToHome =() =>{
+        Swal.fire({
+            title: "Warning!!!",
+            text:"Bạn có muốn quay lại trang chủ?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes!"
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                await dispatch(removeAllSelectedSeat())
+                navigate(`/`)
+            }
+        });
     }
     const convertTime = (time) =>{
         return time.substring(0, 5);
@@ -262,13 +279,23 @@ function ModalFixtureOfMovie() {
                                     </div>
                                 )
                             }
+
                             {/*bước kế tiếp*/}
-                            <div>
+                            <div className="w-full flex justify-start items-center mt-4">
                                 <div className="w-full  h-[250px] flex flex-col-reverse justify-items-end items-center">
-                                    <button onClick={()=>handelClickMoveToSeatScreen()}
-                                        className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded ">
+                                    <button
+                                        onClick={() => handelClickBackToHome()}
+                                        className="bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded">
+                                        Trở về
+                                    </button>
+
+                                </div>
+                                <div className="w-full  h-[250px] flex flex-col-reverse justify-items-end items-center">
+                                    <button onClick={() => handelClickMoveToSeatScreen()}
+                                            className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded ">
                                         Tiếp theo
                                     </button>
+
                                 </div>
                             </div>
                         </div>

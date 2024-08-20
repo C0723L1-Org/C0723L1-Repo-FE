@@ -1,12 +1,12 @@
 import "./App.css";
-import React, {useEffect} from "react";
+import React, {Suspense, useEffect} from "react";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import routes from "./router/Router";
 import PrivateRoute from "./utils/PrivateRoute";
-import NotFound from "./pages/NotFound/NotFound";
 import {PayPalScriptProvider} from "@paypal/react-paypal-js";
 import {ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import Loader from "./component/Booking/Loader";
 
 
 function App() {
@@ -15,8 +15,11 @@ function App() {
         currency: "USD",
         intent: "capture",
     };
+
+
     useEffect(() => {
         window.scrollTo(0, 0);
+
     }, []);
     return (
         <PayPalScriptProvider options={initialOptions}>
@@ -40,8 +43,6 @@ function App() {
                             />
                         );
                     })}
-
-                    <Route path='*' element={<NotFound/>}/>
                 </Routes>
                 <ToastContainer />
             </Router>

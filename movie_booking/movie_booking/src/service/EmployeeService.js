@@ -1,16 +1,17 @@
 import axios from "axios";
+import request from '../redux/axios-config'
 
 //Bùi Thế Thiên
 export const fetchEmployees = async (page, valueSearch = null) => {
     try {
-        let url = `http://localhost:8080/api/v1/user/private/list-employee?page=${page}`;
+        let url = `user/private/list-employee?page=${page}`;
         if (valueSearch) {
             const queryParams = new URLSearchParams(valueSearch).toString();
             url += `&${queryParams}`;
             console.log(queryParams);
             console.log(url);
         }
-        const response = await axios.get(url);
+        const response = await request.get(url);
         return response.data;
     } catch (error) {
         console.error('Error fetching employee data:', error);
@@ -20,7 +21,7 @@ export const fetchEmployees = async (page, valueSearch = null) => {
 
 export const deleteEmployeeById = async (id) => {
     try {
-        let res = await axios.put(`http://localhost:8080/api/v1/user/private/delete-employee/${id}`, {},
+        let res = await request.put(`user/private/delete-employee/${id}`, {},
         )
         return res.status === 200
     } catch (e) {

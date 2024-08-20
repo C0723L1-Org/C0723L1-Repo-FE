@@ -9,14 +9,15 @@ import {
   FaSignOutAlt,
 } from "react-icons/fa";
 import {Main} from "../../../layout/main/Main";
+import Cookies from "js-cookie";
 
 function Sidebar() {
   return (
-      <Main content={
+
     <aside className="w-64 bg-white shadow-lg rounded-md hidden md:block">
       <div className="flex flex-col p-4 space-y-2">
         <NavLink
-          to="/ho-so"
+          to="/profile"
           className={({ isActive }) =>
             `flex items-center px-3 py-2.5 font-semibold ${
               isActive
@@ -29,7 +30,7 @@ function Sidebar() {
           <span className="text-gray-800">Hồ sơ</span>
         </NavLink>
         <NavLink
-          to="/settings"
+          to="/change-password"
           className={({ isActive }) =>
             `flex items-center px-3 py-2.5 font-semibold ${
               isActive
@@ -42,7 +43,7 @@ function Sidebar() {
           <span className="text-gray-800">Đổi mật khẩu</span>
         </NavLink>
         <NavLink
-          to="/lich-su-dat-ve"
+          to="/use-booking-management"
           className={({ isActive }) =>
             `flex items-center px-3 py-2.5 font-semibold ${
               isActive
@@ -55,7 +56,7 @@ function Sidebar() {
           <span className="text-gray-800">Lịch sử đặt vé</span>
         </NavLink>
         <NavLink
-          to="/canceled-tickets"
+          to="#"
           className={({ isActive }) =>
             `flex items-center px-3 py-2.5 font-semibold ${
               isActive
@@ -68,7 +69,7 @@ function Sidebar() {
           <span className="text-gray-800">Vé đã hủy</span>
         </NavLink>
         <NavLink
-          to="/help"
+          to="/faq"
           className={({ isActive }) =>
             `flex items-center px-3 py-2.5 font-semibold ${
               isActive
@@ -81,7 +82,11 @@ function Sidebar() {
           <span className="text-gray-800">Trợ giúp</span>
         </NavLink>
         <NavLink
-          to="/logout"
+          to="/"
+          onClick={() => {
+            localStorage.clear();
+            Cookies.set('jwt', '')
+          }}
           className={({ isActive }) =>
             `flex items-center px-3 py-2.5 font-semibold ${
               isActive
@@ -95,7 +100,6 @@ function Sidebar() {
         </NavLink>
       </div>
     </aside>
-      }/>
   );
 }
 
