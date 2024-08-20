@@ -315,7 +315,7 @@ export const MovieManager = () => {
                                               <tr key={index} className="max-lg:w-3/4 max-lg:flex max-lg:flex-col min-xl:flex min-xl:flex-col">
                                                   <td className="py-2 px-5 border-b border-blue-gray-50 ">
                                                       <div className="flex items-center gap-4">
-                                                          <img src="{movie.avatar}" alt=""
+                                                          <img src={`${movie.avatar}`} alt=""
                                                                className="w-9 h-9 rounded-md ml-4"/>
                                                           <p className="font-medium">{movie.nameMovie}</p>
                                                       </div>

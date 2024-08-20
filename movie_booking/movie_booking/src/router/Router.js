@@ -86,7 +86,9 @@ const routes = [
     {
     path: '/movie-manager',
     element: <MovieManager/>
+
     }
 ];
+
 
 export default routes;

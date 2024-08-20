@@ -16,41 +16,62 @@ function CreateMovie() {
     const [posterPreview, setPosterPreview] = useState(null);
 
     // Validation schema cho form
+    // cập nhật mới...........................
     const validationSchema = Yup.object().shape({
-        nameMovie: Yup.string().required("Tên phim là bắt buộc"),
+        nameMovie: Yup.string()
+            .max(255, 'Tên phim không được vượt quá 255 ký tự')
+            .required("Tên phim là bắt buộc"),
         releaseDate: Yup.string()
             .matches(/^\d{2}\/\d{2}\/\d{4}$/, "Ngày phát hành phải theo định dạng dd/mm/yyyy")
+            .test('after-2015', 'Ngày phát hành phải sau năm 2015', value => {
+                const [day, month, year] = value.split('/').map(Number);
+                return year > 2015;
+            })
             .required("Ngày phát hành là bắt buộc"),
         durationMovie: Yup.string()
             .test('is-numeric', 'Thời lượng phải là một số', value => {
-                // Kiểm tra nếu giá trị là một số
                 return !isNaN(value);
             })
+            .test('is-integer', 'Thời lượng phải là số nguyên', value => {
+                return Number.isInteger(Number(value));
+            })
             .test('greater-than-zero', 'Thời lượng phải lớn hơn 0', value => {
-                // Kiểm tra nếu giá trị là số và lớn hơn 0
                 return Number(value) > 0;
             })
+            .test('max-duration', 'Thời lượng phải dưới 300 phút', value => {
+                return Number(value) <= 300;
+            })
             .required('Thời lượng là bắt buộc'),
-        actor: Yup.string().required(" Tên diễn viên là bắt buộc")
+        actor: Yup.string()
+            .max(150, 'Tên diễn viên không được vượt quá 150 ký tự')
+            .required("Tên diễn viên là bắt buộc")
             .min(5, 'Tên diễn viên phải có ít nhất 5 ký tự')
             .matches(/^[^\d]*$/, 'Tên diễn viên không được chứa số'),
-        director: Yup.string().required("Tên đạo diễn là bắt buộc")
-            .min(5, 'Tên đạo diễn phải có ít nhất 5 ký tự').
-            matches(/^[^\d]*$/, 'Tên đạo diễn không được chứa số'),
-        studio: Yup.string().required("Hãng phim là bắt buộc"),
-        content: Yup.string().required("Nội dung là bắt buộc"),
+        director: Yup.string()
+            .max(150, 'Tên đạo diễn không được vượt quá 150 ký tự')
+            .required("Tên đạo diễn là bắt buộc")
+            .min(5, 'Tên đạo diễn phải có ít nhất 5 ký tự')
+            .matches(/^[^\d]*$/, 'Tên đạo diễn không được chứa số'),
+        studio: Yup.string()
+            .max(255, 'Hãng phim không được vượt quá 255 ký tự')
+            .required("Hãng phim là bắt buộc"),
+        content: Yup.string()
+            .max(255, 'Nội dung không được vượt quá 255 ký tự')
+            .required("Nội dung là bắt buộc"),
         trailer: Yup.string()
             .url("Định dạng URL không hợp lệ")
+            .max(255, 'URL trailer không được vượt quá 255 ký tự')
             .required("URL trailer là bắt buộc"),
-        avatar: Yup.mixed().required("Ảnh đại diện là bắt buộc"),
-        poster: Yup.mixed().required("Ảnh poster là bắt buộc"),
-        // statusFilm: Yup.object()
-        //     .shape({
-        //         id: Yup.number().required("ID trạng thái là bắt buộc"),
-        //         name: Yup.string().required("Tên trạng thái là bắt buộc"),
-        //     })
-        //     .nullable()
-        //     .required("Trạng thái phim là bắt buộc"),
+        avatar: Yup.mixed()
+            .required("Ảnh đại diện là bắt buộc")
+            .test('fileFormat', 'Chỉ chấp nhận tệp .jpg', value => {
+                return value && value.type === 'image/jpeg';
+            }),
+        poster: Yup.mixed()
+            .required("Ảnh poster là bắt buộc")
+            .test('fileFormat', 'Chỉ chấp nhận tệp .jpg', value => {
+                return value && value.type === 'image/jpeg';
+            }),
         kindOfFilm: Yup.array()
             .of(Yup.number().required())
             .min(1, "Ít nhất một thể loại phim phải được chọn")
@@ -98,7 +119,7 @@ function CreateMovie() {
                 data
             );
             toast.success(`Phim ${data.nameMovie} đã được thêm mới thành công.`);
-            navigate("/");
+            navigate("/movie-manager");
         } catch (error) {
             console.error("Lỗi khi tạo phim:", error);
             toast.error("Có lỗi xảy ra khi thêm mới phim.");

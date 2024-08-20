@@ -15,36 +15,84 @@ function UpdateMovie() {
     const [avatarPreview, setAvatarPreview] = useState(null);
     const [posterPreview, setPosterPreview] = useState(null);
     const { movieId } = useParams();
-
+    //Biến mới...............
+    const [kindOfFilmData, setKindOfFilmData] = useState([]); // State mới cho kindOfFilm
+    //Câp nhật mới.............
     const validationSchema = Yup.object().shape({
-        nameMovie: Yup.string().required("Tên phim là bắt buộc"),
-        releaseDate: Yup.string().required("Ngày phát hành là bắt buộc"),
+        nameMovie: Yup.string()
+            .max(255, 'Tên phim không được vượt quá 255 ký tự')
+            .required("Tên phim là bắt buộc"),
+        releaseDate: Yup.string()
+            .matches(/^\d{2}\/\d{2}\/\d{4}$/, "Ngày phát hành phải theo định dạng dd/mm/yyyy")
+            .test('after-2015', 'Ngày phát hành phải sau năm 2015', value => {
+                const [day, month, year] = value.split('/').map(Number);
+                return year > 2015;
+            })
+            .required("Ngày phát hành là bắt buộc"),
         durationMovie: Yup.string()
             .test('is-numeric', 'Thời lượng phải là một số', value => {
-                // Kiểm tra nếu giá trị là một số
                 return !isNaN(value);
             })
+            .test('is-integer', 'Thời lượng phải là số nguyên', value => {
+                return Number.isInteger(Number(value));
+            })
             .test('greater-than-zero', 'Thời lượng phải lớn hơn 0', value => {
-                // Kiểm tra nếu giá trị là số và lớn hơn 0
                 return Number(value) > 0;
             })
+            .test('max-duration', 'Thời lượng phải dưới 300 phút', value => {
+                return Number(value) <= 300;
+            })
             .required('Thời lượng là bắt buộc'),
-        actor: Yup.string().required(" Tên diễn viên là bắt buộc")
+        actor: Yup.string()
+            .max(150, 'Tên diễn viên không được vượt quá 150 ký tự')
+            .required("Tên diễn viên là bắt buộc")
             .min(5, 'Tên diễn viên phải có ít nhất 5 ký tự')
             .matches(/^[^\d]*$/, 'Tên diễn viên không được chứa số'),
-        director: Yup.string().required("Tên đạo diễn là bắt buộc")
-            .min(5, 'Tên đạo diễn phải có ít nhất 5 ký tự').
-            matches(/^[^\d]*$/, 'Tên đạo diễn không được chứa số'),
-        studio: Yup.string().required("Hãng phim là bắt buộc"),
-        content: Yup.string().required("Nội dung là bắt buộc"),
-        trailer: Yup.string().url("URL không hợp lệ").required("URL trailer là bắt buộc"),
-        avatar: Yup.mixed(),
-        poster: Yup.mixed(),
-        // statusFilm: Yup.object().shape({
-        //     id: Yup.number().required(),
-        //     name: Yup.string().required()
-        // }),
-        kindOfFilm: Yup.array().of(Yup.number().required()).min(1, "Phải chọn ít nhất một thể loại phim").required("Phải chọn ít nhất một thể loại phim"),
+        director: Yup.string()
+            .max(150, 'Tên đạo diễn không được vượt quá 150 ký tự')
+            .required("Tên đạo diễn là bắt buộc")
+            .min(5, 'Tên đạo diễn phải có ít nhất 5 ký tự')
+            .matches(/^[^\d]*$/, 'Tên đạo diễn không được chứa số'),
+        studio: Yup.string()
+            .max(255, 'Hãng phim không được vượt quá 255 ký tự')
+            .required("Hãng phim là bắt buộc"),
+        content: Yup.string()
+            .max(255, 'Nội dung không được vượt quá 255 ký tự')
+            .required("Nội dung là bắt buộc"),
+        trailer: Yup.string()
+            .url("Định dạng URL không hợp lệ")
+            .max(255, 'URL trailer không được vượt quá 255 ký tự')
+            .required("URL trailer là bắt buộc"),
+        // avatar: Yup.mixed()
+        //     .test('fileFormat', 'Chỉ chấp nhận tệp .jpg', value => {
+        //         // Nếu giá trị là chuỗi (URL), bỏ qua kiểm tra
+        //         if (typeof value === 'string') return true;
+        //         // Nếu giá trị là tệp tin, kiểm tra định dạng
+        //         return value && value.type === 'image/jpeg';
+        //     })
+        //     .test('required', 'Ảnh đại diện là bắt buộc', value => {
+        //         // Nếu giá trị là chuỗi (URL), xem như đã có ảnh
+        //         if (typeof value === 'string') return true;
+        //         // Nếu giá trị là tệp tin, phải có tệp tin
+        //         return value !== null && value !== undefined && value !== '' && (typeof value === 'string' || value.type === 'image/jpeg');
+        //     }),
+        // poster: Yup.mixed()
+        //     .test('fileFormat', 'Chỉ chấp nhận tệp .jpg', value => {
+        //         // Nếu giá trị là chuỗi (URL), bỏ qua kiểm tra
+        //         if (typeof value === 'string') return true;
+        //         // Nếu giá trị là tệp tin, kiểm tra định dạng
+        //         return value && value.type === 'image/jpeg';
+        //     })
+        //     .test('required', 'Ảnh poster là bắt buộc', value => {
+        //         // Nếu giá trị là chuỗi (URL), xem như đã có ảnh
+        //         if (typeof value === 'string') return true;
+        //         // Nếu giá trị là tệp tin, phải có tệp tin
+        //         return value !== null && value !== undefined && value !== '' && (typeof value === 'string' || value.type === 'image/jpeg');
+        //     }),
+        kindOfFilm: Yup.array()
+            .of(Yup.number().required())
+            .min(1, "Ít nhất một thể loại phim phải được chọn")
+            .required("Ít nhất một thể loại phim phải được chọn"),
     });
 
     useEffect(() => {
@@ -54,6 +102,8 @@ function UpdateMovie() {
                 setMovie(response.data);
                 setAvatarPreview(response.data.avatar);
                 setPosterPreview(response.data.poster);
+                //cập nhật mới ..............................
+                setKindOfFilmData(response.data.kindOfFilm.map(kind => kind.id)); // Gán dữ liệu kindOfFilm vào state
 
             } catch (error) {
                 console.error("Không thể tải thông tin phim", error);
@@ -72,6 +122,14 @@ function UpdateMovie() {
         fetchMovieDetails();
         fetchKindOfFilms();
     }, [movieId]);
+    //Biến mới .............
+    const handleKindOfFilmChange = (id) => {
+        if (kindOfFilmData.includes(id)) {
+            setKindOfFilmData(kindOfFilmData.filter(kindId => kindId !== id));
+        } else {
+            setKindOfFilmData([...kindOfFilmData, id]);
+        }
+    };
 
     const uploadFile = async (file, path) => {
         if (file) {
@@ -91,12 +149,14 @@ function UpdateMovie() {
                 ...values,
                 avatar: avatarURL,
                 poster: posterURL,
-                kindOfFilm: values.kindOfFilm.map(id => ({ id })),
+                //cập nhât mới.............................
+                kindOfFilm: kindOfFilmData.map(id => ({ id })), // Sử dụng kindOfFilmData để cập nhật
+
             };
 
             await axios.put(`http://localhost:8080/api/v1/movie/private/update/${movieId}`, data);
             toast.success(`Phim ${data.nameMovie} đã được cập nhật thành công.`);
-            navigate("/");
+            navigate("/movie-manager");
         } catch (error) {
             console.error("Không thể cập nhật phim:", error);
             toast.error("Có lỗi xảy ra khi cập nhật phim.");
@@ -120,9 +180,11 @@ function UpdateMovie() {
                     studio: movie.studio || "",
                     content: movie.content || "",
                     trailer: movie.trailer || "",
-                    avatar: movie.avatar || "",
+                    //cập nhật mới................
+                    avatar: null,
                     avatarURL: movie.avatar || "",
-                    poster: movie.poster || "",
+                    //cập nhật mới................x
+                    poster: null,
                     posterURL: movie.poster || "",
                     statusFilm: JSON.stringify(movie.statusFilm) || {},
                     kindOfFilm: movie.kindOfFilm.map(kind => kind.id) || [],
@@ -354,18 +416,19 @@ function UpdateMovie() {
                         </div>
 
 
-                        {/* Kind of Film */}
+                         {/*Kind of Film cập nhật mới....................... */}
                         <div className="flex flex-col mb-8">
                             <label className="font-semibold text-gray-700 mb-2">Thể Loại Phim:</label>
                             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                                 {kindOfFilms.map((kind) => (
                                     <label key={kind.id} className="flex items-center">
-                                        <Field
+                                        <input
                                             type="checkbox"
                                             name="kindOfFilm"
                                             value={kind.id.toString()}
                                             className="mr-2 accent-indigo-600"
-                                            checked={values.kindOfFilm.includes(kind.id)}
+                                            checked={kindOfFilmData.includes(kind.id)} // Kiểm tra xem id có nằm trong kindOfFilmData không
+                                            onChange={() => handleKindOfFilmChange(kind.id)} // Thay đổi dữ liệu khi checkbox thay đổi
                                         />
                                         <span className="text-gray-700">{kind.name}</span>
                                     </label>
@@ -373,7 +436,6 @@ function UpdateMovie() {
                             </div>
                             <ErrorMessage name="kindOfFilm" component="div" className="text-red-500 text-sm mt-1" />
                         </div>
-
                         <button
                             type="submit"
                             disabled={isSubmitting}
@@ -391,6 +453,3 @@ function UpdateMovie() {
 }
 
 export default UpdateMovie;
-
-
-
