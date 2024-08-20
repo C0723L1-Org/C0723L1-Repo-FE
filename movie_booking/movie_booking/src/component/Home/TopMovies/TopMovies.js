@@ -4,8 +4,8 @@ import { GrLike } from "react-icons/gr";
 const Top3MoviesMostLike = [
     {
         id: 1,
-        img: "https://www.themoviedb.org/t/p/w1280/lfY2CfmxyN9OvxmFuap6aejViJn.jpg",
-        name: "Deadpool và Wolverine",
+        img: "https://www.themoviedb.org/t/p/w1280/8go3YE9sBMQaCXEx23j6BAfeuxd.jpg",
+        name: "Avengers 4: Hồi Kết",
         like: "10000000",
     },
     {
@@ -16,8 +16,8 @@ const Top3MoviesMostLike = [
     },
     {
         id: 3,
-        img: "https://www.themoviedb.org/t/p/w1280/lfY2CfmxyN9OvxmFuap6aejViJn.jpg",
-        name: "Deadpool và Wolverine",
+        img: "https://www.themoviedb.org/t/p/w1280/ovMxUPSSuvBD7GcgdQxzbJfsR8q.jpg",
+        name: "Phù Thủy Tối Thượng: Đa Vũ Trụ Hỗn Loạn",
         like: "888888",
     },
 ];

@@ -39,7 +39,7 @@ function SeeMovieDetails() {
     <>
       <div className="book__ticket__wrapper">
         <div className="relative bg-black flex justify-center w-full h-full ">
-          <div className="absolute w-full h-full z-[300] bg-[#0003]"></div>
+          <div className="absolute w-full h-full bg-[#0003]"></div>
           <div className="relative h-full overflow-hidden">
             <div className="absolute top-0 -left-[0%] z-100">
               <img
@@ -190,7 +190,8 @@ function SeeMovieDetails() {
                       </ul>
                     </div>
                     <div className="flex flex-nowrap  items-center text-sm">
-                      <button className="py-2 px-5 bg-blue-500 text-dark font-semibold rounded-full shadow-md hover:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-400 focus:ring-opacity-75 text-white">
+                      <button
+                          className="py-2 px-5 bg-blue-500 text-dark font-semibold rounded-full shadow-md hover:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-400 focus:ring-opacity-75 text-white">
                         Đặt vé
                       </button>
                     </div>

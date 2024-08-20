@@ -1,10 +1,10 @@
 import axios from "axios";
 
 const BASE_URL = "http://localhost:8080/api/v1";
-export const getSearchMovie = async (nameMovie, director, releaseDate, nameStatus, actor, page) => {
+export const getSearchMovie = async (nameMovie, director, actor, nameStatus, releaseDate, studio,  page) => {
     try {
         const response = await axios.get(`${BASE_URL}/movie/public/show-search-movie?nameMovie=${nameMovie}`+
-            `&director=${director}&actor=${actor}&nameStatus=${nameStatus}&releaseDate=${releaseDate}&page=${page}`);
+            `&director=${director}&actor=${actor}&nameStatus=${nameStatus}&releaseDate=${releaseDate}&studio=${studio}&page=${page}`);
         console.log(response.data)
         return response.data;
     } catch (error) {
@@ -29,9 +29,9 @@ export const getSearchMovieByKindOfFilm = async (nameKind, page) => {
     }
 }
 
-export const getMovieComming = async () => {
+export const getMovieComming = async (page) => {
     try {
-        const response = await axios.get(`${BASE_URL}/movie/public/show-list-movie-comming`);
+        const response = await axios.get(`${BASE_URL}/movie/public/show-list-movie-comming?page=${page}`);
         console.log(response.data)
         return response.data;
     } catch (error) {
@@ -39,9 +39,9 @@ export const getMovieComming = async () => {
         return [];
     }
 };
-export const getMovieShowing = async () => {
+export const getMovieShowing = async (page) => {
     try {
-        const response = await axios.get(`${BASE_URL}/movie/public/show-list-movie-showing`);
+        const response = await axios.get(`${BASE_URL}/movie/public/show-list-movie-showing?page=${page}`);
         console.log(response.data)
         return response.data;
     } catch (error) {

@@ -56,7 +56,7 @@ const Assess = () => {
                     slidesToScroll: 1,
                     infinite: true,
                     centerMode: true,
-                    centerPadding: '20px',
+                    centerPadding: '40px',
                 },
             },
             {
@@ -64,8 +64,16 @@ const Assess = () => {
                 settings: {
                     slidesToShow: 2,
                     slidesToScroll: 1,
-                    initialSlides: 2,
                     centerMode: true,
+                    centerPadding: '30px',
+                },
+            },
+            {
+                breakpoint: 768,
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 1,
+                    centerMode: false,
                     centerPadding: '20px',
                 },
             },
@@ -75,7 +83,16 @@ const Assess = () => {
                     slidesToShow: 1,
                     slidesToScroll: 1,
                     centerMode: true,
-                    centerPadding: '20px',
+                    centerPadding: '10px',
+                },
+            },
+            {
+                breakpoint: 480,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                    centerMode: true,
+                    centerPadding: '5px',
                 },
             },
         ],
