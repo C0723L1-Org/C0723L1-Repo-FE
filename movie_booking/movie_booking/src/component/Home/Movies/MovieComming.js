@@ -2,10 +2,13 @@ import React, { useEffect, useState } from "react";
 import {Link, useNavigate} from "react-router-dom";
 import * as MovieService from "../../../service/MovieService";
 import { toast } from "react-toastify";
+import {useSelector} from "react-redux";
 
 const MovieComming = () => {
     const [listFilmComming, setListFilmComming] = useState([]);
     const navigate = useNavigate();
+    const user = useSelector(state => state.user.user)
+    const [totalPages, setTotalPages] = useState(0);
     const [pageNumber, setPageNumber] = useState(0);
 
     useEffect(() => {

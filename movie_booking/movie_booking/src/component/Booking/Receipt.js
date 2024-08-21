@@ -96,6 +96,7 @@ function Receipt(){
 
     useEffect(() => {
         document.title = `Movie: ${listBooking[1]?.showTime?.movie?.nameMovie || 'Tên Phim'}` ;
+        window.scrollTo(0, 0);
         const fetchExchangeRate = async () => {
             try {
                 const response = await axios.get('https://v6.exchangerate-api.com/v6/c6e9382a6961e5a03e3ee78e/latest/VND');
@@ -156,8 +157,13 @@ function Receipt(){
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
             confirmButtonText: "Yes!"
-        }).then((result) => {
+        }).then(async (result) => {
             if (result.isConfirmed) {
+                const bookingRequest ={
+                    seatId: item.seat.id,
+                    showtimeId: item.showTime.id
+                }
+                await request.put(`/booking/remove`,bookingRequest)
                 const newListBooking =  listBooking.filter((item, i) => index !== i)
                 dispatch(removeSeat(item.showTime.room.id,item.seat.seatNumber))
                 dispatch(setListBooking(newListBooking))
@@ -165,6 +171,13 @@ function Receipt(){
         });
 
     }
+    const formatCurrency = (amount) => {
+        // Chuyển đổi số tiền thành chuỗi và định dạng với dấu phân cách hàng nghìn
+        return new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND',
+        }).format(amount);
+    };
     return (
         <Main content={
         <>  {isLoading ? (<Loader/>):("")}
@@ -179,19 +192,19 @@ function Receipt(){
                     <div className="flex flex-col justify-start items-start w-full space-y-4 md:space-y-6 xl:space-y-8">
                         <div className="flex flex-col justify-start items-start bg-gray-50 px-4 py-4 md:py-6 md:p-6 xl:p-8 w-full rounded-3xl">
                             <p className="text-lg md:text-xl font-semibold leading-6 xl:leading-5 text-gray-800">
-                                Booking Information
+                                Thông tin đặt vé
                             </p>
                             <div className="overflow-hidden rounded-lg border border-gray-200 shadow-md m-5">
                                 <table className="w-full border-collapse bg-white text-left text-sm text-gray-500">
                                     <thead className="bg-gray-50">
                                     <tr>
-                                        <th scope="col" className="px-6 py-4 font-medium text-lg text-gray-900">Movie Name</th>
-                                        <th scope="col" className="px-6 py-4 font-medium text-lg text-gray-900">Seat</th>
-                                        <th scope="col" className="px-6 py-4 font-medium text-lg text-gray-900">Theater</th>
-                                        <th scope="col" className="px-6 py-4 font-medium text-lg text-gray-900">Time</th>
-                                        <th scope="col" className="px-6 py-4 font-medium text-lg text-gray-900">Date</th>
-                                        <th scope="col" className="px-6 py-4 font-medium text-lg text-gray-900">Price</th>
-                                        <th scope="col" className="px-6 py-4 font-medium text-lg text-gray-900"></th>
+                                        <th scope="col" className="px-6 py-4 font-medium text-lg text-gray-900 whitespace-nowrap">Tên phim</th>
+                                        <th scope="col" className="px-6 py-4 font-medium text-lg text-gray-900 whitespace-nowrap">Ghế</th>
+                                        <th scope="col" className="px-6 py-4 font-medium text-lg text-gray-900 whitespace-nowrap">Phòng chiếu</th>
+                                        <th scope="col" className="px-6 py-4 font-medium text-lg text-gray-900 whitespace-nowrap">Thời gian</th>
+                                        <th scope="col" className="px-6 py-4 font-medium text-lg text-gray-900 whitespace-nowrap">Ngày chiếu</th>
+                                        <th scope="col" className="px-6 py-4 font-medium text-lg text-gray-900 whitespace-nowrap">Đơn giá</th>
+                                        <th scope="col" className="px-6 py-4 font-medium text-lg text-gray-900 whitespace-nowrap"></th>
                                     </tr>
                                     </thead>
                                     <tbody className="divide-y divide-gray-100 border-t border-gray-100">
@@ -220,7 +233,7 @@ function Receipt(){
                                                 </div>
                                             </td>
                                             <td className="px-6 py-4">{formatDate(item.showTime.showDate)}</td>
-                                            <td className="px-6 py-4">{item.totalAmount} VNĐ</td>
+                                            <td className="px-6 py-4">{formatCurrency(item.totalAmount)}</td>
                                             <td className="px-6 py-4">
                                                 <div onClick={() =>removeBooking(index,item)}
                                                      className="flex justify-end gap-4">
@@ -255,7 +268,7 @@ function Receipt(){
                         </p>
                         <div className="flex justify-center items-center w-full bg-orange-100 rounded p-2 mb-4">
                             <div className="total-money text-2xl font-bold text-orange-600">
-                                {totalAmount} VNĐ
+                                {formatCurrency(totalAmount)}
                             </div>
                         </div>
                         <p className="text-lg font-semibold text-gray-900 mb-4">

@@ -69,6 +69,8 @@ const ListEmployee = (() => {
 
     useEffect(() => {
         fetchData(currentPage, valueSearch);
+        document.title = "Danh sách nhân viên rạp chiếu";
+        window.scrollTo(0, 0);
     }, [currentPage,valueSearch]);
 
 

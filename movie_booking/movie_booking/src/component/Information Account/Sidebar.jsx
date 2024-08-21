@@ -11,15 +11,23 @@ import {
   faSignOutAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import Cookies from "js-cookie";
+import request from "../../redux/axios-config";
+import {toast} from "react-toastify";
+import {setUser} from "../../redux/action/user-action";
+import {useDispatch} from "react-redux";
 
 function Sidebar() {
     const navigate = useNavigate()
   const [isOpen, setIsOpen] = useState(false);
+    const dispatch = useDispatch()
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
-
+    const logout = async ()=>{
+        let res = await request.post('/auth/public/log-out')
+        toast.success(res.data)
+    }
   return (
       <>
         <button
@@ -111,8 +119,9 @@ function Sidebar() {
             <NavLink
                 to="/"
                 onClick={() => {
-                    localStorage.clear();
-                    Cookies.set('jwt', '')
+                    logout()
+                    dispatch(setUser(null))
+                    navigate("/");
                 }}
                 className={({ isActive }) =>
                     `flex items-center px-3 py-2.5 font-semibold ${

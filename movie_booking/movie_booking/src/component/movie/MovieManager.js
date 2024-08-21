@@ -19,6 +19,7 @@ export const MovieManager = () => {
     const recordPerPage = 5;
     const numbers = Array.from({ length: numberTotalPage }, (_, i) => i + 1);
     const user = useSelector(state => state.user.user)
+    const [isReload, setIsReload] = useState(false)
 
     const getKindOfMovies= async () => {
         const temp = await movieService.getFindAllKindOfFilm();
@@ -38,6 +39,8 @@ export const MovieManager = () => {
         setLoading(false);
     };
     useEffect(() => {
+        window.scrollTo(0, 0);
+        document.title="Quản lí danh sách phim";
         getMovieFindAll();
     }, [currentPage]);
     const searchMovieByAll = async (nameMovie, content, director, releaseDateFrom, releaseDateTo, nameStatus, actor, currentPage, recordPerPage) => {
@@ -82,7 +85,7 @@ export const MovieManager = () => {
             setCurrentPage(currentPage + 1);
         }
     };
-    const handleDeletelMovies = () =>{
+    const handleDeletelMovies = async () =>{
         const checkboxes = document.querySelectorAll('.checkboxMovies');
         const  movieIds = [];
 
@@ -100,7 +103,7 @@ export const MovieManager = () => {
             cancelButtonColor: "#d33",
             confirmButtonText: "Yes, delete it!"
         }).then((result) => {
-            console.log(result);
+            movieService.deleteByIds(movieIds);
             if (result.isConfirmed) {
                 Swal.fire({
                         title: "Deleted!",
@@ -108,34 +111,30 @@ export const MovieManager = () => {
                         icon: "success"
                     }
                 );
-                movieService.deleteByIds(movieIds);
-                getMovieFindAll();
+
             }
         });
     }
-    const handleDeletel = (id, name) =>{
-        Swal.fire({
-            title: "Bạn chắc chắn xóa "+name+" không",
+    const handleDeletel = async (id, name) => {
+        const result = await Swal.fire({
+            title: "Bạn chắc chắn xóa " + name + " không?",
             text: "Bạn sẽ không thể hoàn nguyên điều này!",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
             confirmButtonText: "Yes, delete it!"
-        }).then((result) => {
-            console.log(result);
-            if (result.isConfirmed) {
-                Swal.fire({
-                    title: "Deleted!",
-                    text: "Bạn muốn xóa",
-                    icon: "success"
-                }
-                );
-                movieService.deleteById(id);
-                getMovieFindAll();
-
-            }
         });
+
+        if (result.isConfirmed) {
+            await movieService.deleteById(id);
+            Swal.fire({
+                title: "Deleted!",
+                text: name + " đã được xóa.",
+                icon: "success"
+            });
+            getMovieFindAll();
+        }
     }
     const againSetListMovie = async (e) =>{
        await getMovieFindAll();

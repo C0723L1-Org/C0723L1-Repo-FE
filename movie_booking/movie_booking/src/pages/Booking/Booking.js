@@ -4,10 +4,12 @@ import * as MovieService from "../../service/MovieService";
 import { Main } from "../../layout/main/Main";
 import { toast } from "react-toastify";
 import { CgArrowLeft, CgArrowRight } from "react-icons/cg";
+import {useSelector} from "react-redux";
 
 const Booking = () => {
     const [listFilmShowing, setListFilmShowing] = useState([]);
     const navigate = useNavigate();
+    const user = useSelector(state => state.user.user)
     const [totalPages, setTotalPages] = useState(0);
     const [pageNumber, setPageNumber] = useState(0);
 
@@ -89,7 +91,7 @@ const Booking = () => {
                                         Đạo Diễn: <span className="text-orange-400">{data.director}</span>
                                     </p>
                                     <div className="flex flex-col space-y-2">
-                                        {data.statusFilmId.name === "Showing" && (
+                                        {data.statusFilmId.name === "Showing" && user?.role !== "employee" ? (
                                             <Link
                                                 to={`/movie/${data.id}`}
                                                 type="button"
@@ -105,7 +107,7 @@ const Booking = () => {
                                                 />
                                                 Mua vé
                                             </Link>
-                                        )}
+                                        ) :""}
                                         <button
                                             onClick={() => {
                                                 navigate(`/see-movie-details/${data.id}`);
