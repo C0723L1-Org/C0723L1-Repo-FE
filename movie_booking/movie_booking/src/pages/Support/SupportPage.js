@@ -4,6 +4,7 @@ import Assess from "../../component/Home/Assess/Assess";
 import {Main} from "../../layout/main/Main";
 const SupportPage = () => {
     useEffect(() => {
+        document.title = `Ý Kiến` ;
         window.scrollTo(0, 0);
     }, []);
     return (

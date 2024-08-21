@@ -2,6 +2,7 @@ import React from "react";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
+import request from "../../redux/axios-config"
 import { toast } from "react-toastify";
 import {FaUser, FaEnvelope, FaLock, FaPhone, FaIdCard} from 'react-icons/fa';
 import {FaCalendarDays, FaLocationDot} from "react-icons/fa6";
@@ -23,7 +24,7 @@ const Register = () => {
 
     const handleSubmit = async (values) => {
         try {
-            await axios.post(' http://localhost:8080/api/v1/user/public/register', values);
+            await request.post('/user/public/register', values);
             toast.success('Đăng ký thành công, bạn sẽ được chuyển về trang đăng nhập sau  3 giây',{
                 autoClose: 3000,
             });
