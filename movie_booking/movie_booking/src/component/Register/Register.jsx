@@ -5,6 +5,7 @@ import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
 import axios from "axios";
+import request from "../../redux/axios-config"
 import { toast } from "react-toastify";
 import {FaUser, FaEnvelope, FaLock, FaPhone, FaIdCard, FaEyeSlash, FaEye} from 'react-icons/fa';
 import {FaCalendarDays, FaLocationDot} from "react-icons/fa6";
@@ -45,12 +46,13 @@ const Register = () => {
 
     const handleSubmit = async (values) => {
         try {
-            await axios.post(' http://localhost:8080/api/v1/user/public/register', values);
-            toast.success('Đăng ký thành công, hãy đăng nhập để sử dụng!');
-            setTimeout( ()=>{
-                navigate('/login'); // Điều hướng đến trang hồ sơ sau khi đăng nhập thành công
-                // navigate('/test'); // Điều hướng đến trang hồ sơ sau khi đăng nhập thành công
-            },1000)
+            await request.post('/user/public/register', values);
+            toast.success('Đăng ký thành công, bạn sẽ được chuyển về trang đăng nhập sau  3 giây',{
+                autoClose: 3000,
+            });
+            setTimeout(() =>{
+                navigate("/login")
+            },3000)
         } catch (error) {
             if (error.response && error.response.status === 400) {
                 const errors = error.response.data;

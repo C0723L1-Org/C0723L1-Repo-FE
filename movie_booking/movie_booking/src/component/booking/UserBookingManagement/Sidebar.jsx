@@ -94,7 +94,9 @@ function Sidebar() {
         <NavLink
           to="/"
           onClick={() => {
-
+            logout()
+            dispatch(setUser(null))
+            navigate("/");
           }}
           className={({ isActive }) =>
             `flex items-center px-3 py-2.5 font-semibold ${

@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { FaChevronDown } from 'react-icons/fa';
 import {Main} from "../../../layout/main/Main";
 
 const FAQ = () => {
     const [activeIndex, setActiveIndex] = useState(null);
+    useEffect(() => {
+        document.title = `Hỗ Trợ` ;
+    }, []);
 
     const toggleAccordion = (index) => {
         setActiveIndex(activeIndex === index ? null : index);
