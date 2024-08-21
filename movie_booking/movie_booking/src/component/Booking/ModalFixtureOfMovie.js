@@ -3,7 +3,7 @@ import {useNavigate, useParams} from "react-router-dom";
 import {Bounce, toast} from "react-toastify";
 import request from "../../redux/axios-config";
 import {useDispatch, useSelector} from "react-redux";
-import {setShowtime} from "../../redux/action/showtime-action";
+import {removeShowtime, setShowtime} from "../../redux/action/showtime-action";
 import Swal from "sweetalert2";
 import {Main} from "../../layout/main/Main";
 import {removeAllSelectedSeat} from "../../redux/action/seat-action";
@@ -32,7 +32,6 @@ function ModalFixtureOfMovie() {
         setDays(days => dates)
     }, [currentDate]);
     useEffect(() => {
-
         const fetchDataMovie = async () => {
             try {
                 const res = await request.get(`/movie/public/${params.id}`)
@@ -57,6 +56,8 @@ function ModalFixtureOfMovie() {
         fetchDataMovie()
     }, []);
     useEffect(() => {
+        dispatch(setShowtime(null))
+        window.scrollTo(0, 0);
         const fetchDataShowtime = async () => {
             const timePart = currentDate.toTimeString().split(' ')[0]
             const year = currentDate.getFullYear(); // Lấy năm
@@ -92,7 +93,6 @@ function ModalFixtureOfMovie() {
     }, [currentDate]);
     const handleDayClick = (day) => {
         setCurrentDate(currentDate => day)
-        console.log(currentDate)
     };
     const handleClickDateButton = (param) => {
         const newDate = new Date(currentDate);
@@ -107,16 +107,20 @@ function ModalFixtureOfMovie() {
                 break;
         }
         setCurrentDate(currentDate => newDate);
-        console.log("cur: " + currentDate)
 
     }
 
     const handleSlotClick = (index) => {
+        const selectedShowtime = listShowtime[index];
+        if (showtime?.id === selectedShowtime.id) {
+            dispatch(setShowtime(null));
+        }
+        else {
         dispatch(setShowtime(listShowtime[index]))
+        }
     };
 
     function handelClickMoveToSeatScreen() {
-        console.log(showtime)
         if (showtime) {
             navigate(`/seat/${movie.id}`)
         } else {
@@ -166,8 +170,8 @@ function ModalFixtureOfMovie() {
                     <div className="m-1 my-2 mx-auto p-1">
                         {/*lịch chiếu film*/}
                         <div className="mb-8">
-                            <h1 className="mb-4 text-3xl font-semibold">
-                                Lịch chiếu phim
+                            <h1 className="mb-4 text-xl font-semibold truncate">
+                                Lịch chiếu phim : {movie.nameMovie}
                             </h1>
                             <span className="flex items-center">
                                 <span className="h-px flex-1 bg-black"></span>
@@ -176,8 +180,7 @@ function ModalFixtureOfMovie() {
                     </div>
                     <div className="h-[200px] bg-white p-6">
                         <div
-                            className="flex bg-white shadow-md justify-start md:justify-center rounded-lg  mx-auto py-4 px-2 md:mx-12">
-                            {}
+                            className="flex bg-white shadow-md justify-start md:justify-center rounded-lg  mx-auto py-4 px-2 md:mx-12 border-t border-gray-300">
                             <div
                                 className="flex group rounded-lg mx-1 transition-all duration-300 cursor-pointer justify-center w-16 bg-slate-50 hover:shadow-regal-blue  hover:shadow-lg hover-light-shadow ">
                                 <div className="flex items-center px-4 py-4">
@@ -185,7 +188,7 @@ function ModalFixtureOfMovie() {
                                         onClick={currentDate.getTime() >= today.getTime() ? () => handleClickDateButton("PREVIOUS") : null}
                                         className={`text-center ${currentDate.getTime() < today.getTime() ? 'opacity-50 cursor-not-allowed' : ''}`}>
                                         <p className="text-gray-900 group-hover:text-black text-sm transition-all duration-300">
-                                            Previous
+                                            Lùi lại
                                         </p>
                                     </div>
                                 </div>
@@ -230,7 +233,7 @@ function ModalFixtureOfMovie() {
                                     <div onClick={() => handleClickDateButton("NEXT")}
                                          className="text-center">
                                         <p className="text-gray-900 group-hover:text-black text-sm transition-all duration-300">
-                                            Next
+                                            Kế tiếp
                                         </p>
                                     </div>
                                 </div>

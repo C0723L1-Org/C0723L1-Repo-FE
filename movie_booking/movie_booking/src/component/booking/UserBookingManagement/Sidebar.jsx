@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import {NavLink, useNavigate} from "react-router-dom";
 import {
   FaUser,
   FaCog,
@@ -10,8 +10,18 @@ import {
 } from "react-icons/fa";
 import {Main} from "../../../layout/main/Main";
 import Cookies from "js-cookie";
+import request from "../../../redux/axios-config";
+import {toast} from "react-toastify";
+import {setUser} from "../../../redux/action/user-action";
+import {useDispatch} from "react-redux";
 
 function Sidebar() {
+   const dispatch = useDispatch();
+   const navigate = useNavigate();
+  const logout = async ()=>{
+    let res = await request.post('/auth/public/log-out')
+    toast.success(res.data)
+  }
   return (
 
     <aside className="w-64 bg-white shadow-lg rounded-md hidden md:block">
@@ -84,8 +94,7 @@ function Sidebar() {
         <NavLink
           to="/"
           onClick={() => {
-            localStorage.clear();
-            Cookies.set('jwt', '')
+
           }}
           className={({ isActive }) =>
             `flex items-center px-3 py-2.5 font-semibold ${

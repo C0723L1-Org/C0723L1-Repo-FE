@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import * as MovieService from "../../../service/HomeService/MovieService";
 import { toast } from "react-toastify";
+import {useSelector} from "react-redux";
 
 const MovieComming = () => {
     const [listFilmComming, setListFilmComming] = useState([]);
     const navigate = useNavigate();
+    const user = useSelector(state => state.user.user)
     const [totalPages, setTotalPages] = useState(0);
     const [pageNumber, setPageNumber] = useState(0);
 
@@ -82,7 +84,7 @@ const MovieComming = () => {
                                             </p>
                                             <div className="flex flex-col space-y-2">
                                                 {data.statusFilmId.name ===
-                                                    "Showing" && (
+                                                    "Showing" && user?.role !== "employee" ? (
                                                         <button
                                                             onClick={() => {
                                                                 navigate(
@@ -93,7 +95,7 @@ const MovieComming = () => {
                                                         >
                                                             Đặt vé
                                                         </button>
-                                                    )}
+                                                    ):""}
                                                 <button
                                                     onClick={() => {
                                                         navigate(

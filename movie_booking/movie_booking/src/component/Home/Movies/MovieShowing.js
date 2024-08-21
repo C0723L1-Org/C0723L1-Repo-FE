@@ -2,14 +2,18 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import * as MovieService from "../../../service/HomeService/MovieService";
 import { toast } from "react-toastify";
+import {useSelector} from "react-redux";
 
 const MovieShowing = () => {
     const [listFilmShowing, setListFilmShowing] = useState([]);
     const navigate = useNavigate();
+    const user = useSelector(state => state.user.user)
+
     const [totalPages, setTotalPages] = useState(0);
     const [pageNumber, setPageNumber] = useState(0);
 
     useEffect(() => {
+        document.title="Home"
         const fetchMoviesShowing = async () => {
             await getAllMoviesShowing(pageNumber);
         };
@@ -73,7 +77,7 @@ const MovieShowing = () => {
                                             {data.releaseDate}
                                         </p>
                                         <div className="flex flex-col space-y-2">
-                                            {data.statusFilmId.name === "Showing" && (
+                                            {data.statusFilmId.name === "Showing" && user?.role !== "employee" ? (
                                                 <Link
                                                     to={`/movie/${data.id}`}
                                                     type="button"
@@ -89,7 +93,7 @@ const MovieShowing = () => {
                                                     />
                                                     Mua vé
                                                 </Link>
-                                            )}
+                                            ):""}
                                             <button
                                                 onClick={() => {
                                                     navigate(`/see-movie-details/${data.id}`);

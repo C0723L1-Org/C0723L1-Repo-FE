@@ -69,6 +69,8 @@ const ListBooking = () => {
 
     useEffect(() => {
         fetchData(currentPage, valueSearch);
+        document.title= "Danh sách đặt vé";
+        window.scrollTo(0, 0);
     }, [currentPage,valueSearch]);
 
 

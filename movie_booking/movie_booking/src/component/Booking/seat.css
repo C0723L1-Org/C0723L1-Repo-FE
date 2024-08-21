@@ -53,7 +53,7 @@
     background-color: #6feaf6;
 }
 .seat.other-selecting {
-    background-color: #6feaf6;
+    background-color: rgb(254 215 170);
 }
 .seat.occupied {
     background-color: #981212;

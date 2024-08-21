@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import request from "../../redux/axios-config"
+import request  from "../../redux/axios-config"
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -9,7 +9,6 @@ import { storage } from "../../firebase-config";
 import { XMarkIcon } from '@heroicons/react/24/solid';
 import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
-import {Main} from "../../layout/main/Main";
 
 function CreateMovie() {
     const navigate = useNavigate();
@@ -18,41 +17,62 @@ function CreateMovie() {
     const [posterPreview, setPosterPreview] = useState(null);
 
     // Validation schema cho form
+    // cập nhật mới...........................
     const validationSchema = Yup.object().shape({
-        nameMovie: Yup.string().required("Tên phim là bắt buộc"),
+        nameMovie: Yup.string()
+            .max(255, 'Tên phim không được vượt quá 255 ký tự')
+            .required("Tên phim là bắt buộc"),
         releaseDate: Yup.string()
             .matches(/^\d{2}\/\d{2}\/\d{4}$/, "Ngày phát hành phải theo định dạng dd/mm/yyyy")
+            .test('after-2015', 'Ngày phát hành phải sau năm 2015', value => {
+                const [day, month, year] = value.split('/').map(Number);
+                return year > 2015;
+            })
             .required("Ngày phát hành là bắt buộc"),
         durationMovie: Yup.string()
             .test('is-numeric', 'Thời lượng phải là một số', value => {
-                // Kiểm tra nếu giá trị là một số
                 return !isNaN(value);
             })
+            .test('is-integer', 'Thời lượng phải là số nguyên', value => {
+                return Number.isInteger(Number(value));
+            })
             .test('greater-than-zero', 'Thời lượng phải lớn hơn 0', value => {
-                // Kiểm tra nếu giá trị là số và lớn hơn 0
                 return Number(value) > 0;
             })
+            .test('max-duration', 'Thời lượng phải dưới 300 phút', value => {
+                return Number(value) <= 300;
+            })
             .required('Thời lượng là bắt buộc'),
-        actor: Yup.string().required(" Tên diễn viên là bắt buộc")
+        actor: Yup.string()
+            .max(150, 'Tên diễn viên không được vượt quá 150 ký tự')
+            .required("Tên diễn viên là bắt buộc")
             .min(5, 'Tên diễn viên phải có ít nhất 5 ký tự')
             .matches(/^[^\d]*$/, 'Tên diễn viên không được chứa số'),
-        director: Yup.string().required("Tên đạo diễn là bắt buộc")
-            .min(5, 'Tên đạo diễn phải có ít nhất 5 ký tự').
-            matches(/^[^\d]*$/, 'Tên đạo diễn không được chứa số'),
-        studio: Yup.string().required("Hãng phim là bắt buộc"),
-        content: Yup.string().required("Nội dung là bắt buộc"),
+        director: Yup.string()
+            .max(150, 'Tên đạo diễn không được vượt quá 150 ký tự')
+            .required("Tên đạo diễn là bắt buộc")
+            .min(5, 'Tên đạo diễn phải có ít nhất 5 ký tự')
+            .matches(/^[^\d]*$/, 'Tên đạo diễn không được chứa số'),
+        studio: Yup.string()
+            .max(255, 'Hãng phim không được vượt quá 255 ký tự')
+            .required("Hãng phim là bắt buộc"),
+        content: Yup.string()
+            .max(255, 'Nội dung không được vượt quá 255 ký tự')
+            .required("Nội dung là bắt buộc"),
         trailer: Yup.string()
             .url("Định dạng URL không hợp lệ")
+            .max(255, 'URL trailer không được vượt quá 255 ký tự')
             .required("URL trailer là bắt buộc"),
-        avatar: Yup.mixed().required("Ảnh đại diện là bắt buộc"),
-        poster: Yup.mixed().required("Ảnh poster là bắt buộc"),
-        // statusFilm: Yup.object()
-        //     .shape({
-        //         id: Yup.number().required("ID trạng thái là bắt buộc"),
-        //         name: Yup.string().required("Tên trạng thái là bắt buộc"),
-        //     })
-        //     .nullable()
-        //     .required("Trạng thái phim là bắt buộc"),
+        avatar: Yup.mixed()
+            .required("Ảnh đại diện là bắt buộc")
+            .test('fileFormat', 'Chỉ chấp nhận tệp .jpg', value => {
+                return value && value.type === 'image/jpeg';
+            }),
+        poster: Yup.mixed()
+            .required("Ảnh poster là bắt buộc")
+            .test('fileFormat', 'Chỉ chấp nhận tệp .jpg', value => {
+                return value && value.type === 'image/jpeg';
+            }),
         kindOfFilm: Yup.array()
             .of(Yup.number().required())
             .min(1, "Ít nhất một thể loại phim phải được chọn")
@@ -118,7 +138,6 @@ function CreateMovie() {
     };
 
     return (
-        <Main content={
         <div className="container mx-auto p-8 max-w-6xl bg-white shadow-lg rounded-lg">
             <h2 className="text-3xl font-bold mb-8 text-center text-gray-800 uppercase">Thêm mới Phim</h2>
             <Formik
@@ -165,7 +184,8 @@ function CreateMovie() {
                                     />
                                     <div className="flex items-center justify-center p-4">
                                         {avatarPreview ? (
-                                            <img src={avatarPreview} alt="Ảnh Đại Diện Xem Trước" className="max-w-full h-auto rounded-lg" />
+                                            <img src={avatarPreview} alt="Ảnh Đại Diện Xem Trước"
+                                                 className="max-w-full h-auto rounded-lg"/>
                                         ) : (
                                             <p className="text-gray-500 text-center">Chọn ảnh đại diện</p>
                                         )}
@@ -179,17 +199,17 @@ function CreateMovie() {
                                                     setFieldValue("avatar", null);
                                                 }}
                                             >
-                                                <XMarkIcon className="w-6 h-6 text-red-500" />
+                                                <XMarkIcon className="w-6 h-6 text-red-500"/>
                                             </button>
                                         )}
                                     </div>
                                 </div>
-                                <ErrorMessage name="avatar" component="div" className="text-red-500 text-sm mt-1" />
+                                <ErrorMessage name="avatar" component="div" className="text-red-500 text-sm mt-1"/>
                             </div>
 
                             <div className="relative flex flex-col">
                                 <label className="font-semibold text-gray-700 mb-2" htmlFor="poster">
-                                     Poster:
+                                    Poster:
                                 </label>
                                 <div
                                     className="relative border-2 border-gray-300 bg-gray-100 rounded-lg cursor-pointer hover:bg-gray-200"
@@ -209,7 +229,8 @@ function CreateMovie() {
                                     />
                                     <div className="flex items-center justify-center p-4">
                                         {posterPreview ? (
-                                            <img src={posterPreview} alt="Ảnh Poster Xem Trước" className="max-w-full h-auto rounded-lg" />
+                                            <img src={posterPreview} alt="Ảnh Poster Xem Trước"
+                                                 className="max-w-full h-auto rounded-lg"/>
                                         ) : (
                                             <p className="text-gray-500 text-center">Chọn ảnh poster</p>
                                         )}
@@ -223,12 +244,12 @@ function CreateMovie() {
                                                     setFieldValue("poster", null);
                                                 }}
                                             >
-                                                <XMarkIcon className="w-6 h-6 text-red-500" />
+                                                <XMarkIcon className="w-6 h-6 text-red-500"/>
                                             </button>
                                         )}
                                     </div>
                                 </div>
-                                <ErrorMessage name="poster" component="div" className="text-red-500 text-sm mt-1" />
+                                <ErrorMessage name="poster" component="div" className="text-red-500 text-sm mt-1"/>
                             </div>
                         </div>
 
@@ -244,7 +265,7 @@ function CreateMovie() {
                                     name="nameMovie"
                                     className="p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                                 />
-                                <ErrorMessage name="nameMovie" component="div" className="text-red-500 text-sm mt-1" />
+                                <ErrorMessage name="nameMovie" component="div" className="text-red-500 text-sm mt-1"/>
                             </div>
 
                             <div className="flex flex-col">
@@ -258,7 +279,7 @@ function CreateMovie() {
                                     className="p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                                     placeholder="dd/mm/yyyy"
                                 />
-                                <ErrorMessage name="releaseDate" component="div" className="text-red-500 text-sm mt-1" />
+                                <ErrorMessage name="releaseDate" component="div" className="text-red-500 text-sm mt-1"/>
                             </div>
 
                             <div className="flex flex-col">
@@ -271,7 +292,8 @@ function CreateMovie() {
                                     name="durationMovie"
                                     className="p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                                 />
-                                <ErrorMessage name="durationMovie" component="div" className="text-red-500 text-sm mt-1" />
+                                <ErrorMessage name="durationMovie" component="div"
+                                              className="text-red-500 text-sm mt-1"/>
                             </div>
 
                             <div className="flex flex-col">
@@ -284,7 +306,7 @@ function CreateMovie() {
                                     name="actor"
                                     className="p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                                 />
-                                <ErrorMessage name="actor" component="div" className="text-red-500 text-sm mt-1" />
+                                <ErrorMessage name="actor" component="div" className="text-red-500 text-sm mt-1"/>
                             </div>
 
                             <div className="flex flex-col">
@@ -297,7 +319,7 @@ function CreateMovie() {
                                     name="director"
                                     className="p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                                 />
-                                <ErrorMessage name="director" component="div" className="text-red-500 text-sm mt-1" />
+                                <ErrorMessage name="director" component="div" className="text-red-500 text-sm mt-1"/>
                             </div>
 
                             <div className="flex flex-col">
@@ -310,7 +332,7 @@ function CreateMovie() {
                                     name="studio"
                                     className="p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                                 />
-                                <ErrorMessage name="studio" component="div" className="text-red-500 text-sm mt-1" />
+                                <ErrorMessage name="studio" component="div" className="text-red-500 text-sm mt-1"/>
                             </div>
                         </div>
 
@@ -325,7 +347,7 @@ function CreateMovie() {
                                 className="p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                                 rows="6"
                             />
-                            <ErrorMessage name="content" component="div" className="text-red-500 text-sm mt-1" />
+                            <ErrorMessage name="content" component="div" className="text-red-500 text-sm mt-1"/>
                         </div>
 
                         <div className="flex flex-col mb-8">
@@ -339,7 +361,7 @@ function CreateMovie() {
                                 className="p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                                 placeholder="http://example.com/trailer"
                             />
-                            <ErrorMessage name="trailer" component="div" className="text-red-500 text-sm mt-1" />
+                            <ErrorMessage name="trailer" component="div" className="text-red-500 text-sm mt-1"/>
                         </div>
 
                         <div className="flex flex-col mb-8">
@@ -353,14 +375,14 @@ function CreateMovie() {
                                 className="p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                             >
                                 <option value="">Chọn trạng thái</option>
-                                <option value={JSON.stringify({ id: 1, name: "Đang chiếu" })}>
+                                <option value={JSON.stringify({id: 1, name: "Đang chiếu"})}>
                                     Đang chiếu
                                 </option>
-                                <option value={JSON.stringify({ id: 2, name: "Sắp chiếu" })}>
+                                <option value={JSON.stringify({id: 2, name: "Sắp chiếu"})}>
                                     Sắp chiếu
                                 </option>
                             </Field>
-                            <ErrorMessage name="statusFilm" component="div" className="text-red-500 text-sm mt-1" />
+                            <ErrorMessage name="statusFilm" component="div" className="text-red-500 text-sm mt-1"/>
                         </div>
 
                         {/* Kind of Film */}
@@ -379,7 +401,7 @@ function CreateMovie() {
                                     </label>
                                 ))}
                             </div>
-                            <ErrorMessage name="kindOfFilm" component="div" className="text-red-500 text-sm mt-1" />
+                            <ErrorMessage name="kindOfFilm" component="div" className="text-red-500 text-sm mt-1"/>
                         </div>
 
                         <button
@@ -395,7 +417,6 @@ function CreateMovie() {
                 )}
             </Formik>
         </div>
-        }/>
     );
 }
 
