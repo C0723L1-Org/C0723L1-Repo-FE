@@ -1,6 +1,6 @@
 import {SidebarCollection} from "./SidebarCollection.js";
 import {useEffect, useState} from "react";
-import * as movieService from "../../service/HomeService/MovieService"
+import * as movieService from "../../service/MovieService"
 import Swal from "sweetalert2";
 import {Header} from "./Header";
 import {DataNotFound} from "./DataNotFound";
@@ -16,7 +16,7 @@ export const MovieManager = () => {
     const [numberElement, setNumberElement] = useState(0);
     const [numberTotalPage, setNumberTotalPage] = useState(0);
     const [currentPage, setCurrentPage] = useState(0);
-    const recordPerPage = 2;
+    const recordPerPage = 5;
     const numbers = Array.from({ length: numberTotalPage }, (_, i) => i + 1);
     const user = useSelector(state => state.user.user)
 
@@ -167,9 +167,6 @@ export const MovieManager = () => {
               </div>
                 <div
                     className="col-span-9 max-md:col-span-10 max-lg:ml-4 max-lg:col-span-10 min-xl:col-span-9 pt-4 pr-7">
-                    <div className="w-full">
-                        <Header/>
-                    </div>
                     <div className="bg-white px-4 py-6 mx-4 rounded-xl shadow-lg mt-10">
                         <div className="flex gap-2">
                           <span

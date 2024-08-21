@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import * as MovieService from "../../service/HomeService/MovieService";
+import * as MovieService from "../../service/MovieService";
 import { infinity } from "ldrs";
 import { Main } from "../../layout/main/Main";
 import { toast } from "react-toastify";
@@ -32,6 +32,11 @@ const Comming = () => {
         }
     };
 
+    const formatDate = (dateString) => {
+        const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+        return new Date(dateString).toLocaleDateString('vi-VN', options);
+    };
+
     const showPageNo = () => {
         return Array.from({ length: totalPages }, (_, i) => (
             <a
@@ -55,7 +60,7 @@ const Comming = () => {
             content={
                 <div className="mt-14 mb-12">
                     <div className="container mx-auto px-4">
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 place-items-center">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 place-items-center justify-center">
                             {listFilmComming?.map((data) => (
                                 <div key={data.id} className="relative group h-full w-full">
                                     <div>
@@ -64,7 +69,7 @@ const Comming = () => {
                                             alt="#"
                                             className="h-full min-h-[300px] w-full object-cover rounded-md"
                                         />
-                                        <div className="absolute inset-0 flex flex-col p-4 bg-black bg-opacity-75 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-md">
+                                        <div className="absolute inset-0 flex flex-col justify-center p-4 bg-black bg-opacity-75 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-md">
                                             <h2 className="text-white text-center text-lg font-bold">
                                                 {data.nameMovie}
                                             </h2>
@@ -85,7 +90,7 @@ const Comming = () => {
                                             <p className="text-white mb-2 text-center">
                                                 Ngày Khởi Chiếu:
                                                 <br />
-                                                {data.releaseDate}
+                                                {formatDate(data.releaseDate)}
                                             </p>
                                             <div className="flex flex-col space-y-2">
                                                 {data.statusFilmId.name === "Showing" && (

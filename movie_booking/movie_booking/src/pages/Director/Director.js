@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import * as MovieService from "../../service/HomeService/MovieService";
+import * as MovieService from "../../service/MovieService";
 import { useForm } from "react-hook-form";
 import { FiSearch } from "react-icons/fi";
 import { ToastContainer, toast } from 'react-toastify';
@@ -15,6 +15,7 @@ const Director = () => {
 
 
     useEffect(() => {
+        document.title = `Đạo Diễn` ;
         const fetchMovies = async () => {
             await searchMovieByAll('', '', '', '', '', '',pageNumber);
         }
