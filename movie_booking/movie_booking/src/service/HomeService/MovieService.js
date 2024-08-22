@@ -1,10 +1,6 @@
 import axios from "axios";
 import request  from "../../redux/axios-config"
 
-// import axios from "axios";export const getSearchMovie = async (nameMovie, director, releaseDate, nameStatus, actor, page) => {
-//     try {
-//         const response = await axios.get(`http://localhost:8080/api/v1/movie/public/show-search-movie?nameMovie=${nameMovie}`+
-//             `&director=${director}&nameStatus=${nameStatus}&actor=${actor}&releaseDate=${releaseDate}&page=${page}`);
 
 const BASE_URL = "http://localhost:8080/api/v1";
 export const getSearchMovie = async (nameMovie, director, actor, nameStatus, releaseDate, studio,  page) => {
