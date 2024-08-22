@@ -2,7 +2,7 @@ import React from 'react';
 import * as employeeService from "../../../service/EmployeeService"
 import {toast} from 'react-toastify'
 import "../../../css/employee/deleteEmployee.css"
-import {WarningIcon} from "../utils/Icons";
+// import {WarningIcon} from "../utils/Icons";
 import '@fortawesome/fontawesome-free/css/all.min.css';
 const DeleteEmployeeModal = ({employee, isOpen, onClose, onEmployeeDeleted}) => {
     const deleteEmployee = async () => {

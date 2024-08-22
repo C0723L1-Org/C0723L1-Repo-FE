@@ -37,7 +37,7 @@ const ListEmployee = (() => {
             setEmployees(data.content || []);
             setTotalPages(data.totalPages);
             setIsLoading(false); // Kết thúc trạng thái loading sau 2 giây
-        }, 300); // Thời gian chờ 2 giây
+        }, 200); // Thời gian chờ 2 giây
     };
 
     const handleOpenModalDelete = (employee) => setEmployeeDelete(employee);
@@ -68,59 +68,12 @@ const ListEmployee = (() => {
 
     useEffect(() => {
         fetchData(currentPage, valueSearch);
+        document.title="Danh sách nhân viên rạp phim";
     }, [currentPage,valueSearch]);
 
 
     return (
         <>
-            {/*<div className="tw-custom-header-table-zone sticky top-0 z-50">*/}
-            {/*    /!* Header *!/*/}
-            {/*    <HeaderEmployee onSearch={handleSearch}/>*/}
-            {/*</div>*/}
-            {/*<div>*/}
-            {/*    {isLoading ? (*/}
-            {/*        <div className="flex justify-center items-center h-full">*/}
-            {/*            <ClipLoader color="#123abc" loading={isLoading} size={40}/> /!* Vòng tròn loading *!/*/}
-            {/*        </div>*/}
-            {/*    ) : (*/}
-            {/*        <>*/}
-            {/*            {employees.length > 0 ? (*/}
-            {/*                <div className="tw-table-zone">*/}
-            {/*                    /!* Table *!/*/}
-            {/*                    <EmployeeTable*/}
-            {/*                        employees={employees}*/}
-            {/*                        handleOpenModalDelete={handleOpenModalDelete}*/}
-            {/*                    />*/}
-            {/*                </div>*/}
-            {/*            ) : (*/}
-            {/*                <div className="mx-16 h-10">*/}
-            {/*                    <SearchNotFound onFetchData={() => {*/}
-            {/*                        setValueSearch({valueSearch: ''});*/}
-            {/*                    }}/>*/}
-            {/*                </div>*/}
-            {/*            )}*/}
-            {/*        </>*/}
-            {/*    )}*/}
-            {/*</div>*/}
-            {/*{!isLoading && (*/}
-            {/*    <Pagination*/}
-            {/*        currentPage={currentPage}*/}
-            {/*        totalPages={totalPages}*/}
-            {/*        onPageChange={handlePageChange}*/}
-            {/*        onPreviousPage={handlePreviousPage}*/}
-            {/*        onNextPage={handleNextPage}*/}
-            {/*    />*/}
-            {/*)}*/}
-
-            {/*{employeeDelete && (*/}
-            {/*    <DeleteEmployeeModal*/}
-            {/*        employee={employeeDelete}*/}
-            {/*        isOpen={!!employeeDelete}*/}
-            {/*        onClose={handleCloseModalDelete}*/}
-            {/*        onEmployeeDeleted={handleEmployeeDeleted}*/}
-            {/*    />*/}
-            {/*)}*/}
-
             <div className="grid grid-cols-1 xl:grid-cols-12">
                 {/* Sidebar */}
                 <div className="col-span-2 hidden xl:block text-white sticky top-0 h-screen">

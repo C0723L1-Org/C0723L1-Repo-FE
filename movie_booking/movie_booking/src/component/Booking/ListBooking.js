@@ -68,59 +68,12 @@ const ListBooking = () => {
 
     useEffect(() => {
         fetchData(currentPage, valueSearch);
+        document.title="Danh sách vé đặt";
     }, [currentPage,valueSearch]);
 
 
     return (
         <>
-            {/*<div className="tw-custom-header-table-zone sticky top-0 z-50">*/}
-            {/*    /!* Header *!/*/}
-            {/*    <HeaderBooking onSearch={handleSearch}/>*/}
-            {/*</div>*/}
-            {/*<div>*/}
-            {/*    {isLoading ? (*/}
-            {/*        <div className="flex justify-center items-center h-full">*/}
-            {/*            <ClipLoader color="#123abc" loading={isLoading} size={40}/> /!* Vòng tròn loading *!/*/}
-            {/*        </div>*/}
-            {/*    ) : (*/}
-            {/*        <>*/}
-            {/*            {bookings.length > 0 ? (*/}
-            {/*                <div className="tw-table-zone">*/}
-            {/*                    /!* Table *!/*/}
-            {/*                    <BookingTable*/}
-            {/*                        bookings={bookings}*/}
-            {/*                        handleOpenModalReceive={handleOpenModalReceive}*/}
-            {/*                    />*/}
-            {/*                </div>*/}
-            {/*            ) : (*/}
-            {/*                <div className="mx-16 h-10">*/}
-            {/*                    <SearchNotFound onFetchData={() => {*/}
-            {/*                        setValueSearch({valueSearch: ''});*/}
-            {/*                    }}/>*/}
-            {/*                </div>*/}
-            {/*            )}*/}
-            {/*        </>*/}
-            {/*    )}*/}
-            {/*</div>*/}
-
-            {/*{!isLoading && (*/}
-            {/*    <Pagination*/}
-            {/*        currentPage={currentPage}*/}
-            {/*        totalPages={totalPages}*/}
-            {/*        onPageChange={handlePageChange}*/}
-            {/*        onPreviousPage={handlePreviousPage}*/}
-            {/*        onNextPage={handleNextPage}*/}
-            {/*    />*/}
-            {/*)}*/}
-
-            {/*{bookingReceive && (*/}
-            {/*    <ReceiveBookingModal*/}
-            {/*        booking={bookingReceive}*/}
-            {/*        isOpen={!!bookingReceive}*/}
-            {/*        onClose={handleCloseModalReceive}*/}
-            {/*        onBookingReceived={handleBookingReceived}*/}
-            {/*    />*/}
-            {/*)}*/}
             <div className="grid grid-cols-1 xl:grid-cols-12">
                 {/* Sidebar */}
                 <div className="col-span-2 hidden xl:block sticky top-0 h-screen">
@@ -150,7 +103,7 @@ const ListBooking = () => {
                                 ) : (
                                     <div className="mx-16 h-10">
                                         <SearchNotFound onFetchData={() => {
-                                            // Xử lý không tìm thấy kết quả
+                                            setValueSearch({valueSearch: ''});
                                         }}/>
                                     </div>
                                 )}
