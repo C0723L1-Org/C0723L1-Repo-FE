@@ -15,7 +15,7 @@ export const MovieManager = () => {
     const [numberElement, setNumberElement] = useState(0);
     const [numberTotalPage, setNumberTotalPage] = useState(0);
     const [currentPage, setCurrentPage] = useState(0);
-    const recordPerPage = 5;
+    const recordPerPage = 8;
     const numbers = Array.from({ length: numberTotalPage }, (_, i) => i + 1);
     const user = useSelector(state => state.user.user)
     const [isReload, setIsReload] = useState(false)
@@ -279,10 +279,10 @@ export const MovieManager = () => {
                             </Link>
                         </div>
                         <div className="p-6 px-0 pt-0 pb-2 space-y-6 col-span-5">
-                            <table
+                            <table aria-colspan="0"
                                 className=" w-full min-w-[640px] table-auto min-xl:flex min-xl:flex-col lg:items-center max-lg:flex max-lg:flex-row">
                                 <thead>
-                                <tr className="text-left max-lg:flex max-lg:flex-col lg:w-1/4">
+                                <tr className="text-left max-lg:flex max-lg:flex-col lg:w-1/4 max-lg:hidden">
                                     <th className="py-3 px-5 border-b border-blue-gray-50">Tên Phim</th>
                                     <th className="py-3 px-5 border-b border-blue-gray-50">Loại Phim</th>
                                     <th className="py-3 px-5 border-b border-blue-gray-50">Trạng Thái</th>
@@ -290,6 +290,14 @@ export const MovieManager = () => {
                                     <th className="py-3 px-5 border-b border-blue-gray-50">Ngày Phát Hành</th>
                                     <th className="py-3 px-5 border-b border-blue-gray-50">Thời Lượng</th>
                                     <th className="py-3 px-5 border-b border-blue-gray-50">Chức Năng</th>
+                                    <th className="py-3 px-5 border-b border-blue-gray-50 text-left">
+                                        <button onClick={(e) => handleDeletelMovies(e)}
+                                                className="flex items-center justify-center px-3 h-8 text-sm font-medium text-white bg-red-700 border-0 border-gray-700 rounded hover:bg-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-300 dark:hover:text-white mr-3">
+                                            Xóa
+                                        </button>
+                                    </th>
+                                </tr>
+                                <tr className="max-lg:block hidden">
                                     <th className="py-3 px-5 border-b border-blue-gray-50 text-left">
                                         <button onClick={(e) => handleDeletelMovies(e)}
                                                 className="flex items-center justify-center px-3 h-8 text-sm font-medium text-white bg-red-700 border-0 border-gray-700 rounded hover:bg-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-300 dark:hover:text-white mr-3">
@@ -352,13 +360,13 @@ export const MovieManager = () => {
                                     </tr>
                                 ) : (listSearchMovie.length > 0 ? (
                                         <tbody
-                                            className="max-lg:grid max-lg:grid-cols-2 max-lg:gap-4 min-xl:grid min-xl:grid-cols-1 min-xl:gap-4">
+                                            className="max-lg:grid max-lg:grid-cols-2 max-lg:gap-2 min-xl:grid min-xl:grid-cols-1 min-xl:gap-4">
                                         {
                                             listSearchMovie.map((movie, index) => {
                                                 return (
                                                     <tr key={index}
                                                         className="max-lg:w-3/4 max-lg:flex max-lg:flex-col min-xl:flex min-xl:flex-col">
-                                                        <td className="py-2 px-5 border-b border-blue-gray-50 ">
+                                                        <td className="py-2 px-5">
                                                             <div className="flex items-center gap-4">
                                                                 <img src={movie.avatar}
                                                                      alt=""
@@ -366,7 +374,7 @@ export const MovieManager = () => {
                                                                 <p className="font-medium">{movie.nameMovie}</p>
                                                             </div>
                                                         </td>
-                                                        <td className="py-2 px-5 border-b border-blue-gray-50">
+                                                        <td className="py-2 px-3">
                                                             {movie.kindOfFilm?.map((kind, index) => (
                                                                 <div key={index}
                                                                      className="relative grid items-center font-sans uppercase select-none bg-gradient-to-tr from-cyan-500 to-cyan-300 text-white rounded-lg py-0.5 px-2 text-[11px] font-medium w-fit">
@@ -374,25 +382,25 @@ export const MovieManager = () => {
                                                                 </div>
                                                             ))}
                                                         </td>
-                                                        <td className="py-2 px-5 border-b border-blue-gray-50">
+                                                        <td className="py-2 px-3">
                                                             <div
                                                                 className="relative grid items-center font-sans uppercase whitespace-nowrap select-none bg-gradient-to-tr from-green-600 to-green-400 text-white rounded-lg py-0.5 px-2 text-[11px] font-medium w-fit">
-                                                                <span>{movie.statusFilm?.name || "No status available"}</span>
+                                                                <span>{movie.statusFilm?.name || "No status"}</span>
                                                             </div>
                                                         </td>
-                                                        <td className="py-2 px-5 border-b border-blue-gray-50">
+                                                        <td className="py-2 px-3">
                                                             <p className="text-[14px] font-semibold">{movie.actor}</p>
                                                         </td>
-                                                        <td className="py-2 px-5 border-b border-blue-gray-50">
+                                                        <td className="py-2 px-3">
                                                             <p className="text-[14px] font-semibold">{movie.releaseDate}</p>
                                                         </td>
-                                                        <td className="py-2 px-5 border-b border-blue-gray-50">
-                                                            <p className="text-[14px] font-semibold">{movie.durationMovie}</p>
+                                                        <td className="py-2 px-3">
+                                                            <p className="text-[14px]2 px-5 font-semibold">{movie.durationMovie}</p>
                                                         </td>
-                                                        <td className="box-border flex space-x-1 py-5 px-2 border-b border-blue-gray-50">
+                                                        <td className="box-border flex space-x-1 py-5 px-3">
                                                             <Link to={`/update-movie/${movie.id}`}>
-                                                                <button type="button" className="flex text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-md text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-green-600
-                                                          dark:hover:bg-green-700 dark:focus:ring-green-800">
+                                                                <button type="button" className="flex text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-md text-sm px-2 py-1 text-center me-2 mb-2 dark:bg-green-600
+                                                                dark:hover:bg-green-700 dark:focus:ring-green-800">
                                                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                                          viewBox="0 0 24 24" strokeWidth={1.5}
                                                                          stroke="currentColor"
@@ -459,9 +467,9 @@ export const MovieManager = () => {
                                         {
                                             numbers.map((n, i) => (
                                                 <li className="flex items-center justify-center px-3 h-8 text-sm font-medium text-white bg-gray-800 border-0 border-s border-gray-700 rounded-e hover:bg-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                                                    key={i}>
+                                                    key={i} onClick={() => changeNPage(n - 1)}>
                                                     <a className='page-link' href="#"
-                                                       onClick={() => changeNPage(n - 1)}>{n}</a>
+                                                       >{n}</a>
                                                 </li>
                                             ))
                                         }
