@@ -1,12 +1,11 @@
-import {SidebarCollection} from "./SidebarCollection.js";
 import {useEffect, useState} from "react";
 import * as movieService from "../../service/MovieService"
 import Swal from "sweetalert2";
-import {Header} from "./Header";
 import {DataNotFound} from "./DataNotFound";
 import {Link, useNavigate} from "react-router-dom";
 import {Main} from "../../layout/main/Main";
 import {useSelector} from "react-redux";
+import {SidebarCollection} from "../../layout/Sidebar/SidebarCollection";
 
 export const MovieManager = () => {
     const [loading, setLoading] = useState(true);
@@ -53,14 +52,6 @@ export const MovieManager = () => {
     };
     const handleSearchs = async (e) =>{
         e.preventDefault();
-        // const checkboxes = document.querySelectorAll('.kinds');
-        // // const  kindIds = [];
-        //
-        // checkboxes.forEach(checkbox =>{
-        //     if(checkbox.checked){
-        //         kindIds.push(checkbox.value);
-        //     }
-        // })
         const name = e.target.nameMovie.value;
         const content = e.target.content.value;
         const director = e.target.director.value;
@@ -177,18 +168,18 @@ export const MovieManager = () => {
                                         d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"/>
                               </svg>
                         </span>
-                            <h1 className="text-xl font-medium ">Search</h1>
+                            <h1 className="text-xl font-medium ">Tìm Kiếm</h1>
                         </div>
 
                         <form className="space-y-2  max-lg:flex-col max-lg:grid " onSubmit={(e) => handleSearchs(e)}>
                             <div className="grid grid-cols-2 gap-5 max-lg:grid-cols-1">
                                 <div className="flex-col justify-center items-center">
-                                    <label className="font-medium text-[14px]" htmlFor="nameMovie">Tên phim:</label>
+                                    <label className="font-medium text-[14px]" htmlFor="nameMovie">Tên Phim:</label>
                                     <input type="text" name="nameMovie" id="nameMovie" placeholder="Nhập tên phim"
                                            className="w-full rounded-lg border border-gray-300 mr-2 px-3 py-1"/>
                                 </div>
                                 <div className="flex-col justify-center items-center">
-                                    <label className="font-medium text-[14px]" htmlFor="actor">Diễn viên chính:</label>
+                                    <label className="font-medium text-[14px]" htmlFor="actor">Diễn Viên:</label>
                                     <input type="text" name="actor" id="actor" placeholder="Nhập diễn viên phim"
                                            className="w-full rounded-lg border border-gray-300 mr-2 px-3 py-1"/>
                                 </div>
@@ -196,22 +187,22 @@ export const MovieManager = () => {
 
                             <div className="flex-col grid grid-cols-4 gap-5 max-lg:grid-cols-1">
                                 <div className="flex-col justify-center items-center max-lg:col-span-4">
-                                    <label className="font-medium text-[14px]" htmlFor="releaseDateFrom">Ngày phát hành
-                                        từ:</label>
+                                    <label className="font-medium text-[14px]" htmlFor="releaseDateFrom">Ngày Công Chiếu
+                                        Từ:</label>
                                     <input type="date" name="releaseDateFrom" id="releaseDateFrom"
                                            className="w-full rounded-lg border border-gray-300 mr-2 px-3 min-xl:py-1"/>
                                 </div>
                                 <div className="flex-col clear-both justify-center items-center max-lg:col-span-4">
-                                    <label className="font-medium text-[14px]" htmlFor="releaseDateTo">Ngày phát hành
-                                        đến:</label>
+                                    <label className="font-medium text-[14px]" htmlFor="releaseDateTo">Ngày Công Chiếu
+                                        Đến:</label>
                                     <input type="date" name="releaseDateTo" id="releaseDateTo"
                                            className="w-full rounded-lg border border-gray-300 mr-2 px-3 min-xl:py-1"/>
                                 </div>
                                 <div className="flex-col justify-center items-center col-span-2 max-lg:col-span-4">
-                                    <label className="font-medium text-[14px]" htmlFor="status">Trạng thái phim:</label>
+                                    <label className="font-medium text-[14px]" htmlFor="status">Trạng Thái Phim:</label>
                                     <select name="status" id="status"
                                             className="w-full rounded-lg border min-xl:py-1 border-gray-300 mr-2 text-center">
-                                        <option value="">--Chọn loại phim--</option>
+                                        <option value="">Trạng Thái Phim</option>
                                         {
                                             statusMovie.map((i, index) => (
                                                 <option key={index} value={i.name}>{i.name}</option>
@@ -223,12 +214,12 @@ export const MovieManager = () => {
 
                             <div className="grid grid-cols-5 gap-5 max-lg:grid-cols-1">
                                 <div className="flex-col justify-center items-center col-span-2 max-lg:grid-cols-5">
-                                    <label className="font-medium text-[14px]" htmlFor="director">Đạo diễn:</label>
+                                    <label className="font-medium text-[14px]" htmlFor="director">Đạo Diễn:</label>
                                     <input type="text" name="director" id="director" placeholder="Nhập đạo diễn phim"
                                            className="w-full rounded-lg border border-gray-300 mr-2 px-3 py-1"/>
                                 </div>
                                 <div className="flex-col justify-center items-center col-span-3 max-lg:grid-cols-5">
-                                    <label className="font-medium text-[14px]" htmlFor="content">Nội dung:</label>
+                                    <label className="font-medium text-[14px]" htmlFor="content">Nội Dung:</label>
                                     <textarea name="content" id="content" cols="10" rows="10"
                                               className="w-full h-10 rounded-lg border border-gray-300 mr-2 px-1 py-1 pl-2"></textarea>
                                 </div>
@@ -257,7 +248,7 @@ export const MovieManager = () => {
                                               strokeWidth="2"
                                               d="M17.651 7.65a7.131 7.131 0 0 0-12.68 3.15M18.001 4v4h-4m-7.652 8.35a7.13 7.13 0 0 0 12.68-3.15M6 20v-4h4"/>
                                     </svg>
-                                    <p>Đặt lại</p>
+                                    <p>Đặt Lại</p>
                                 </button>
                             </div>
                         </form>
@@ -280,7 +271,7 @@ export const MovieManager = () => {
                                               stroke-width="2"
                                               d="M12 7.757v8.486M7.757 12h8.486M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
                                     </svg>
-                                    <p>Thêm mới</p></button>
+                                    <p>Thêm Mới</p></button>
                             </Link>
                         </div>
                         <div className="p-6 px-0 pt-0 pb-2 space-y-6 col-span-5">
@@ -288,13 +279,13 @@ export const MovieManager = () => {
                                 className=" w-full min-w-[640px] table-auto min-xl:flex min-xl:flex-col lg:items-center max-lg:flex max-lg:flex-row">
                                 <thead>
                                 <tr className="text-left max-lg:flex max-lg:flex-col lg:w-1/4">
-                                    <th className="py-3 px-5 border-b border-blue-gray-50">Tên phim</th>
-                                    <th className="py-3 px-5 border-b border-blue-gray-50">Loại phim</th>
-                                    <th className="py-3 px-5 border-b border-blue-gray-50">Trạng thái</th>
-                                    <th className="py-3 px-5 border-b border-blue-gray-50">Diễn viên chính</th>
-                                    <th className="py-3 px-5 border-b border-blue-gray-50">Ngày phát hành</th>
-                                    <th className="py-3 px-5 border-b border-blue-gray-50">Thời lượng</th>
-                                    <th className="py-3 px-5 border-b border-blue-gray-50">Chức năng</th>
+                                    <th className="py-3 px-5 border-b border-blue-gray-50">Tên Phim</th>
+                                    <th className="py-3 px-5 border-b border-blue-gray-50">Loại Phim</th>
+                                    <th className="py-3 px-5 border-b border-blue-gray-50">Trạng Thái</th>
+                                    <th className="py-3 px-5 border-b border-blue-gray-50">Diễn Viên Chính</th>
+                                    <th className="py-3 px-5 border-b border-blue-gray-50">Ngày Phát Hành</th>
+                                    <th className="py-3 px-5 border-b border-blue-gray-50">Thời Lượng</th>
+                                    <th className="py-3 px-5 border-b border-blue-gray-50">Chức Năng</th>
                                     <th className="py-3 px-5 border-b border-blue-gray-50 text-left">
                                         <button onClick={(e) => handleDeletelMovies(e)}
                                                 className="flex items-center justify-center px-3 h-8 text-sm font-medium text-white bg-red-700 border-0 border-gray-700 rounded hover:bg-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-300 dark:hover:text-white mr-3">

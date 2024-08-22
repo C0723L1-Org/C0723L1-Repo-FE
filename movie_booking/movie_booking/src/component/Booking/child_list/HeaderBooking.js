@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import "../../../css/booking/styles.css";
 import {useDebounced} from "../utils/Utils";
-import {SidebarCollection} from "./SidebarCollection";
+import {SidebarCollection} from "../../../layout/Sidebar/SidebarCollection";
 const HeaderBooking = ({onSearch}) => {
     const [searchInput, setSearchInput] = useState('');
     const debouncedSearchInput = useDebounced(searchInput, 1000);  // Điều chỉnh thời gian debounce nếu cần

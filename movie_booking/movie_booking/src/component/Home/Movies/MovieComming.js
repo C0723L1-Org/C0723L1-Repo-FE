@@ -31,6 +31,11 @@ const MovieComming = () => {
         const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
         return new Date(dateString).toLocaleDateString('vi-VN', options);
     };
+    const kindMapping = {
+        Action: "Hành Động",
+        Horno: "Kinh Dị",
+        Funny: "Hài Hước",
+    };
 
     return (
         <div className="mt-14 mb-12">
@@ -38,7 +43,7 @@ const MovieComming = () => {
                 {/* Header Section */}
                 <div className="text-center mb-10 max-w-[600px] mx-auto">
                     <h1 className="bg-slate-100 mb-12 mt-4 rounded-3xl border-solid border-stone-50 p-5 border-2 w-full text-2xl font-bold text-black">
-                        Sắp công chiếu
+                        Sắp Công Chiếu
                     </h1>
                 </div>
                 {/* Body */}
@@ -63,7 +68,7 @@ const MovieComming = () => {
                                             </h2>
                                             <div
                                                 className=" text-white text-center items-center grid grid-rows-1">
-                                                <p>⏰Thời lượng: <span
+                                                <p>⏰Thời Lượng: <span
                                                     className="text-orange-400">{data.durationMovie} phút </span>
                                                 </p>
                                             </div>
@@ -75,7 +80,7 @@ const MovieComming = () => {
                                                                 key={item.id}
                                                                 className="bg-orange-400 text-white px-2 py-1 m-1 rounded-full text-sm"
                                                             >
-                                                                {item.name}
+                                                               {kindMapping[item.name] || item.name}
                                                             </span>
                                                         )
                                                     )}
@@ -120,7 +125,6 @@ const MovieComming = () => {
                                 </div>
                             ))}
                     </div>
-                    {/* View all */}
                     <div className="flex justify-center">
                         <button
                             onClick={() => navigate("/search-movie")}

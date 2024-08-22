@@ -8,6 +8,7 @@ import { CgArrowLeft, CgArrowRight } from "react-icons/cg";
 import { treadmill } from 'ldrs'
 import { Main } from "../../layout/main/Main";
 import {Link, useNavigate} from "react-router-dom";
+import {FaFilterCircleXmark} from "react-icons/fa6";
 
 treadmill.register();
 
@@ -78,6 +79,7 @@ const SearchMovies = () => {
     };
 
     const handlePage = (pageNo) => {
+        scrollToMiddle();
         searchMovieByAll(
             searchCriteria.nameMovie,
             searchCriteria.director,
@@ -93,7 +95,7 @@ const SearchMovies = () => {
         return Array.from({ length: totalPages }, (_, i) => (
             <a
                 key={i}
-                className={`h-10 w-10 hover:bg-blue-700 rounded-full font-semibold text-white text-sm flex items-center justify-center ${i === pageNumber ? 'bg-blue-500 text-white' : 'bg-blue-500 text-black'}`}
+                className={`h-10 w-10 hover:bg-orange-300 rounded-full font-semibold text-white text-sm flex items-center justify-center ${i === pageNumber ? 'bg-orange-400 text-white' : 'bg-orange-400 text-black'}`}
                 onClick={() => handlePage(i)}
             >
                 {i + 1}
@@ -109,7 +111,7 @@ const SearchMovies = () => {
         return Array.from({ length: totalPages1 }, (_, i) => (
             <a
                 key={i}
-                className={`h-10 w-10 hover:bg-blue-700 rounded-full font-semibold text-white text-sm flex items-center justify-center ${i === pageNumber1 ? 'bg-blue-500 text-white' : 'bg-blue-500 text-black'}`}
+                className={`h-10 w-10 hover:bg-orange-400 rounded-full font-semibold text-white text-sm flex items-center justify-center ${i === pageNumber1 ? 'bg-orange-300 text-white' : 'bg-orange-300 text-black'}`}
                 onClick={() => handlePage1(i)}
             >
                 {i + 1}
@@ -165,15 +167,34 @@ const SearchMovies = () => {
             setLoading(false);
         }
     };
+    const handleClearFilters = () => {
+        setSearchCriteria({
+            nameMovie: '',
+            director: '',
+            actor: '',
+            nameStatus: '',
+            releaseDate: '',
+            studio: '',
+        });
+        setKind('');
+        searchMovieByAll('', '', '', '', '', '', pageNumber);
+    };
+
+
     const formatDate = (dateString) => {
         const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
         return new Date(dateString).toLocaleDateString('vi-VN', options);
     };
+    const scrollToMiddle = () => {
+        const windowHeight = window.innerHeight;
+        const middlePosition = windowHeight / 2;
+        window.scrollTo(0, middlePosition);
+    };
 
     const statusMapping = {
-        Comming: "Sắp chiếu",
-        Showing: "Đang chiếu",
-        End: "Đã kết thúc",
+        Comming: "Sắp Chiếu",
+        Showing: "Đang Chiếu",
+        End: "Đã Kết Thúc",
     };
     const kindMapping = {
         Action: "Hành Động",
@@ -273,12 +294,17 @@ const SearchMovies = () => {
                                     ))}
                                 </select>
                             </div>
-                            <div className="flex justify-center">
+                            <div className="flex justify-center gap-6">
                                 <button
                                     type="submit"
-                                    className="w-32 bg-blue-600 text-white font-bold py-2 px-4 rounded-lg shadow-lg hover:bg-blue-700"
+                                    className="w-44 bg-orange-400 text-white font-bold py-2 px-4 rounded-lg shadow-lg hover:bg-orange-300"
                                 >
                                     Tìm Kiếm
+                                </button>
+                                <button  onClick={handleClearFilters}
+                                        className="w-44 bg-orange-400 text-white gap-3 font-bold py-2 px-4 rounded-lg shadow-lg hover:bg-orange-300 flex items-center">
+                                    <FaFilterCircleXmark />
+                                    <span>Xóa Bộ Lọc</span>
                                 </button>
                             </div>
                         </form>
@@ -294,7 +320,7 @@ const SearchMovies = () => {
                     </div>
                 ) : !kind ? (
                     <div className="mt-14 mb-12">
-                        <div className="container mx-auto px-4">
+                    <div className="container mx-auto px-4">
                             <div
                                 className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 place-items-center justify-center">
                                 {movies?.map((data) => (
@@ -375,17 +401,18 @@ const SearchMovies = () => {
                                 <div className="flex space-x-2">
                                     {pageNumber > 0 && (
                                         <a
-                                            className="h-10 px-4  text-white bg-blue-500 hover:bg-blue-700 text-sm flex items-center justify-center rounded-full transition duration-200"
-                                            onClick={() => handlePage(pageNumber - 1)}
+                                            className={`h-10 px-4 ${pageNumber === 0 ? 'bg-gray-400 cursor-not-allowed' : 'bg-orange-400 hover:bg-orange-300'} text-white text-sm flex items-center justify-center rounded-full transition duration-200`}
+                                            onClick={() => pageNumber > 0 && handlePage(pageNumber - 1)}
                                         >
                                             <CgArrowLeft className="mr-2"/>
                                             Trang Trước
                                         </a>
+
                                     )}
                                     {showPageNo()}
                                     {pageNumber < totalPages - 1 && (
                                         <a
-                                            className="h-10 px-4  text-white bg-blue-500 hover:bg-blue-700 text-sm flex items-center justify-center rounded-full transition duration-200"
+                                            className="h-10 px-4  text-white bg-orange-400 hover:bg-orange-300 text-sm flex items-center justify-center rounded-full transition duration-200"
                                             onClick={() => handlePage(pageNumber + 1)}
                                         >
                                             Trang Sau
@@ -479,7 +506,7 @@ const SearchMovies = () => {
                                 <div className="flex space-x-2">
                                     {pageNumber1 > 0 && (
                                         <a
-                                            className="h-10 px-4  text-white bg-blue-500 hover:bg-blue-700 text-sm flex items-center justify-center rounded-full transition duration-200"
+                                            className="h-10 px-4  text-white bg-orange-400 hover:bg-orange-300 text-sm flex items-center justify-center rounded-full transition duration-200"
                                             onClick={() => handlePage1(pageNumber1 - 1)}
                                         >
                                             <CgArrowLeft className="mr-2"/>
@@ -489,7 +516,7 @@ const SearchMovies = () => {
                                     {showPageNo1()}
                                     {pageNumber1 < totalPages1 - 1 && (
                                         <a
-                                            className="h-10 px-4 text-white bg-blue-500 hover:bg-blue-700 text-sm flex items-center justify-center rounded-full transition duration-200"
+                                            className="h-10 px-4 text-white bg-orange-400 hover:bg-orange-300 text-sm flex items-center justify-center rounded-full transition duration-200"
                                             onClick={() => handlePage1(pageNumber1 + 1)}
                                         >
                                             Trang Sau
