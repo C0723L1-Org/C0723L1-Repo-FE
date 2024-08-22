@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import "../../../css/employee/styles.css";
 import {useDebounced} from "../utils/Utils";
-import {SidebarCollection} from "./SidebarCollection";
+import {SidebarCollection} from "../../../layout/Sidebar/SidebarCollection";
 const HeaderEmployee = ({onSearch}) => {
     const [searchInput, setSearchInput] = useState('');
     const debouncedSearchInput = useDebounced(searchInput, 1000);  // Điều chỉnh thời gian debounce nếu cần

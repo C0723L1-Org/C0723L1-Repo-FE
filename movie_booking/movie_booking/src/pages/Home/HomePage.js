@@ -12,6 +12,7 @@ const HomePage = () => {
     const hideTime = localStorage.getItem('hide-today-time');
 
     useEffect(() => {
+        document.title = `Trang Chủ` ;
         window.scrollTo(0, 0);
 
         const now = new Date().getTime();

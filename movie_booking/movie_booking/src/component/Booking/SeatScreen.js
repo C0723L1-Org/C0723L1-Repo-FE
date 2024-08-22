@@ -29,6 +29,8 @@ function SeatScreen(){
     }
     useEffect(() => {
         document.title = `Movie: ${showtime?.movie?.nameMovie || 'Tên Phim'}` ;
+        window.scrollTo(0, 0);
+        dispatch(removeAllSelectedSeat())
         const fetchDateSeatSelected = async () =>{
             console.log(showtime)
             try {
@@ -215,8 +217,12 @@ return listSeat.some(seat => seat.seatNumber === seatNumber);
                                <div className="seat occupied"></div>
                                <small className="text-white">Đã đặt</small>
                            </li>
+                           <li className="m-2">
+                               <div className="seat other-selecting"></div>
+                               <small className="text-white"> Giữ vé</small>
+                           </li>
                        </ul>
-                        {/*in ra danh sách ghế*/}
+                       {/*in ra danh sách ghế*/}
                        <div className="seat-container px-2 sm:px-4 md:px-8">
                            <div className="screen"></div>
                            {rows.map((row) => (
@@ -258,7 +264,7 @@ return listSeat.some(seat => seat.seatNumber === seatNumber);
                                <div className="w-full flex justify-center items-center">
                                    <button onClick={() =>handelClickMoveReceipt()}
                                             className="bg-amber-50 hover:bg-amber-200 text-blue-700 font-semibold hover:text-black py-2 px-4 border border-amber-500 hover:border-transparent rounded ">
-                                       {isLoading ? <BtnLoader/>:"Tiếp theo"}
+                                       {isLoading ? <BtnLoader/>:"Đặt vé"}
                                    </button>
                                </div>
                            </div>

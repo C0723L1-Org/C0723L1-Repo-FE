@@ -11,7 +11,7 @@ const Top3MoviesMostLike = [
     {
         id: 2,
         img: "https://www.themoviedb.org/t/p/w1280/lfY2CfmxyN9OvxmFuap6aejViJn.jpg",
-        name: "Deadpool và Wolverine",
+        name: "Deadpool Và Wolverine",
         like: "999999",
     },
     {
@@ -29,7 +29,7 @@ const TopMovies = () => {
                 {/*Header*/}
                 <div className="text-center mb-10 max-w[600px] mx-auto ">
                     <h1 className="bg-slate-100 mb-24 mt-4 rounded-3xl border-solid border-stone-50 p-5 border-2 w-[96] text-2xl font-bold text-black">
-                        Top 3 Phim Hot Tháng 8
+                        Danh Sách 3 Phim Hot Trong Tháng 8
                     </h1>
                 </div>
                 {/*Body*/}

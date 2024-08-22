@@ -1,5 +1,5 @@
 import axios from "axios";
-import request  from "../../redux/axios-config"
+import request  from "../redux/axios-config"
 
 
 const BASE_URL = "http://localhost:8080/api/v1";

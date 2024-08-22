@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import 'tailwindcss/tailwind.css';
 
 import { Formik, Field, Form, ErrorMessage } from "formik";
@@ -17,6 +17,10 @@ const Login = () => {
         email: Yup.string().email('Invalid email address').required('Email is required'),
         password: Yup.string().required('Password is required'),
     });
+    const [isClick, setIsClick] = useState(false)
+    useEffect(() => {
+        document.title = `Login` ;
+    }, []);
 
     function setCookie(name, value, minutes) {
         let expires = "";
@@ -28,6 +32,7 @@ const Login = () => {
         document.cookie = `${name}=${encodeURIComponent(value)};${expires};path=/`;
     }
     const handleSubmit = async (values) => {
+        setIsClick(prevState => true)
         try {
             const response = await request.post('/auth/public/authenticate', values)
             const token = response.data;
@@ -40,7 +45,9 @@ const Login = () => {
                 navigate("/"); // Điều hướng đến trang hồ sơ sau khi đăng nhập thành công
             },1000)
         } catch (error) {
+            setIsClick(prevState => false)
             if (error.response && error.response.status === 400) {
+                setIsClick(prevState => false)
                 const errorMessage = error.response.data;
                 if (errorMessage === "Email not found") {
                     toast.error('Email không được tìm thấy');
@@ -112,7 +119,9 @@ const Login = () => {
 
                             <button
                                 type="submit"
-                                className="w-full py-2 bg-red-600 text-white font-semibold rounded-md shadow-sm hover:bg-red-700"
+                                className={`w-full py-2 bg-red-600 text-white font-semibold rounded-md shadow-sm 
+                                ${isClick ? 'bg-red-400 cursor-not-allowed pointer-events-none' : 'hover:bg-red-700'}
+                                hover:bg-red-700`}
                             >
                                 Đăng nhập
                             </button>

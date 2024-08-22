@@ -1,11 +1,11 @@
 import {useEffect, useState} from "react";
-import * as movieService from "../../service/HomeService/MovieService"
+import * as movieService from "../../service/MovieService"
 import Swal from "sweetalert2";
 import {DataNotFound} from "./DataNotFound";
 import {Link, useNavigate} from "react-router-dom";
 import {Main} from "../../layout/main/Main";
 import {useSelector} from "react-redux";
-import {SidebarCollection} from "./SidebarCollection";
+import {SidebarCollection} from "../../layout/Sidebar/SidebarCollection";
 
 export const MovieManager = () => {
     const [loading, setLoading] = useState(true);
@@ -38,7 +38,7 @@ export const MovieManager = () => {
         setLoading(false);
     };
     useEffect(() => {
-        // window.scrollTo(0, document.body.scrollHeight);
+        // window.scrollTo(0, 0);
         document.title="Quản lí danh sách phim";
         getMovieFindAll();
     }, [currentPage]);

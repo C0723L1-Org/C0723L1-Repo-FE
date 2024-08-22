@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import * as MovieService from "../../service/HomeService/MovieService";
+import * as MovieService from "../../service/MovieService";
 import { useForm } from "react-hook-form";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -14,6 +14,7 @@ const Studio = () => {
     const { register, handleSubmit, formState: { errors } } = useForm({ criteriaMode: "all" });
 
     useEffect(() => {
+        document.title = `Diễn Viên` ;
         const fetchMovies = async () => {
             await searchMovieByAll('', '', '', '', '', '',pageNumber);
         }

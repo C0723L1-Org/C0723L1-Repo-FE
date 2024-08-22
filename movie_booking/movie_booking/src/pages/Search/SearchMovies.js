@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import * as MovieService from "../../service/HomeService/MovieService";
+import * as MovieService from "../../service/MovieService";
 import { useForm } from "react-hook-form";
 import { FiSearch } from "react-icons/fi";
 import { ToastContainer, toast } from 'react-toastify';
@@ -7,6 +7,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import { CgArrowLeft, CgArrowRight } from "react-icons/cg";
 import { treadmill } from 'ldrs'
 import { Main } from "../../layout/main/Main";
+import {Link, useNavigate} from "react-router-dom";
+import {FaFilterCircleXmark} from "react-icons/fa6";
 
 treadmill.register();
 
@@ -22,6 +24,7 @@ const SearchMovies = () => {
     const [kind, setKind] = useState('');
     const [loading, setLoading] = useState(true);
     const { register, handleSubmit, formState: { errors } } = useForm({ criteriaMode: "all" });
+    const navigate = useNavigate();
 
     const [searchCriteria, setSearchCriteria] = useState({
         nameMovie: '',
@@ -34,6 +37,7 @@ const SearchMovies = () => {
 
     useEffect(() => {
         const fetchMovies = async () => {
+            document.title = `Phim Điện Ảnh` ;
             setLoading(true);
             await new Promise(resolve => setTimeout(resolve, 1500));
             await searchMovieByAll('', '', '', '', '', '', pageNumber);
@@ -75,6 +79,7 @@ const SearchMovies = () => {
     };
 
     const handlePage = (pageNo) => {
+        scrollToMiddle();
         searchMovieByAll(
             searchCriteria.nameMovie,
             searchCriteria.director,
@@ -90,7 +95,7 @@ const SearchMovies = () => {
         return Array.from({ length: totalPages }, (_, i) => (
             <a
                 key={i}
-                className={`h-10 w-10 hover:bg-blue-700 rounded-full font-semibold text-white text-sm flex items-center justify-center ${i === pageNumber ? 'bg-blue-500 text-white' : 'bg-blue-500 text-black'}`}
+                className={`h-10 w-10 hover:bg-orange-300 rounded-full font-semibold text-white text-sm flex items-center justify-center ${i === pageNumber ? 'bg-orange-400 text-white' : 'bg-orange-400 text-black'}`}
                 onClick={() => handlePage(i)}
             >
                 {i + 1}
@@ -106,7 +111,7 @@ const SearchMovies = () => {
         return Array.from({ length: totalPages1 }, (_, i) => (
             <a
                 key={i}
-                className={`h-10 w-10 hover:bg-blue-700 rounded-full font-semibold text-white text-sm flex items-center justify-center ${i === pageNumber1 ? 'bg-blue-500 text-white' : 'bg-blue-500 text-black'}`}
+                className={`h-10 w-10 hover:bg-orange-400 rounded-full font-semibold text-white text-sm flex items-center justify-center ${i === pageNumber1 ? 'bg-orange-300 text-white' : 'bg-orange-300 text-black'}`}
                 onClick={() => handlePage1(i)}
             >
                 {i + 1}
@@ -150,11 +155,6 @@ const SearchMovies = () => {
     const onSubmit = async (data) => {
         const { nameMovie = '', director = '', actor = '', nameStatus = '', releaseDate = '', studio = '' } = data;
         setSearchCriteria({ nameMovie, director, actor, nameStatus, releaseDate, studio });
-
-        // if (!nameMovie && !director && !actor && !nameStatus && !releaseDate && !studio) {
-        //     toast.warning('Hãy nhập hoặc chọn một trường bất kỳ!');
-        //     return searchMovieByAll('', '', '', '', '', '', pageNumber);
-        // }
         try {
             setLoading(true);
             await new Promise(resolve => setTimeout(resolve, 2000));
@@ -167,11 +167,34 @@ const SearchMovies = () => {
             setLoading(false);
         }
     };
+    const handleClearFilters = () => {
+        setSearchCriteria({
+            nameMovie: '',
+            director: '',
+            actor: '',
+            nameStatus: '',
+            releaseDate: '',
+            studio: '',
+        });
+        setKind('');
+        searchMovieByAll('', '', '', '', '', '', pageNumber);
+    };
+
+
+    const formatDate = (dateString) => {
+        const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+        return new Date(dateString).toLocaleDateString('vi-VN', options);
+    };
+    const scrollToMiddle = () => {
+        const windowHeight = window.innerHeight;
+        const middlePosition = windowHeight / 2;
+        window.scrollTo(0, middlePosition);
+    };
 
     const statusMapping = {
-        Comming: "Sắp chiếu",
-        Showing: "Đang chiếu",
-        End: "Đã kết thúc",
+        Comming: "Sắp Chiếu",
+        Showing: "Đang Chiếu",
+        End: "Đã Kết Thúc",
     };
     const kindMapping = {
         Action: "Hành Động",
@@ -192,11 +215,11 @@ const SearchMovies = () => {
                         <span className="inline-flex items-center justify-center w-9 h-9 rounded-full border-4 border-blue-100 bg-blue-200 text-blue-800 mr-2">
                             <FiSearch />
                         </span>
-                            <h1 className="text-xl font-medium">Search</h1>
+                            <h1 className="text-xl font-medium">Tìm Kiếm</h1>
                         </div>
                         <div className="flex flex-col mb-4 mx-auto">
                             <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white" htmlFor="kind">
-                                Loại phim:
+                               Thể Loại Phim:
                             </label>
                             <select
                                 name="kind"
@@ -204,7 +227,7 @@ const SearchMovies = () => {
                                 id="kind"
                                 className="w-full rounded-lg border border-gray-300 py-2 text-center bg-gray-50 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             >
-                                <option value="">--Chọn loại phim--</option>
+                                <option value="">Thể Loại</option>
                                 {kindOfMovie.map((item, index) => (
                                     <option key={index} value={item.name}>
                                         {kindMapping[item.name] || item.name}
@@ -215,7 +238,7 @@ const SearchMovies = () => {
                         <form className="space-y-4 w-full" onSubmit={handleSubmit(onSubmit)}>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                                 <div className="flex flex-col">
-                                    <label className="font-medium text-sm mb-1" htmlFor="nameMovie">Tên phim:</label>
+                                    <label className="font-medium text-sm mb-1" htmlFor="nameMovie">Tên Phim:</label>
                                     <input
                                         {...register("nameMovie")}
                                         type="text"
@@ -225,7 +248,7 @@ const SearchMovies = () => {
                                     />
                                 </div>
                                 <div className="flex flex-col">
-                                    <label className="font-medium text-sm mb-1" htmlFor="director">Đạo diễn:</label>
+                                    <label className="font-medium text-sm mb-1" htmlFor="director">Đạo Diễn:</label>
                                     <input
                                         {...register("director")}
                                         type="text"
@@ -235,7 +258,7 @@ const SearchMovies = () => {
                                     />
                                 </div>
                                 <div className="flex flex-col">
-                                    <label className="font-medium text-sm mb-1" htmlFor="actor">Diễn viên:</label>
+                                    <label className="font-medium text-sm mb-1" htmlFor="actor">Diễn Viên:</label>
                                     <input
                                         {...register("actor")}
                                         type="text"
@@ -245,22 +268,8 @@ const SearchMovies = () => {
                                     />
                                 </div>
                                 <div className="flex flex-col">
-                                    <label className="font-medium text-sm mb-1" htmlFor="nameStatus">Trạng thái phim:</label>
-                                    <select
-                                        {...register("nameStatus")}
-                                        id="nameStatus"
-                                        className="w-full rounded-lg border border-gray-300 px-3 py-2"
-                                    >
-                                        <option value="">--Chọn trạng thái--</option>
-                                        {statusMovie.map((item, index) => (
-                                            <option key={index} value={item.name}>
-                                                {statusMapping[item.name] || item.name}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
-                                <div className="flex flex-col">
-                                    <label className="font-medium text-sm mb-1" htmlFor="releaseDate">Ngày phát hành:</label>
+                                    <label className="font-medium text-sm mb-1" htmlFor="releaseDate">Ngày Công
+                                        Chiếu:</label>
                                     <input
                                         {...register("releaseDate")}
                                         type="date"
@@ -268,23 +277,34 @@ const SearchMovies = () => {
                                         className="w-full rounded-lg border border-gray-300 px-3 py-2"
                                     />
                                 </div>
-                                <div className="flex flex-col">
-                                    <label className="font-medium text-sm mb-1" htmlFor="studio">Studio:</label>
-                                    <input
-                                        {...register("studio")}
-                                        type="text"
-                                        id="studio"
-                                        placeholder="Nhập tên studio"
-                                        className="w-full rounded-lg border border-gray-300 px-3 py-2"
-                                    />
-                                </div>
                             </div>
-                            <div className="flex justify-center">
+                            <div className="flex flex-col">
+                                <label className="font-medium text-sm mb-1" htmlFor="nameStatus">Trạng Thái
+                                    Phim:</label>
+                                <select
+                                    {...register("nameStatus")}
+                                    id="nameStatus"
+                                    className="w-full rounded-lg border border-gray-300 py-2 text-center bg-gray-50 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                >
+                                    <option value="">Đang Chiếu / Sắp Chiếu / Kết Thúc</option>
+                                    {statusMovie.map((item, index) => (
+                                        <option key={index} value={item.name}>
+                                            {statusMapping[item.name] || item.name}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div className="flex justify-center gap-6">
                                 <button
                                     type="submit"
-                                    className="w-32 bg-blue-600 text-white font-bold py-2 px-4 rounded-lg shadow-lg hover:bg-blue-700"
+                                    className="w-44 bg-orange-400 text-white font-bold py-2 px-4 rounded-lg shadow-lg hover:bg-orange-300"
                                 >
-                                    Tìm kiếm
+                                    Tìm Kiếm
+                                </button>
+                                <button  onClick={handleClearFilters}
+                                        className="w-44 bg-orange-400 text-white gap-3 font-bold py-2 px-4 rounded-lg shadow-lg hover:bg-orange-300 flex items-center">
+                                    <FaFilterCircleXmark />
+                                    <span>Xóa Bộ Lọc</span>
                                 </button>
                             </div>
                         </form>
@@ -299,73 +319,212 @@ const SearchMovies = () => {
                         ></l-treadmill>
                     </div>
                 ) : !kind ? (
-                    <div className="space-y-6">
-                        {movies.length > 0 ? (
-                            movies.map(movie => (
-                                <div key={movie.id} className="bg-white rounded-lg shadow-lg overflow-hidden flex items-center">
-                                    <img src={movie.avatar} alt={movie.nameMovie} className="h-40 w-30 object-cover"/>
-                                    <div className="p-4 flex flex-col justify-between">
+                    <div className="mt-14 mb-12">
+                    <div className="container mx-auto px-4">
+                            <div
+                                className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 place-items-center justify-center">
+                                {movies?.map((data) => (
+                                    <div key={data.id} className="relative group h-full w-full">
                                         <div>
-                                            <h2 className="text-xl font-bold">{movie.nameMovie}</h2>
-                                            <p className="text-gray-600">{movie.content}</p>
+                                            <img
+                                                src={data.avatar}
+                                                alt="#"
+                                                className="h-[400px] min-h-[300px] w-full object-cover rounded-md"
+                                            />
+                                            <div
+                                                className="absolute inset-0 flex flex-col justify-center p-4 bg-black bg-opacity-75 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-md">
+                                                <h2 className="text-white text-center text-xl font-bold">
+                                                    {data.nameMovie}
+                                                </h2>
+                                                <div
+                                                    className=" text-white text-center items-center grid grid-rows-1">
+                                                    <p>⏰Thời Lượng: <span className="text-orange-400">{data.durationMovie} phút </span>
+                                                    </p>
+                                                </div>
+                                                <div className="flex flex-wrap justify-center mb-2">
+                                                    {data.kindOfFilms &&
+                                                        data.kindOfFilms.map((item) => (
+                                                            <span
+                                                                key={item.id}
+                                                                className="bg-orange-400 text-white px-2 py-1 m-1 rounded-full text-sm"
+                                                            >
+                                                              {kindMapping[item.name] || item.name}
+                                                        </span>
+                                                        ))}
+                                                </div>
+                                                <p className="text-white mb-2 text-center">
+                                                    Ngày Khởi Chiếu:
+                                                    <br/>
+                                                    <span className="text-orange-400">{formatDate(data.releaseDate)}</span>
+                                                </p>
+                                                <p className="text-white mb-2 text-center">
+                                                    Diễn Viên: <span className="text-orange-400">{data.actor}</span>
+                                                </p>
+                                                <p className="text-white mb-2 text-center">
+                                                    Đạo Diễn: <span className="text-orange-400">{data.director}</span>
+                                                </p>
+                                                <div className="flex flex-col space-y-2">
+                                                    {data.statusFilmId.name === "Showing" && (
+                                                        <Link
+                                                            to={`/movie/${data.id}`}
+                                                            type="button"
+                                                            className="text-white justify-center font-semibold bg-[#f26b38] w-[150px] h-[40px] hover:bg-[#fb9440] rounded text-sm px-5 py-2.5 text-center inline-flex items-center mx-auto dark:hover:bg-[#fb9440] dark:focus:ring-[#fb9440]"
+                                                        >
+                                                            <img
+                                                                alt="Logo Buy Ticket"
+                                                                width="40"
+                                                                height="200"
+                                                                className="mr-2"
+                                                                src="https://www.galaxycine.vn/_next/static/media/Vector-1.319a0d2b.svg"
+                                                                style={{color: "transparent"}}
+                                                            />
+                                                            Mua Vé
+                                                        </Link>
+                                                    )}
+                                                    <button
+                                                        onClick={() => {
+                                                            navigate(
+                                                                `/see-movie-details/${data.id}`
+                                                            );
+                                                        }}
+                                                        className="text-white justify-center font-semibold bg-[#f26b38] w-[150px] h-[40px] hover:bg-[#fb9440] rounded text-sm px-5 py-2.5 text-center inline-flex items-center mx-auto dark:hover:bg-[#fb9440] dark:focus:ring-[#fb9440]"
+                                                    >
+                                                        Thông Tin
+                                                    </button>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
+                                ))}
+                            </div>
+                            <div className="flex items-center justify-center py-8">
+                                <div className="flex space-x-2">
+                                    {pageNumber > 0 && (
+                                        <a
+                                            className={`h-10 px-4 ${pageNumber === 0 ? 'bg-gray-400 cursor-not-allowed' : 'bg-orange-400 hover:bg-orange-300'} text-white text-sm flex items-center justify-center rounded-full transition duration-200`}
+                                            onClick={() => pageNumber > 0 && handlePage(pageNumber - 1)}
+                                        >
+                                            <CgArrowLeft className="mr-2"/>
+                                            Trang Trước
+                                        </a>
+
+                                    )}
+                                    {showPageNo()}
+                                    {pageNumber < totalPages - 1 && (
+                                        <a
+                                            className="h-10 px-4  text-white bg-orange-400 hover:bg-orange-300 text-sm flex items-center justify-center rounded-full transition duration-200"
+                                            onClick={() => handlePage(pageNumber + 1)}
+                                        >
+                                            Trang Sau
+                                            <CgArrowRight className="ml-2"/>
+                                        </a>
+                                    )}
                                 </div>
-                            ))
-                        ) : (
-                            <div className="text-center text-gray-500">Không tìm thấy kết quả tương ứng.</div>
-                        )}
-                        <div className="flex justify-center mt-5 space-x-1">
-                            <button
-                                className="h-10 w-10 bg-blue-500 rounded-full font-semibold text-white text-sm hover:bg-blue-700 flex items-center justify-center"
-                                disabled={pageNumber === 0}
-                                onClick={() => setPageNumber(pageNumber - 1)}
-                            >
-                                <CgArrowLeft className="h-6 w-6" />
-                            </button>
-                            {showPageNo()}
-                            <button
-                                className="h-10 w-10 bg-blue-500 rounded-full font-semibold text-white text-sm hover:bg-blue-700 flex items-center justify-center"
-                                disabled={pageNumber === totalPages - 1}
-                                onClick={() => setPageNumber(pageNumber + 1)}
-                            >
-                                <CgArrowRight className="h-6 w-6" />
-                            </button>
+                            </div>
                         </div>
                     </div>
                 ) : (
-                    <div className="space-y-6">
-                        {moviesKind.length > 0 ? (
-                            moviesKind.map(movie => (
-                                <div key={movie.id} className="bg-white rounded-lg shadow-lg overflow-hidden flex items-center">
-                                    <img src={movie.avatar} alt={movie.nameMovie} className="h-40 w-30 object-cover"/>
-                                    <div className="p-4 flex flex-col justify-between">
+                    <div className="mt-14 mb-12">
+                        <div className="container mx-auto px-4">
+                            <div
+                                className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 place-items-center justify-center">
+                                {moviesKind?.map((data) => (
+                                    <div key={data.id} className="relative group h-full w-full">
                                         <div>
-                                            <h2 className="text-xl font-bold">{movie.nameMovie}</h2>
-                                            <p className="text-gray-600">{movie.content}</p>
+                                            <img
+                                                src={data.avatar}
+                                                alt="#"
+                                                className="h-full min-h-[300px] w-full object-cover rounded-md"
+                                            />
+                                            <div
+                                                className="absolute inset-0 flex flex-col justify-center p-4 bg-black bg-opacity-75 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-md">
+                                                <h2 className="text-white text-center text-lg font-bold">
+                                                    {data.nameMovie}
+                                                </h2>
+                                                <div
+                                                    className="text-orange-400 text-center items-center grid grid-rows-1">
+                                                    <p>⏰Thời lượng: {data.durationMovie} phút</p>
+                                                </div>
+                                                <div className="flex flex-wrap justify-center mb-2">
+                                                    {data.kindOfFilms &&
+                                                        data.kindOfFilms.map((item) => (
+                                                            <span
+                                                                key={item.id}
+                                                                className="bg-orange-400 text-white px-2 py-1 m-1 rounded-full text-sm"
+                                                            >
+                                                               {kindMapping[item.name] || item.name}
+                                                        </span>
+                                                        ))}
+                                                </div>
+                                                <p className="text-white mb-2 text-center">
+                                                    Ngày Khởi Chiếu:
+                                                    <br/>
+                                                    <span
+                                                        className="text-orange-400">{formatDate(data.releaseDate)}</span>
+                                                </p>
+                                                <p className="text-white mb-2 text-center">
+                                                    Diễn Viên: <span className="text-orange-400">{data.actor}</span>
+                                                </p>
+                                                <p className="text-white mb-2 text-center">
+                                                    Đạo Diễn: <span className="text-orange-400">{data.director}</span>
+                                                </p>
+                                                <div className="flex flex-col space-y-2">
+                                                    {data.statusFilmId.name === "Showing" && (
+                                                        <Link
+                                                            to={`/movie/${data.id}`}
+                                                            type="button"
+                                                            className="text-white justify-center font-semibold bg-[#f26b38] w-[150px] h-[40px] hover:bg-[#fb9440] rounded text-sm px-5 py-2.5 text-center inline-flex items-center mx-auto dark:hover:bg-[#fb9440] dark:focus:ring-[#fb9440]"
+                                                        >
+                                                            <img
+                                                                alt="Logo Buy Ticket"
+                                                                width="40"
+                                                                height="200"
+                                                                className="mr-2"
+                                                                src="https://www.galaxycine.vn/_next/static/media/Vector-1.319a0d2b.svg"
+                                                                style={{color: "transparent"}}
+                                                            />
+                                                            Mua Vé
+                                                        </Link>
+                                                    )}
+                                                    <button
+                                                        onClick={() => {
+                                                            navigate(
+                                                                `/see-movie-details/${data.id}`
+                                                            );
+                                                        }}
+                                                        className="text-white justify-center font-semibold  bg-[#f26b38] w-[150px] h-[40px] hover:bg-[#fb9440] rounded text-sm px-5 py-2.5 text-center inline-flex items-center mx-auto dark:hover:bg-[#fb9440] dark:focus:ring-[#fb9440]"
+                                                    >
+                                                        Thông Tin
+                                                    </button>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
+                                ))}
+                            </div>
+                            <div className="flex items-center justify-center py-8">
+                                <div className="flex space-x-2">
+                                    {pageNumber1 > 0 && (
+                                        <a
+                                            className="h-10 px-4  text-white bg-orange-400 hover:bg-orange-300 text-sm flex items-center justify-center rounded-full transition duration-200"
+                                            onClick={() => handlePage1(pageNumber1 - 1)}
+                                        >
+                                            <CgArrowLeft className="mr-2"/>
+                                            Trang Trước
+                                        </a>
+                                    )}
+                                    {showPageNo1()}
+                                    {pageNumber1 < totalPages1 - 1 && (
+                                        <a
+                                            className="h-10 px-4 text-white bg-orange-400 hover:bg-orange-300 text-sm flex items-center justify-center rounded-full transition duration-200"
+                                            onClick={() => handlePage1(pageNumber1 + 1)}
+                                        >
+                                            Trang Sau
+                                            <CgArrowRight className="ml-2"/>
+                                        </a>
+                                    )}
                                 </div>
-                            ))
-                        ) : (
-                            <div className="text-center text-gray-500">Không tìm thấy kết quả tương ứng.</div>
-                        )}
-                        <div className="flex justify-center mt-5 space-x-1">
-                            <button
-                                className="h-10 w-10 bg-blue-500 rounded-full font-semibold text-white text-sm hover:bg-blue-700 flex items-center justify-center"
-                                disabled={pageNumber1 === 0}
-                                onClick={() => setPageNumber1(pageNumber1 - 1)}
-                            >
-                                <CgArrowLeft className="h-6 w-6" />
-                            </button>
-                            {showPageNo1()}
-                            <button
-                                className="h-10 w-10 bg-blue-500 rounded-full font-semibold text-white text-sm hover:bg-blue-700 flex items-center justify-center"
-                                disabled={pageNumber1 === totalPages1 - 1}
-                                onClick={() => setPageNumber1(pageNumber1 + 1)}
-                            >
-                                <CgArrowRight className="h-6 w-6" />
-                            </button>
+                            </div>
                         </div>
                     </div>
                 )}
