@@ -28,6 +28,11 @@ const MovieComming = () => {
         const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
         return new Date(dateString).toLocaleDateString('vi-VN', options);
     };
+    const kindMapping = {
+        Action: "Hành Động",
+        Horno: "Kinh Dị",
+        Funny: "Hài Hước",
+    };
 
     return (
         <div className="mt-14 mb-12">
@@ -72,7 +77,7 @@ const MovieComming = () => {
                                                                 key={item.id}
                                                                 className="bg-orange-400 text-white px-2 py-1 m-1 rounded-full text-sm"
                                                             >
-                                                                {item.name}
+                                                               {kindMapping[item.name] || item.name}
                                                             </span>
                                                         )
                                                     )}

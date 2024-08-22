@@ -25,9 +25,9 @@ const InformationDropdown = [{
 }, {
     id: 2, name: "Diễn Viên", link: "/actor",
 }, {
-    id: 3, name: "Đạo diễn", link: "/director",
+    id: 3, name: "Đạo Diễn", link: "/director",
 }, {
-    id: 4, name: "Hãng phim", link: "/studio",
+    id: 4, name: "Hãng Phim", link: "/studio",
 },];
 let a = null;
 const Navbar = () => {
@@ -100,7 +100,7 @@ const Navbar = () => {
                                                 }}
                                                 className="cursor-pointer block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-200 transform dark:text-gray-300 hover:bg-slate-200 "
                                             >
-                                                Quản lý phim
+                                                Quản Lý
                                             </div>
                                         ) : (
 
@@ -111,7 +111,7 @@ const Navbar = () => {
                                                     }}
                                                     className="cursor-pointer block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-200 transform dark:text-gray-300 hover:bg-slate-200 "
                                                 >
-                                                    Xem thông tin cá nhân
+                                                    Xem Thông Tin Cá Nhân
                                                 </div>
                                                 <hr className="border-gray-200 dark:border-gray-700 "/>
                                                 <div
@@ -120,7 +120,7 @@ const Navbar = () => {
                                                     }}
                                                     className="cursor-pointer block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-200 transform dark:text-gray-300 hover:bg-slate-200"
                                                 >
-                                                    Lịch sử đặt vé
+                                                    Lịch Sử Đặt Vé
                                                 </div>
                                             </>
                                         )}
@@ -134,7 +134,7 @@ const Navbar = () => {
                                             }}
                                             className="cursor-pointer block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-200 transform dark:text-gray-300 hover:bg-slate-200"
                                         >
-                                            Đăng xuất
+                                            Đăng Xuất
                                         </div>
                                     </div>
                                 </div>

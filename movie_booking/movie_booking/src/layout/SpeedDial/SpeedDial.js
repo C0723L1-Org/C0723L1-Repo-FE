@@ -75,7 +75,7 @@ const SpeedDial = () => {
             </div>
             <button
                 type="button"
-                className="flex items-center justify-center text-white bg-blue-700 rounded-full w-14 h-14 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 focus:outline-none dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                className="flex items-center justify-center text-white bg-orange-400 rounded-full w-14 h-14 hover:bg-orange-300 focus:ring-4 focus:ring-blue-300 focus:outline-none dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             >
                 <FaPlus className={`w-5 h-5 transition-transform duration-400 ${isOpen ? "rotate-90" : ""}`}/>
                 <span className="sr-only">Open actions menu</span>
