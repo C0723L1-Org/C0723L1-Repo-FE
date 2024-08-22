@@ -1,26 +1,48 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
+import 'tailwindcss/tailwind.css';
+
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
+
 import axios from "axios";
 import request from "../../redux/axios-config"
 import { toast } from "react-toastify";
-import {FaUser, FaEnvelope, FaLock, FaPhone, FaIdCard} from 'react-icons/fa';
+import {FaUser, FaEnvelope, FaLock, FaPhone, FaIdCard, FaEyeSlash, FaEye} from 'react-icons/fa';
 import {FaCalendarDays, FaLocationDot} from "react-icons/fa6";
 import {useNavigate} from "react-router-dom";
 
 const Register = () => {
-    const navigate = useNavigate()
-
+    useEffect(() => {
+        document.title = `Register`
+    }, []);
     const validationSchema = Yup.object({
-        name: Yup.string().required('Name is required'),
-        email: Yup.string().email('Invalid email address').required('Email is required'),
-        password: Yup.string().required('Password is required'),
-        phoneNumber: Yup.string().required('Phone number is required'),
-        address: Yup.string().required('Address is required'),
-        gender: Yup.boolean().required('Gender is required'),
-        cardId: Yup.string().required("ID Card is required"),
-        dayOfBirth: Yup.string().required("Birth day is required"),
+        name: Yup.string()
+            .min(5, 'Tên phải có ít nhất 5 kí tự')
+            .matches(/^[a-zA-Z\s]+$/, 'Tên không được chứa số hoặc ký tự đặc biệt')
+            .required('Tên không được để trống'),
+        email: Yup.string().email('Email không hợp lệ').required('Email không được để trống'),
+        password: Yup.string()
+            .min(6,'Mật khẩu phải có ít nhất 6 kí tự')
+            .required('Mật khẩu không được để trống'),
+        phoneNumber: Yup.string()
+            .matches(/^(07|09)\d{8}$/, 'Số điện thoại phải bắt đầu bằng 07 hoặc 09 và chỉ nhập số')
+            .matches(/^[0-9]+$/, 'Số điện thoại chỉ chứa số')
+            .required('Số điện thoại không được để trống'),
+        address: Yup.string().required('Địa chỉ không được để trống'),
+        gender: Yup.mixed()
+            .oneOf([true, false], 'Giới tính không được để trống')
+            .required('Giới tính không được để trống'),
+        cardId: Yup.string()
+            .length(10, 'Số CCCD phải chứa đúng 10 kí tự')
+            .matches(/^[0-9]+$/, 'Số CCCD chỉ chứa số')
+            .required("Số CCCD không được để trống"),
+        dayOfBirth: Yup.date()
+            .max(new Date(), 'Ngày sinh không được là tương lai')
+            .required('Ngày sinh không được để trống'),
     });
+    const navigate = useNavigate();
+    const [showPassword, setShowPassword] = useState(false);
+
 
     const handleSubmit = async (values) => {
         try {
@@ -61,7 +83,7 @@ const Register = () => {
                         address: '',
                         gender: '',
                         cardId: '',
-                        // dayOfBirth: '',
+                        dayOfBirth: '',
                     }}
                     validationSchema={validationSchema}
                     onSubmit={handleSubmit}
@@ -95,31 +117,37 @@ const Register = () => {
                                     <ErrorMessage name="email" component="div" className="text-red-500 text-sm"/>
                                 </div>
                             </div>
-                            <div className="flex justify-between items-center bg-gray-900 text-white p-2 rounded-md">
-                                <label className="flex items-center">
-                                    <Field
-                                        type="radio"
-                                        id="male"
-                                        name="gender"
-                                        value="true"
-                                        checked={values.gender === true}
-                                        onChange={() => handleChange({target: {name: 'gender', value: true}})}
-                                        className="form-radio text-blue-500"
-                                    />
-                                    <span className="ml-2">Nam</span>
-                                </label>
-                                <label className="flex items-center">
-                                    <Field
-                                        type="radio"
-                                        id="female"
-                                        name="gender"
-                                        value="false"
-                                        checked={values.gender === false}
-                                        onChange={() => handleChange({target: {name: 'gender', value: false}})}
-                                        className="form-radio text-pink-500"
-                                    />
-                                    <span className="ml-2">Nữ</span>
-                                </label>
+
+                            <div className="flex items-center bg-gray-900 text-white p-2 rounded-md">
+                                <div className="flex-grow">
+                                    <div className="flex justify-between items-center">
+                                        <label className="flex items-center">
+                                            <Field
+                                                type="radio"
+                                                id="male"
+                                                name="gender"
+                                                value="true"
+                                                checked={values.gender === true}
+                                                onChange={() => handleChange({target: {name: 'gender', value: true}})}
+                                                className="form-radio text-blue-500"
+                                            />
+                                            <span className="ml-2">Nam</span>
+                                        </label>
+                                        <label className="flex items-center">
+                                            <Field
+                                                type="radio"
+                                                id="female"
+                                                name="gender"
+                                                value="false"
+                                                checked={values.gender === false}
+                                                onChange={() => handleChange({target: {name: 'gender', value: false}})}
+                                                className="form-radio text-pink-500"
+                                            />
+                                            <span className="ml-2">Nữ</span>
+                                        </label>
+                                    </div>
+                                    <ErrorMessage name="gender" component="div" className="text-red-500 text-sm mt-1"/>
+                                </div>
                             </div>
 
                             <div className="flex items-center bg-gray-900 text-white p-2 rounded-md">
@@ -177,16 +205,23 @@ const Register = () => {
                                 </div>
                             </div>
 
-                            <div className="flex items-center bg-gray-900 text-white p-2 rounded-md">
+                            <div className="flex items-center bg-gray-900 text-white p-2 rounded-md relative">
                                 <FaLock className="mr-3"/>
                                 <div className="flex-grow">
                                     <Field
-                                        type="password"
+                                        type={showPassword ? 'text' : 'password'}
                                         id="password"
                                         name="password"
                                         placeholder="Mật khẩu"
                                         className="bg-transparent border-none w-full text-white"
                                     />
+                                    <button
+                                        type="button"
+                                        className="absolute right-2 top-1/2 transform -translate-y-1/2 text-white"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                    >
+                                        {showPassword ? <FaEyeSlash/> : <FaEye/>}
+                                    </button>
                                     <ErrorMessage name="password" component="div" className="text-red-500 text-sm"/>
                                 </div>
                             </div>
@@ -199,7 +234,7 @@ const Register = () => {
                             </button>
                             <div className="text-center">
                                     <span className="text-white">
-                                        Bạn đã  có tài khoản? Bạn có thể{" "}
+                                        Bạn đã có tài khoản? Bạn có thể{" "}
                                     </span>
                                 <button
                                     onClick={() => {
@@ -212,6 +247,7 @@ const Register = () => {
                                 </button>
                                 .
                             </div>
+
                         </Form>
                     )}
                 </Formik>

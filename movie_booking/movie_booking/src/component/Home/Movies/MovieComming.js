@@ -2,10 +2,13 @@ import React, { useEffect, useState } from "react";
 import {Link, useNavigate} from "react-router-dom";
 import * as MovieService from "../../../service/MovieService";
 import { toast } from "react-toastify";
+import {useSelector} from "react-redux";
 
 const MovieComming = () => {
     const [listFilmComming, setListFilmComming] = useState([]);
     const navigate = useNavigate();
+    const user = useSelector(state => state.user.user)
+    const [totalPages, setTotalPages] = useState(0);
     const [pageNumber, setPageNumber] = useState(0);
 
     useEffect(() => {
@@ -40,7 +43,7 @@ const MovieComming = () => {
                 {/* Header Section */}
                 <div className="text-center mb-10 max-w-[600px] mx-auto">
                     <h1 className="bg-slate-100 mb-12 mt-4 rounded-3xl border-solid border-stone-50 p-5 border-2 w-full text-2xl font-bold text-black">
-                        Sắp công chiếu
+                        Sắp Công Chiếu
                     </h1>
                 </div>
                 {/* Body */}
@@ -65,7 +68,7 @@ const MovieComming = () => {
                                             </h2>
                                             <div
                                                 className=" text-white text-center items-center grid grid-rows-1">
-                                                <p>⏰Thời lượng: <span
+                                                <p>⏰Thời Lượng: <span
                                                     className="text-orange-400">{data.durationMovie} phút </span>
                                                 </p>
                                             </div>
@@ -122,7 +125,6 @@ const MovieComming = () => {
                                 </div>
                             ))}
                     </div>
-                    {/* View all */}
                     <div className="flex justify-center">
                         <button
                             onClick={() => navigate("/search-movie")}

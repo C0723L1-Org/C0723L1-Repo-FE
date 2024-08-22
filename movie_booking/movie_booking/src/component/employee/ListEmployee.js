@@ -7,14 +7,13 @@ import Pagination from "./child_list/Pagination";
 import DeleteEmployeeModal from "./child_list/DeleteEmployeeModal";
 import SearchNotFound from "./child_list/SearchNotFound";
 import { ClipLoader } from 'react-spinners';
-import {SidebarCollection} from "./child_list/SidebarCollection";
 import {Main} from "../../layout/main/Main";
+import {SidebarCollection} from "../../layout/Sidebar/SidebarCollection";
 const ListEmployee = (() => {
     const [employees, setEmployees] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPages, setTotalPages] = useState(1);
     const [employeeDelete, setEmployeeDelete] = useState(null);
-    // const [selectedEmployee, setSelectedEmployee] = useState(null);
     const [valueSearch, setValueSearch] = useState({valueSearch: ''});
     const [isLoading, setIsLoading] = useState(false); // Biến trạng thái loading
 
@@ -25,12 +24,6 @@ const ListEmployee = (() => {
         fetchData(currentPage, valueSearch); // Cập nhật lại danh sách nhân viên
     };
 
-    // Lấy dữ liệu
-    // const fetchData = async (page, valueSearch) => {
-    //     const data = await fetchEmployees(page, valueSearch);
-    //     setEmployees(data.content || []);
-    //     setTotalPages(data.totalPages);
-    // };
     const fetchData = async (page, valueSearch) => {
         setIsLoading(true); // Bắt đầu trạng thái loading
         const data = await fetchEmployees(page, valueSearch);
@@ -69,6 +62,8 @@ const ListEmployee = (() => {
 
     useEffect(() => {
         fetchData(currentPage, valueSearch);
+        document.title = "Danh sách nhân viên rạp chiếu";
+        window.scrollTo(0, 0);
     }, [currentPage,valueSearch]);
 
 

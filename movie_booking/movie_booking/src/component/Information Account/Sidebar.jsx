@@ -11,15 +11,23 @@ import {
   faSignOutAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import Cookies from "js-cookie";
+import request from "../../redux/axios-config";
+import {toast} from "react-toastify";
+import {setUser} from "../../redux/action/user-action";
+import {useDispatch} from "react-redux";
 
 function Sidebar() {
     const navigate = useNavigate()
   const [isOpen, setIsOpen] = useState(false);
+    const dispatch = useDispatch()
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
-
+    const logout = async ()=>{
+        let res = await request.post('/auth/public/log-out')
+        toast.success(res.data)
+    }
   return (
       <>
         <button
@@ -46,9 +54,8 @@ function Sidebar() {
                 }
             >
               <FontAwesomeIcon icon={faUser} className="mr-3 text-blue-500" />
-              <span className="text-gray-800">Hồ sơ</span>
+              <span className="text-gray-800">Hồ Sơ</span>
             </NavLink>
-
             <NavLink
                 to="/change-password"
                 className={({ isActive }) =>
@@ -60,7 +67,7 @@ function Sidebar() {
                 }
             >
               <FontAwesomeIcon icon={faCog} className="mr-3 text-green-500" />
-              <span className="text-gray-800">Đổi mật khẩu</span>
+              <span className="text-gray-800">Đổi Mật Khẩu</span>
             </NavLink>
 
             <NavLink
@@ -74,23 +81,8 @@ function Sidebar() {
                 }
             >
               <FontAwesomeIcon icon={faTicketAlt} className="mr-3 text-red-500" />
-              <span className="text-gray-800">Lịch sử đặt vé</span>
+              <span className="text-gray-800">Lịch Sử Đặt Vé</span>
             </NavLink>
-
-            <NavLink
-                to="#"
-                className={({ isActive }) =>
-                    `flex items-center px-3 py-2.5 font-semibold ${
-                        isActive
-                            ? "text-indigo-900 border rounded-full"
-                            : "hover:text-indigo-900 hover:border hover:rounded-full"
-                    }`
-                }
-            >
-              <FontAwesomeIcon icon={faBan} className="mr-3 text-yellow-500" />
-              <span className="text-gray-800">Vé đã hủy</span>
-            </NavLink>
-
             <NavLink
                 to="/faq"
                 className={({ isActive }) =>
@@ -105,14 +97,15 @@ function Sidebar() {
                   icon={faQuestionCircle}
                   className="mr-3 text-purple-500"
               />
-              <span className="text-gray-800">Trợ giúp</span>
+              <span className="text-gray-800">Trợ Giúp</span>
             </NavLink>
 
             <NavLink
                 to="/"
                 onClick={() => {
-                    localStorage.clear();
-                    Cookies.set('jwt', '')
+                    logout()
+                    dispatch(setUser(null))
+                    navigate("/");
                 }}
                 className={({ isActive }) =>
                     `flex items-center px-3 py-2.5 font-semibold ${
@@ -126,7 +119,7 @@ function Sidebar() {
                   icon={faSignOutAlt}
                   className="mr-3 text-gray-600"
               />
-              <span className="text-gray-800">Đăng xuất</span>
+              <span className="text-gray-800">Đăng Xuất</span>
             </NavLink>
           </div>
         </aside>

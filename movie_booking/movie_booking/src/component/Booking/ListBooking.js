@@ -6,7 +6,7 @@ import Pagination from "../Booking/child_list/Pagination";
 import SearchNotFound from "../Booking/child_list/SearchNotFound";
 import ReceiveBookingModal from "./child_list/ReceiveBookingModal";
 import { ClipLoader } from 'react-spinners';
-import {SidebarCollection} from "./child_list/SidebarCollection";
+import {SidebarCollection} from "../../layout/Sidebar/SidebarCollection";
 import {Main} from "../../layout/main/Main";
 
 const ListBooking = () => {
@@ -23,12 +23,6 @@ const ListBooking = () => {
         fetchData(currentPage, valueSearch); // Cập nhật lại danh sách nhân viên
     };
 
-    // Lấy dữ liệu
-    // const fetchData = async (page, valueSearch) => {
-    //     const data = await fetchBookings(page, valueSearch);
-    //     setBookings(data.content || []);
-    //     setTotalPages(data.totalPages);
-    // };
     const fetchData = async (page, valueSearch) => {
         setIsLoading(true); // Bắt đầu trạng thái loading
         const data = await fetchBookings(page, valueSearch);
@@ -69,6 +63,8 @@ const ListBooking = () => {
 
     useEffect(() => {
         fetchData(currentPage, valueSearch);
+        document.title= "Danh sách đặt vé";
+        window.scrollTo(0, 0);
     }, [currentPage,valueSearch]);
 
 

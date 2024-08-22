@@ -2,14 +2,18 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import * as MovieService from "../../../service/MovieService";
 import { toast } from "react-toastify";
+import {useSelector} from "react-redux";
 
 const MovieShowing = () => {
     const [listFilmShowing, setListFilmShowing] = useState([]);
     const navigate = useNavigate();
+    const user = useSelector(state => state.user.user)
+
     const [totalPages, setTotalPages] = useState(0);
     const [pageNumber, setPageNumber] = useState(0);
 
     useEffect(() => {
+        document.title="Home"
         const fetchMoviesShowing = async () => {
             await getAllMoviesShowing(pageNumber);
         };
@@ -42,7 +46,7 @@ const MovieShowing = () => {
                 {/* Header Section */}
                 <div className="text-center mb-10 max-w-[600px] mx-auto">
                     <h1 className="bg-slate-100 mb-12 mt-4 rounded-3xl border-solid border-stone-50 p-5 border-2 w-full text-2xl font-bold text-black">
-                        Đang chiếu
+                        Đang Chiếu
                     </h1>
                 </div>
                 {/* Body */}
@@ -63,7 +67,7 @@ const MovieShowing = () => {
                                         </h2>
                                         <div
                                             className=" text-white text-center items-center grid grid-rows-1">
-                                            <p>⏰Thời lượng: <span
+                                            <p>⏰Thời Lượng: <span
                                                 className="text-orange-400">{data.durationMovie} phút </span>
                                             </p>
                                         </div>
@@ -84,7 +88,7 @@ const MovieShowing = () => {
                                             <span className="text-orange-400">{formatDate(data.releaseDate)}</span>
                                         </p>
                                         <div className="flex flex-col space-y-2">
-                                            {data.statusFilmId.name === "Showing" && (
+                                            {data.statusFilmId.name === "Showing" && user?.role !== "employee" ? (
                                                 <Link
                                                     to={`/movie/${data.id}`}
                                                     type="button"
@@ -100,7 +104,7 @@ const MovieShowing = () => {
                                                     />
                                                     Mua vé
                                                 </Link>
-                                            )}
+                                            ):""}
                                             <button
                                                 onClick={() => {
                                                     navigate(`/see-movie-details/${data.id}`);

@@ -39,7 +39,7 @@ const Navbar = () => {
 
     const user = useSelector(state => state.user.user)
     const logout = async ()=>{
-        let res = await request.post('/auth/log-out')
+        let res = await request.post('/auth/public/log-out')
         toast.success(res.data)
     }
     return (
@@ -130,7 +130,6 @@ const Navbar = () => {
                                                 logout()
                                                 dispatch(setUser(null))
                                                 navigate("/");
-                                                console.log(user)
                                             }}
                                             className="cursor-pointer block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-200 transform dark:text-gray-300 hover:bg-slate-200"
                                         >
