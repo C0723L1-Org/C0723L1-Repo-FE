@@ -8,11 +8,11 @@ import {
   FaQuestionCircle,
   FaSignOutAlt,
 } from "react-icons/fa";
-import {Main} from "../../../layout/main/Main";
+import {Main} from "../main/Main";
 import Cookies from "js-cookie";
-import request from "../../../redux/axios-config";
+import request from "../../redux/axios-config";
 import {toast} from "react-toastify";
-import {setUser} from "../../../redux/action/user-action";
+import {setUser} from "../../redux/action/user-action";
 import {useDispatch} from "react-redux";
 
 function Sidebar() {
@@ -37,7 +37,7 @@ function Sidebar() {
           }
         >
           <FaUser className="mr-3 text-blue-500" />
-          <span className="text-gray-800">Hồ sơ</span>
+          <span className="text-gray-800">Hồ Sơ</span>
         </NavLink>
         <NavLink
           to="/change-password"
@@ -50,7 +50,7 @@ function Sidebar() {
           }
         >
           <FaCog className="mr-3 text-green-500" />
-          <span className="text-gray-800">Đổi mật khẩu</span>
+          <span className="text-gray-800">Đổi Mật Khẩu</span>
         </NavLink>
         <NavLink
           to="/use-booking-management"
@@ -63,20 +63,7 @@ function Sidebar() {
           }
         >
           <FaTicketAlt className="mr-3 text-red-500" />
-          <span className="text-gray-800">Lịch sử đặt vé</span>
-        </NavLink>
-        <NavLink
-          to="#"
-          className={({ isActive }) =>
-            `flex items-center px-3 py-2.5 font-semibold ${
-              isActive
-                ? "text-indigo-900 border  rounded-full"
-                : "hover:text-indigo-900 hover:border hover:rounded-full"
-            }`
-          }
-        >
-          <FaBan className="mr-3 text-yellow-500" />
-          <span className="text-gray-800">Vé đã hủy</span>
+          <span className="text-gray-800">Lịch Sử Đặt Vé</span>
         </NavLink>
         <NavLink
           to="/faq"
@@ -89,7 +76,7 @@ function Sidebar() {
           }
         >
           <FaQuestionCircle className="mr-3 text-purple-500" />
-          <span className="text-gray-800">Trợ giúp</span>
+          <span className="text-gray-800">Trợ Giúp</span>
         </NavLink>
         <NavLink
           to="/"
@@ -107,7 +94,7 @@ function Sidebar() {
           }
         >
           <FaSignOutAlt className="mr-3 text-gray-600" />
-          <span className="text-gray-800">Đăng xuất</span>
+          <span className="text-gray-800">Đăng Xuất</span>
         </NavLink>
       </div>
     </aside>

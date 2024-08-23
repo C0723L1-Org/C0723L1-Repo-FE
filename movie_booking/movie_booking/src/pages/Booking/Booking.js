@@ -36,7 +36,7 @@ const Booking = () => {
         return Array.from({ length: totalPages }, (_, i) => (
             <a
                 key={i}
-                className={`h-10 w-10 hover:bg-blue-700 rounded-full font-semibold text-white text-sm flex items-center justify-center ${i === pageNumber ? 'bg-blue-500 text-white' : 'bg-blue-500 text-black'}`}
+                className={`h-10 w-10 hover:bg-orange-300 rounded-full font-semibold text-white text-sm flex items-center justify-center ${i === pageNumber ? 'bg-orange-400 text-white' : 'bg-orange-400 text-black'}`}
                 onClick={() => handlePage(i)}
             >
                 {i + 1}
@@ -50,6 +50,11 @@ const Booking = () => {
     const formatDate = (dateString) => {
         const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
         return new Date(dateString).toLocaleDateString('vi-VN', options);
+    };
+    const kindMapping = {
+        Action: "Hành Động",
+        Horno: "Kinh Dị",
+        Funny: "Hài Hước",
     };
 
     return (
@@ -78,7 +83,7 @@ const Booking = () => {
                                         {data.kindOfFilms && data.kindOfFilms.map((item) => (
                                             <span key={item.id}
                                                   className="bg-orange-400 text-white px-2 py-1 m-1 rounded-full text-sm">
-                                                {item.name}
+                                               {kindMapping[item.name] || item.name}
                                             </span>
                                         ))}
                                     </div>
