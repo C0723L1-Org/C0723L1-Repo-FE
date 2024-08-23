@@ -16,6 +16,7 @@ function Receipt(){
     const dispatch = useDispatch();
     const navigate = useNavigate()
     const params = useParams()
+    const showtime = useSelector(state => state.showtime)
     const [isLoading, setIsLoading] = useState(false)
     const listBooking = useSelector(state => state.booking)
     const user = useSelector(state => state.user.user)
@@ -48,10 +49,11 @@ function Receipt(){
             setIsLoading(prevState => true)
             updateBookings().then(()=>{
                 setIsLoading(prevState => false)
+                let email = obscureEmail(user.email)
                 Swal.fire({
                     icon: "success",
                     title: "đặt vé thành công",
-                    text: "Vui lòng kiểm tra email để xem lại thông tin vé",
+                    text: `Vui lòng kiểm tra email: ${email} để xem lại thông tin vé`,
                     showConfirmButton: true,
                 }).then((result) =>{
                         if (result.isConfirmed){
@@ -123,9 +125,15 @@ function Receipt(){
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
-            confirmButtonText: "Yes!"
-        }).then((result) => {
+            confirmButtonText: "OK!",
+            cancelButtonText: "Hủy!"
+        }).then(async (result) => {
             if (result.isConfirmed) {
+                const userShowtimeId={
+                    userId:user.id,
+                    showtimeId:showtime.id
+                }
+                await request.post(`/seat/remove-all`,userShowtimeId)
                 navigate(`/seat/${params.id}`)
             }
         });
@@ -156,7 +164,8 @@ function Receipt(){
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
-            confirmButtonText: "Yes!"
+            confirmButtonText: "OK!",
+            cancelButtonText: "Hủy!"
         }).then(async (result) => {
             if (result.isConfirmed) {
                 const bookingRequest ={
@@ -178,6 +187,33 @@ function Receipt(){
             currency: 'VND',
         }).format(amount);
     };
+    // làm mờ email
+    function obscureEmail(email) {
+        // Tìm vị trí của ký tự '@'
+        const atIndex = email.indexOf('@');
+        if (atIndex === -1) {
+            return email; // Trả về email gốc nếu không tìm thấy ký tự '@'
+        }
+
+        // Tách phần tên email và phần domain
+        const localPart = email.substring(0, atIndex);
+        const domainPart = email.substring(atIndex);
+
+        // Đảm bảo phần tên email có ít nhất 4 ký tự để thực hiện làm mờ
+        if (localPart.length < 4) {
+            return email; // Không thay đổi nếu phần tên email quá ngắn
+        }
+
+        // Giữ 2 ký tự đầu và 2 ký tự cuối của phần tên email
+        const firstTwoChars = localPart.substring(0, 2);
+        const lastTwoChars = localPart.substring(localPart.length - 2);
+
+        // Tạo phần tên email đã làm mờ
+        const obscuredLocalPart = `${firstTwoChars}***${lastTwoChars}`;
+
+        // Kết hợp phần tên đã làm mờ với phần domain
+        return `${obscuredLocalPart}${domainPart}`;
+    }
     return (
         <Main content={
         <>  {isLoading ? (<Loader/>):("")}

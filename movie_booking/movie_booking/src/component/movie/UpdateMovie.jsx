@@ -5,7 +5,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "../../firebase-config";
-import {useNavigate, useParams} from "react-router-dom";
+import {Link, useNavigate, useParams} from "react-router-dom";
 import { XMarkIcon } from '@heroicons/react/24/solid';
 import {toast} from "react-toastify";
 
@@ -13,6 +13,7 @@ function UpdateMovie() {
     const navigate = useNavigate();
     const [movie, setMovie] = useState(null);
     const [kindOfFilms, setKindOfFilms] = useState([]);
+    const [statusFilm, setStatusFilm] = useState([]);
     const [avatarPreview, setAvatarPreview] = useState(null);
     const [posterPreview, setPosterPreview] = useState(null);
     const { movieId } = useParams();
@@ -83,7 +84,7 @@ function UpdateMovie() {
         //         if (typeof value === 'string') return true;
         //         // Nếu giá trị là tệp tin, kiểm tra định dạng
         //         return value && value.type === 'image/jpeg';
-        //     })
+        //     }),
         //     .test('required', 'Ảnh poster là bắt buộc', value => {
         //         // Nếu giá trị là chuỗi (URL), xem như đã có ảnh
         //         if (typeof value === 'string') return true;
@@ -111,6 +112,7 @@ function UpdateMovie() {
             }
         };
 
+
         const fetchKindOfFilms = async () => {
             try {
                 const response = await request.get("/movie/private/list-kind-of-film");
@@ -123,6 +125,21 @@ function UpdateMovie() {
         fetchMovieDetails();
         fetchKindOfFilms();
     }, [movieId]);
+
+    useEffect(() => {
+        const fetchStatusFilms = async () => {
+            try {
+                const response = await request.get(
+                    "/movie/private/list-status-film"
+                );
+                setStatusFilm(response.data);
+            } catch (error) {
+                console.error("Lỗi khi lấy danh sách trạng thái phim", error);
+            }
+        };
+
+        fetchStatusFilms();
+    }, []);
     //Biến mới .............
     const handleKindOfFilmChange = (id) => {
         if (kindOfFilmData.includes(id)) {
@@ -170,6 +187,13 @@ function UpdateMovie() {
 
     return (
         <div className="container mx-auto p-8 max-w-6xl bg-white shadow-lg rounded-lg">
+            <Link to="/movie-manager">
+                <span>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
+                    </svg>
+                </span>
+            </Link>
             <h2 className="text-3xl font-bold mb-8 text-center text-gray-800 uppercase">Cập nhật Phim</h2>
             <Formik
                 initialValues={{
@@ -406,12 +430,17 @@ function UpdateMovie() {
                                 className="p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                             >
                                 <option value="">Chọn trạng thái</option>
-                                <option value={JSON.stringify({ id: 1, name: "Đang chiếu" })}>
-                                    Đang chiếu
-                                </option>
-                                <option value={JSON.stringify({ id: 2, name: "Sắp chiếu" })}>
-                                    Sắp chiếu
-                                </option>
+                                {/*<option value={JSON.stringify({ id: 1, name: "Đang chiếu" })}>*/}
+                                {/*    Đang chiếu*/}
+                                {/*</option>*/}
+                                {/*<option value={JSON.stringify({ id: 2, name: "Sắp chiếu" })}>*/}
+                                {/*    Sắp chiếu*/}
+                                {/*</option>*/}
+                                {
+                                    statusFilm.map((i, index) => (
+                                        <option key={index} value={JSON.stringify({id: i.id, name: i.name})}>{i.name}</option>
+                                    ))
+                                }
                             </Field>
                             <ErrorMessage name="statusFilm" component="div" className="text-red-500 text-sm mt-1" />
                         </div>

@@ -111,7 +111,7 @@ const Navbar = () => {
                                                     }}
                                                     className="cursor-pointer block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-200 transform dark:text-gray-300 hover:bg-slate-200 "
                                                 >
-                                                    Xem Thông Tin Cá Nhân
+                                                    Hồ Sơ
                                                 </div>
                                                 <hr className="border-gray-200 dark:border-gray-700 "/>
                                                 <div
@@ -159,7 +159,6 @@ const Navbar = () => {
                             </button>
                         </div>
                     )
-
                     }
                 </div>
             </div>

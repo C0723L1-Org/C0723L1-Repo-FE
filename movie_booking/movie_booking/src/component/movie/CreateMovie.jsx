@@ -14,6 +14,7 @@ import {Main} from "../../layout/main/Main";
 function CreateMovie() {
     const navigate = useNavigate();
     const [kindOfFilms, setKindOfFilms] = useState([]);
+    const [statusFilm, setStatusFilm] = useState([]);
     const [avatarPreview, setAvatarPreview] = useState(null);
     const [posterPreview, setPosterPreview] = useState(null);
 
@@ -58,7 +59,7 @@ function CreateMovie() {
             .max(255, 'Hãng phim không được vượt quá 255 ký tự')
             .required("Hãng phim là bắt buộc"),
         content: Yup.string()
-            .max(255, 'Nội dung không được vượt quá 255 ký tự')
+            // .max(255, 'Nội dung không được vượt quá 255 ký tự')
             .required("Nội dung là bắt buộc"),
         trailer: Yup.string()
             .url("Định dạng URL không hợp lệ")
@@ -69,6 +70,7 @@ function CreateMovie() {
             .test('fileFormat', 'Chỉ chấp nhận tệp .jpg', value => {
                 return value && value.type === 'image/jpeg';
             }),
+        statusFilm: Yup.string().required('Không được trống'),
         poster: Yup.mixed()
             .required("Ảnh poster là bắt buộc")
             .test('fileFormat', 'Chỉ chấp nhận tệp .jpg', value => {
@@ -93,6 +95,20 @@ function CreateMovie() {
         };
 
         fetchKindOfFilms();
+    }, []);
+    useEffect(() => {
+        const fetchStatusFilms = async () => {
+            try {
+                const response = await request.get(
+                    "/movie/private/list-status-film"
+                );
+                setStatusFilm(response.data);
+            } catch (error) {
+                console.error("Lỗi khi lấy danh sách trạng thái phim", error);
+            }
+        };
+
+        fetchStatusFilms();
     }, []);
 
     const uploadFile = async (file, path) => {
@@ -141,6 +157,13 @@ function CreateMovie() {
     return (
         <Main content={
         <div className="container mx-auto p-8 max-w-6xl bg-white shadow-lg rounded-lg">
+            <Link to="/movie-manager">
+                <span>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
+                    </svg>
+                </span>
+            </Link>
             <h2 className="text-3xl font-bold mb-8 text-center text-gray-800 uppercase">Thêm mới Phim</h2>
             <Formik
                 initialValues={{
@@ -377,12 +400,17 @@ function CreateMovie() {
                                 className="p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                             >
                                 <option value="">Chọn trạng thái</option>
-                                <option value={JSON.stringify({id: 1, name: "Đang chiếu"})}>
-                                    Đang chiếu
-                                </option>
-                                <option value={JSON.stringify({id: 2, name: "Sắp chiếu"})}>
-                                    Sắp chiếu
-                                </option>
+                                {/*<option value={JSON.stringify({id: 1, name: "Đang chiếu"})}>*/}
+                                {/*    Đang chiếu*/}
+                                {/*</option>*/}
+                                {/*<option value={JSON.stringify({id: 2, name: "Sắp chiếu"})}>*/}
+                                {/*    Sắp chiếu*/}
+                                {/*</option>*/}
+                                {
+                                    statusFilm.map((i, index) => (
+                                        <option key={index} value={JSON.stringify({id: i.id, name: i.name})}>{i.name}</option>
+                                    ))
+                                }
                             </Field>
                             <ErrorMessage name="statusFilm" component="div" className="text-red-500 text-sm mt-1"/>
                         </div>

@@ -43,6 +43,7 @@ function HoSo() {
 
 
     useEffect(() => {
+        document.title="Hồ Sơ"
         fetchUser();
     }, []);
 

@@ -3,13 +3,12 @@ import 'tailwindcss/tailwind.css';
 
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
-
-import axios from "axios";
 import request from "../../redux/axios-config"
 import { toast } from "react-toastify";
 import {FaUser, FaEnvelope, FaLock, FaPhone, FaIdCard, FaEyeSlash, FaEye} from 'react-icons/fa';
 import {FaCalendarDays, FaLocationDot} from "react-icons/fa6";
 import {useNavigate} from "react-router-dom";
+
 
 const Register = () => {
     useEffect(() => {
@@ -18,12 +17,15 @@ const Register = () => {
     const validationSchema = Yup.object({
         name: Yup.string()
             .min(5, 'Tên phải có ít nhất 5 kí tự')
-            .matches(/^[a-zA-Z\s]+$/, 'Tên không được chứa số hoặc ký tự đặc biệt')
+            .matches(/^[^\d!@#$%^&*()_+={}\[\]:;,<.>?\\\/'"]*$/, 'Tên không được chứa số hoặc ký tự đặc biệt')
             .required('Tên không được để trống'),
         email: Yup.string().email('Email không hợp lệ').required('Email không được để trống'),
         password: Yup.string()
             .min(6,'Mật khẩu phải có ít nhất 6 kí tự')
             .required('Mật khẩu không được để trống'),
+        confirmPassword: Yup.string()
+            .oneOf([Yup.ref('password'), null], 'Mật khẩu không khớp')
+            .required('Vui lòng xác nhận mật khẩu'),
         phoneNumber: Yup.string()
             .matches(/^(07|09)\d{8}$/, 'Số điện thoại phải bắt đầu bằng 07 hoặc 09 và chỉ nhập số')
             .matches(/^[0-9]+$/, 'Số điện thoại chỉ chứa số')
@@ -42,9 +44,15 @@ const Register = () => {
     });
     const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
+
+    useEffect(() => {
+        document.title = `Đăng Ký` ;
+    }, []);
 
     const handleSubmit = async (values) => {
+        const { confirmPassword, ...dataToSend } = values; // xóa trước khi gửi xuống db
         try {
             await request.post('/user/public/register', values);
             toast.success('Đăng ký thành công, bạn sẽ được chuyển về trang đăng nhập sau  3 giây',{
@@ -79,6 +87,7 @@ const Register = () => {
                         name: '',
                         email: '',
                         password: '',
+                        confirmPassword: '',
                         phoneNumber: '',
                         address: '',
                         gender: '',
@@ -223,6 +232,28 @@ const Register = () => {
                                         {showPassword ? <FaEyeSlash/> : <FaEye/>}
                                     </button>
                                     <ErrorMessage name="password" component="div" className="text-red-500 text-sm"/>
+                                </div>
+                            </div>
+
+                            <div className="flex items-center bg-gray-900 text-white p-2 rounded-md relative">
+                                <FaLock className="mr-3"/>
+                                <div className="flex-grow">
+                                    <Field
+                                        type={showConfirmPassword ? 'text' : 'password'}
+                                        id="confirmPassword"
+                                        name="confirmPassword"
+                                        placeholder="Xác nhận mật khẩu"
+                                        className="bg-transparent border-none w-full text-white"
+                                    />
+                                    <button
+                                        type="button"
+                                        className="absolute right-2 top-1/2 transform -translate-y-1/2 text-white"
+                                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                    >
+                                        {showConfirmPassword ? <FaEyeSlash/> : <FaEye/>}
+                                    </button>
+                                    <ErrorMessage name="confirmPassword" component="div"
+                                                  className="text-red-500 text-sm"/>
                                 </div>
                             </div>
 

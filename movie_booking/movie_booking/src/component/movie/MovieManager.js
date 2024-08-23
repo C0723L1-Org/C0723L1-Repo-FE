@@ -15,7 +15,7 @@ export const MovieManager = () => {
     const [numberElement, setNumberElement] = useState(0);
     const [numberTotalPage, setNumberTotalPage] = useState(0);
     const [currentPage, setCurrentPage] = useState(0);
-    const recordPerPage = 5;
+    const recordPerPage = 8;
     const numbers = Array.from({ length: numberTotalPage }, (_, i) => i + 1);
     const user = useSelector(state => state.user.user)
     const [isReload, setIsReload] = useState(false)
@@ -38,7 +38,7 @@ export const MovieManager = () => {
         setLoading(false);
     };
     useEffect(() => {
-        window.scrollTo(0, 0);
+        // window.scrollTo(0, 0);
         document.title="Quản lí danh sách phim";
         getMovieFindAll();
     }, [currentPage]);
@@ -76,36 +76,40 @@ export const MovieManager = () => {
             setCurrentPage(currentPage + 1);
         }
     };
-    const handleDeletelMovies = async () =>{
-        const checkboxes = document.querySelectorAll('.checkboxMovies');
-        const  movieIds = [];
+    const [checkedMovies, setCheckedMovies] = useState([]);
 
-        checkboxes.forEach(checkbox =>{
-            if(checkbox.checked){
-                movieIds.push(checkbox.value);
-            }
-        })
-        Swal.fire({
-            title: "Bạn chắc chắn xóa các sựu lựa chọn không ?",
-            text: "Bạn sẽ không thể hoàn nguyên điều này!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, delete it!"
-        }).then((result) => {
-            movieService.deleteByIds(movieIds);
-            if (result.isConfirmed) {
-                Swal.fire({
-                        title: "Deleted!",
-                        text: "Bạn muốn xóa",
-                        icon: "success"
-                    }
-                );
-
+    const handleCheckboxChange = (movieId) => {
+        setCheckedMovies((prevChecked) => {
+            if (prevChecked.includes(movieId)) {
+                return prevChecked.filter(id => id !== movieId);
+            } else {
+                return [...prevChecked, movieId];
             }
         });
-    }
+    };
+    const handleDeletelMovies = async () => {
+        if (checkedMovies.length > 0) {
+            Swal.fire({
+                title: "Bạn chắc chắn xóa các sự lựa chọn không?",
+                text: "Bạn sẽ không thể hoàn nguyên điều này!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    movieService.deleteByIds(checkedMovies).then(() => {
+                        Swal.fire("Deleted!", "Bạn đã xóa thành công.", "success");
+                        setCheckedMovies([]);
+                        getMovieFindAll();
+                    });
+                }
+            });
+        } else {
+            Swal.fire("Thông báo", "Bạn chưa chọn phim nào để xóa.", "info");
+        }
+    };
     const handleDeletel = async (id, name) => {
         const result = await Swal.fire({
             title: "Bạn chắc chắn xóa " + name + " không?",
@@ -128,7 +132,7 @@ export const MovieManager = () => {
         }
     }
     const againSetListMovie = async (e) =>{
-       await getMovieFindAll();
+        await getMovieFindAll();
         document.getElementById("nameMovie").value = '';
         document.getElementById("content").value = '';
         document.getElementById("director").value = '';
@@ -142,19 +146,19 @@ export const MovieManager = () => {
         // searchMovieByAll();
         getKindOfMovies();
         getStatusMovies();
-        // getMovieFindAll();
-        setTimeout(() =>{
-            getMovieFindAll();
-        }, 2000)
+        getMovieFindAll();
+        // setTimeout(() =>{
+        //     getMovieFindAll();
+        // }, 2000)
     }, [])
     return(
-    <Main content={
+        <Main content={
             <div className="grid grid-cols-12 gap-4">
-              <div className="col-span-3 z-50 max-md:col-span-2 max-lg:col-span-2 min-xl:col-span-3">
-                  <div className="h-full">
-                      <SidebarCollection/>
-                  </div>
-              </div>
+                <div className="col-span-3 z-50 max-md:col-span-2 max-lg:col-span-2 min-xl:col-span-3">
+                    <div className="h-full">
+                        <SidebarCollection/>
+                    </div>
+                </div>
                 <div
                     className="col-span-9 max-md:col-span-10 max-lg:ml-4 max-lg:col-span-10 min-xl:col-span-9 pt-4 pr-7">
                     <div className="bg-white px-4 py-6 mx-4 rounded-xl shadow-lg mt-10">
@@ -275,10 +279,10 @@ export const MovieManager = () => {
                             </Link>
                         </div>
                         <div className="p-6 px-0 pt-0 pb-2 space-y-6 col-span-5">
-                            <table
+                            <table aria-colspan="0"
                                 className=" w-full min-w-[640px] table-auto min-xl:flex min-xl:flex-col lg:items-center max-lg:flex max-lg:flex-row">
                                 <thead>
-                                <tr className="text-left max-lg:flex max-lg:flex-col lg:w-1/4">
+                                <tr className="text-left max-lg:flex max-lg:flex-col lg:w-1/4 max-lg:hidden">
                                     <th className="py-3 px-5 border-b border-blue-gray-50">Tên Phim</th>
                                     <th className="py-3 px-5 border-b border-blue-gray-50">Loại Phim</th>
                                     <th className="py-3 px-5 border-b border-blue-gray-50">Trạng Thái</th>
@@ -286,6 +290,14 @@ export const MovieManager = () => {
                                     <th className="py-3 px-5 border-b border-blue-gray-50">Ngày Phát Hành</th>
                                     <th className="py-3 px-5 border-b border-blue-gray-50">Thời Lượng</th>
                                     <th className="py-3 px-5 border-b border-blue-gray-50">Chức Năng</th>
+                                    <th className="py-3 px-5 border-b border-blue-gray-50 text-left">
+                                        <button onClick={(e) => handleDeletelMovies(e)}
+                                                className="flex items-center justify-center px-3 h-8 text-sm font-medium text-white bg-red-700 border-0 border-gray-700 rounded hover:bg-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-300 dark:hover:text-white mr-3">
+                                            Xóa
+                                        </button>
+                                    </th>
+                                </tr>
+                                <tr className="max-lg:block hidden">
                                     <th className="py-3 px-5 border-b border-blue-gray-50 text-left">
                                         <button onClick={(e) => handleDeletelMovies(e)}
                                                 className="flex items-center justify-center px-3 h-8 text-sm font-medium text-white bg-red-700 border-0 border-gray-700 rounded hover:bg-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-300 dark:hover:text-white mr-3">
@@ -346,15 +358,15 @@ export const MovieManager = () => {
                                             </g>
                                         </svg>
                                     </tr>
-                                ) : (listSearchMovie?.length > 0 ? (
+                                ) : (listSearchMovie.length > 0 ? (
                                         <tbody
-                                            className="max-lg:grid max-lg:grid-cols-2 max-lg:gap-4 min-xl:grid min-xl:grid-cols-1 min-xl:gap-4">
+                                            className="max-lg:grid max-lg:grid-cols-2 max-lg:gap-2 min-xl:grid min-xl:grid-cols-1 min-xl:gap-4">
                                         {
                                             listSearchMovie.map((movie, index) => {
                                                 return (
                                                     <tr key={index}
                                                         className="max-lg:w-3/4 max-lg:flex max-lg:flex-col min-xl:flex min-xl:flex-col">
-                                                        <td className="py-2 px-5 border-b border-blue-gray-50 ">
+                                                        <td className="py-2 px-5">
                                                             <div className="flex items-center gap-4">
                                                                 <img src={movie.avatar}
                                                                      alt=""
@@ -362,33 +374,33 @@ export const MovieManager = () => {
                                                                 <p className="font-medium">{movie.nameMovie}</p>
                                                             </div>
                                                         </td>
-                                                        <td className="py-2 px-5 border-b border-blue-gray-50">
-                                                            {movie.kindOfFilm.map((kind, index) => (
+                                                        <td className="py-2 px-3">
+                                                            {movie.kindOfFilm?.map((kind, index) => (
                                                                 <div key={index}
                                                                      className="relative grid items-center font-sans uppercase select-none bg-gradient-to-tr from-cyan-500 to-cyan-300 text-white rounded-lg py-0.5 px-2 text-[11px] font-medium w-fit">
                                                                     <span>{kind.name}</span>
                                                                 </div>
                                                             ))}
                                                         </td>
-                                                        <td className="py-2 px-5 border-b border-blue-gray-50">
+                                                        <td className="py-2 px-3">
                                                             <div
                                                                 className="relative grid items-center font-sans uppercase whitespace-nowrap select-none bg-gradient-to-tr from-green-600 to-green-400 text-white rounded-lg py-0.5 px-2 text-[11px] font-medium w-fit">
-                                                                <span>{movie.statusFilm.name}</span>
+                                                                <span>{movie.statusFilm?.name || "No status"}</span>
                                                             </div>
                                                         </td>
-                                                        <td className="py-2 px-5 border-b border-blue-gray-50">
+                                                        <td className="py-2 px-3">
                                                             <p className="text-[14px] font-semibold">{movie.actor}</p>
                                                         </td>
-                                                        <td className="py-2 px-5 border-b border-blue-gray-50">
+                                                        <td className="py-2 px-3">
                                                             <p className="text-[14px] font-semibold">{movie.releaseDate}</p>
                                                         </td>
-                                                        <td className="py-2 px-5 border-b border-blue-gray-50">
-                                                            <p className="text-[14px] font-semibold">{movie.durationMovie}</p>
+                                                        <td className="py-2 px-3">
+                                                            <p className="text-[14px]2 px-5 font-semibold">{movie.durationMovie}</p>
                                                         </td>
-                                                        <td className="box-border flex space-x-1 py-5 px-2 border-b border-blue-gray-50">
+                                                        <td className="box-border flex space-x-1 py-5 px-3">
                                                             <Link to={`/update-movie/${movie.id}`}>
-                                                                <button type="button" className="flex text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-md text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-green-600
-                                                          dark:hover:bg-green-700 dark:focus:ring-green-800">
+                                                                <button type="button" className="flex text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-md text-sm px-2 py-1 text-center me-2 mb-2 dark:bg-green-600
+                                                                dark:hover:bg-green-700 dark:focus:ring-green-800">
                                                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                                          viewBox="0 0 24 24" strokeWidth={1.5}
                                                                          stroke="currentColor"
@@ -415,9 +427,13 @@ export const MovieManager = () => {
                                                                 <p>Xóa</p>
                                                             </button>
                                                         </td>
-                                                        <td className="py-3 px-5 border-b border-blue-gray-50">
-                                                            <input className="checkboxMovies" name="delete"
-                                                                   value={movie.id} type="checkbox"/>
+                                                        <td>
+                                                            <input
+                                                                type="checkbox"
+                                                                className="checkboxMovies"
+                                                                checked={checkedMovies.includes(movie.id)}
+                                                                onChange={() => handleCheckboxChange(movie.id)}
+                                                            />
                                                         </td>
                                                     </tr>
                                                 )
@@ -425,16 +441,20 @@ export const MovieManager = () => {
                                         }
                                         </tbody>
                                     ) : (
-                                        <div className="w-full mt-6 flex justify-center items-center col-span-6">
-                                            <DataNotFound/>
-                                        </div>
+                                        <tr>
+                                            <td colSpan="8">
+                                                {/*<div className="w-full mt-6 flex justify-center items-center col-span-6">*/}
+                                                    <DataNotFound/>
+                                                {/*</div>*/}
+                                            </td>
+                                        </tr>
                                     )
                                 )}
                             </table>
                             <div>
                                 <div className="flex flex-col items-center">
                                     <div className="inline-flex mt-2 xs:mt-0">
-                                        <button onClick={changePrev}
+                                        <button onClick={changePrev} disabled={currentPage === 0}
                                                 className="flex items-center justify-center px-3 h-8 text-sm font-medium text-white bg-gray-800 rounded-s hover:bg-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
                                             <svg className="w-3.5 h-3.5 me-2 rtl:rotate-180" aria-hidden="true"
                                                  xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
@@ -447,13 +467,13 @@ export const MovieManager = () => {
                                         {
                                             numbers.map((n, i) => (
                                                 <li className="flex items-center justify-center px-3 h-8 text-sm font-medium text-white bg-gray-800 border-0 border-s border-gray-700 rounded-e hover:bg-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                                                    key={i}>
+                                                    key={i} onClick={() => changeNPage(n - 1)}>
                                                     <a className='page-link' href="#"
-                                                       onClick={() => changeNPage(n - 1)}>{n}</a>
+                                                       >{n}</a>
                                                 </li>
                                             ))
                                         }
-                                        <button onClick={changeNext}
+                                        <button onClick={changeNext} disabled={currentPage >= numberTotalPage - 1}
                                                 className="flex items-center justify-center px-3 h-8 text-sm font-medium text-white bg-gray-800 border-0 border-s border-gray-700 rounded-e hover:bg-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
                                             Next
                                             <svg className="w-3.5 h-3.5 ms-2 rtl:rotate-180" aria-hidden="true"
@@ -470,6 +490,6 @@ export const MovieManager = () => {
                     </div>
                 </div>
             </div>
-    }/>
+        }/>
     )
 }

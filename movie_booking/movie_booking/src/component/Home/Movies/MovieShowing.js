@@ -62,7 +62,7 @@ const MovieShowing = () => {
                                     />
                                     <div
                                         className="absolute inset-0 flex flex-col p-4 bg-black bg-opacity-75 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-md">
-                                        <h2 className="text-white text-center text-xl font-bold">
+                                        <h2 className="text-white text-center text-xl font-bold line-clamp-2 ">
                                             {data.nameMovie}
                                         </h2>
                                         <div

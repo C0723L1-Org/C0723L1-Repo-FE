@@ -1,9 +1,52 @@
 import React from 'react';
 
 const Pagination = ({ currentPage, totalPages, onPageChange, onPreviousPage, onNextPage }) => {
+    // const renderPageNumbers = () => {
+    //     if (totalPages <= 4) {
+    //         // If total pages are less than or equal to 4, show all pages
+    //         return [...Array(totalPages).keys()].map((page) => (
+    //             <li key={page} className="tw-custom-li">
+    //                 <button onClick={() => onPageChange(page)}
+    //                         className={`tw-custom-button-page ${currentPage === page && 'tw-custom-button-active'}`}
+    //                 >
+    //                     {page + 1}
+    //                 </button>
+    //             </li>
+    //         ));
+    //     } else {
+    //         // Show first 3 pages, the "..." button, and the last page
+    //         return (
+    //             <>
+    //                 {[0, 1, 2].map((page) => (
+    //                     <li key={page} className="tw-custom-li">
+    //                         <button onClick={() => onPageChange(page)}
+    //                                 className={`tw-custom-button-page ${currentPage === page && 'tw-custom-button-active'}`}
+    //                         >
+    //                             {page + 1}
+    //                         </button>
+    //                     </li>
+    //                 ))}
+    //                 {totalPages > 4 && (
+    //                     <li className="tw-custom-li">
+    //                         <button className="tw-custom-button-page" disabled>
+    //                             ...
+    //                         </button>
+    //                     </li>
+    //                 )}
+    //                 <li key={totalPages - 1} className="tw-custom-li">
+    //                     <button onClick={() => onPageChange(totalPages - 1)}
+    //                             className={`tw-custom-button-page ${currentPage === totalPages - 1 && 'tw-custom-button-active'}`}
+    //                     >
+    //                         {totalPages}
+    //                     </button>
+    //                 </li>
+    //             </>
+    //         );
+    //     }
+    // };
     const renderPageNumbers = () => {
         if (totalPages <= 4) {
-            // If total pages are less than or equal to 4, show all pages
+            // Nếu tổng số trang nhỏ hơn hoặc bằng 4, hiển thị tất cả các trang
             return [...Array(totalPages).keys()].map((page) => (
                 <li key={page} className="tw-custom-li">
                     <button onClick={() => onPageChange(page)}
@@ -14,32 +57,36 @@ const Pagination = ({ currentPage, totalPages, onPageChange, onPreviousPage, onN
                 </li>
             ));
         } else {
-            // Show first 3 pages, the "..." button, and the last page
+            let startPage, endPage;
+
+            if (currentPage <= 1) {
+                // Nếu trang hiện tại là 0 hoặc 1, hiển thị các trang 0, 1, 2, 3
+                startPage = 0;
+                endPage = 3;
+            } else if (currentPage >= totalPages - 2) {
+                // Nếu trang hiện tại là trang cuối hoặc gần cuối, hiển thị các trang cuối
+                startPage = totalPages - 4;
+                endPage = totalPages - 1;
+            } else {
+                // Hiển thị trang hiện tại và 1 trang trước, 2 trang sau
+                startPage = currentPage - 1;
+                endPage = currentPage + 2;
+            }
+
             return (
                 <>
-                    {[0, 1, 2].map((page) => (
-                        <li key={page} className="tw-custom-li">
-                            <button onClick={() => onPageChange(page)}
-                                    className={`tw-custom-button-page ${currentPage === page && 'tw-custom-button-active'}`}
-                            >
-                                {page + 1}
-                            </button>
-                        </li>
-                    ))}
-                    {totalPages > 4 && (
-                        <li className="tw-custom-li">
-                            <button className="tw-custom-button-page" disabled>
-                                ...
-                            </button>
-                        </li>
-                    )}
-                    <li key={totalPages - 1} className="tw-custom-li">
-                        <button onClick={() => onPageChange(totalPages - 1)}
-                                className={`tw-custom-button-page ${currentPage === totalPages - 1 && 'tw-custom-button-active'}`}
-                        >
-                            {totalPages}
-                        </button>
-                    </li>
+                    {[...Array(endPage - startPage + 1).keys()].map((i) => {
+                        const page = startPage + i;
+                        return (
+                            <li key={page} className="tw-custom-li">
+                                <button onClick={() => onPageChange(page)}
+                                        className={`tw-custom-button-page ${currentPage === page && 'tw-custom-button-active'}`}
+                                >
+                                    {page + 1}
+                                </button>
+                            </li>
+                        );
+                    })}
                 </>
             );
         }
