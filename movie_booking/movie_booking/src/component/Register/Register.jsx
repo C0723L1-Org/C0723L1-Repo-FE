@@ -13,7 +13,7 @@ import {useNavigate} from "react-router-dom";
 
 const Register = () => {
     useEffect(() => {
-        document.title = `Register`
+        document.title = `Đăng Ký`
     }, []);
     const validationSchema = Yup.object({
         name: Yup.string()

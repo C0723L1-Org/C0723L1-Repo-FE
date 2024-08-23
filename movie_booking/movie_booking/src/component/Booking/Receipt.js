@@ -16,6 +16,7 @@ function Receipt(){
     const dispatch = useDispatch();
     const navigate = useNavigate()
     const params = useParams()
+    const showtime = useSelector(state => state.showtime)
     const [isLoading, setIsLoading] = useState(false)
     const listBooking = useSelector(state => state.booking)
     const user = useSelector(state => state.user.user)
@@ -124,8 +125,13 @@ function Receipt(){
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
             confirmButtonText: "Yes!"
-        }).then((result) => {
+        }).then(async (result) => {
             if (result.isConfirmed) {
+                const userShowtimeId={
+                    userId:user.id,
+                    showtimeId:showtime.id
+                }
+                await request.post(`/seat/remove-all`,userShowtimeId)
                 navigate(`/seat/${params.id}`)
             }
         });

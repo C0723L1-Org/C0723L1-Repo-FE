@@ -19,7 +19,7 @@ const Login = () => {
     });
     const [isClick, setIsClick] = useState(false)
     useEffect(() => {
-        document.title = `Login` ;
+        document.title = `Đăng Nhập` ;
     }, []);
 
     function setCookie(name, value, minutes) {
@@ -35,10 +35,8 @@ const Login = () => {
         setIsClick(prevState => true)
         try {
             const response = await request.post('/auth/public/authenticate', values)
-            const token = response.data;
             // Lưu token vào localStorage hoặc cookie
-            const jwtToken = response.data
-            await setCookie(`jwt`,jwtToken,30)
+            // await setCookie(`jwt`,jwtToken,30)
             toast.success('Đăng nhập thành công!');
             await getUser()
             setTimeout( ()=>{
