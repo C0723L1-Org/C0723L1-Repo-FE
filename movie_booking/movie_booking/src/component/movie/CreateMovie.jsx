@@ -59,7 +59,7 @@ function CreateMovie() {
             .max(255, 'Hãng phim không được vượt quá 255 ký tự')
             .required("Hãng phim là bắt buộc"),
         content: Yup.string()
-            .max(255, 'Nội dung không được vượt quá 255 ký tự')
+            // .max(255, 'Nội dung không được vượt quá 255 ký tự')
             .required("Nội dung là bắt buộc"),
         trailer: Yup.string()
             .url("Định dạng URL không hợp lệ")

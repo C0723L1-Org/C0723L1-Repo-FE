@@ -3,6 +3,7 @@ import axios from "axios";
 import Sidebar from "../../../layout/Sidebar/Sidebar";
 import {Main} from "../../../layout/main/Main";
 import {useNavigate} from "react-router-dom";
+import {useSelector} from "react-redux";
 
 function UserBookingManagement() {
   const navigate = useNavigate()
@@ -15,7 +16,7 @@ function UserBookingManagement() {
       try {
         const response = await axios.get(
           "http://localhost:8080/api/v1/booking/private/booking-customer",{
-              withCredentials: true
+              withCredentials: true,
             }
         );
         setBookingData(response.data);
